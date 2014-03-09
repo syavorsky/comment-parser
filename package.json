@@ -1,0 +1,35 @@
+{
+  "name": "comment-parser",
+  "version": "0.1.0",
+  "description": "Generic JSDoc-like comment parser. ",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "dependencies": {
+    "event-stream": "~3.1.0",
+    "lodash": "~2.4.1"
+  },
+  "devDependencies": {
+    "mocha": "~1.17.1",
+    "chai": "~1.9.0"
+  },
+  "scripts": {
+    "test": "mocha tests/*"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:yavorskiy/comment-parser.git"
+  },
+  "keywords": [
+    "jsdoc",
+    "comments",
+    "parser"
+  ],
+  "author": "Sergii Iavorskyi <yavorskiy.s@gmail.com> (https://github.com/yavorskiy)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/yavorskiy/comment-parser/issues"
+  },
+  "homepage": "https://github.com/yavorskiy/comment-parser"
+}
