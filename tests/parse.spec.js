@@ -13,15 +13,15 @@ describe('Single comment string parsing', function() {
   }
 
   it('should split the description', function() {
-
     expect(parsed(function(){
-    /**
-     * Description first line
-     *
-     * Description Second line
-     */
-    }).description)
-      .to.eq('Description first line\nDescription Second line');
+      /**
+       * Description first line
+       *
+       * Description second line
+       */
+      var a;
+    })[0].description)
+      .to.eq('Description first line\n\nDescription second line');
   });
 
   it('should keep description "" if omitted', function() {
@@ -29,15 +29,40 @@ describe('Single comment string parsing', function() {
       /**
        *
        */
-    }).description)
+      var a;
+    })[0].description)
       .to.eq('');
   });
 
-  it('should parse one line comment', function() {
+  it('should parse multiple comments', function() {
+    var p = parsed(function(){
+      /**
+       * Description first line
+       */
+      var a;
+
+      /**
+       * Description second line
+       */
+      var b;
+    });
+
+    expect(p.length)
+      .to.eq(2);
+
+    expect(p[0].description)
+      .to.eq('Description first line');
+
+    expect(p[1].description)
+      .to.eq('Description second line');
+  });
+
+  it('should not parse one line comment', function() {
     expect(parsed(function(){
       /** Description */
-    }).description)
-      .to.eq('Description');
+      var a;
+    }).length)
+      .to.eq(0);
   });
 
   it('should return `null` for `/* */` comments', function() {
@@ -45,8 +70,9 @@ describe('Single comment string parsing', function() {
       /*
        *
        */
-    }))
-      .to.eq(null);
+      var a;
+    }).length)
+      .to.eq(0);
   });
 
   it('should return `null` for `/*** */` comments', function() {
@@ -54,18 +80,9 @@ describe('Single comment string parsing', function() {
       /*
        *
        */
-    }))
-      .to.eq(null);
-  });
-
-  it('should be ok with empty comments', function() {
-      expect(parsed(function(){
-        /** */
-      }))
-        .to.eql({
-          description : '',
-          tags        : []
-        });
+      var a;
+    }).length)
+      .to.eq(0);
   });
 
   it('should parse `@tag`', function() {
@@ -73,7 +90,8 @@ describe('Single comment string parsing', function() {
         /**
          * @my-tag
          */
-      }))
+        var a;
+      })[0])
         .to.eql({
           description: '',
           tags: [{
@@ -90,7 +108,8 @@ describe('Single comment string parsing', function() {
         /**
          * @my-tag {my.type}
          */
-      }))
+        var a;
+      })[0])
         .to.eql({
           description: '',
           tags: [{
@@ -107,7 +126,8 @@ describe('Single comment string parsing', function() {
         /**
          * @my-tag {my.type} name
          */
-      }))
+        var a;
+      })[0])
         .to.eql({
           description: '',
           tags: [{
@@ -124,7 +144,7 @@ describe('Single comment string parsing', function() {
         /**
          * @my-tag name
          */
-      }))
+      })[0])
         .to.eql({
           description: '',
           tags: [{
@@ -141,7 +161,7 @@ describe('Single comment string parsing', function() {
         /**
          * @my-tag {my.type} [name]
          */
-      }))
+      })[0])
         .to.eql({
           description: '',
           tags: [{
@@ -159,7 +179,7 @@ describe('Single comment string parsing', function() {
         /**
          * @my-tag {my.type} [name=value]
          */
-      }))
+      })[0])
         .to.eql({
           description: '',
           tags: [{
@@ -178,7 +198,7 @@ describe('Single comment string parsing', function() {
         /**
          * @my-tag {my.type
          */
-      }))
+      })[0])
         .to.eql({
           description : '',
           tags        : []
@@ -192,7 +212,7 @@ describe('Single comment string parsing', function() {
          * @my-tag1
          * @my-tag2
          */
-      }))
+      })[0])
         .to.eql({
           description : 'Description',
           tags        : [{
@@ -217,7 +237,7 @@ describe('Single comment string parsing', function() {
          * @my-tag name.sub-name
          * @my-tag name.sub-name.sub-sub-name
          */
-      }))
+      })[0])
         .to.eql({
           description : 'Description',
           tags        : [{
