@@ -7,7 +7,7 @@ var _      = require('lodash');
 
 
 var RE_COMMENT_START = /^\s*\/\*\*\s*$/m;
-var RE_COMMENT_LINE  = /^\s*\*(?:\s+|$)/m;
+var RE_COMMENT_LINE  = /^\s*\*(?:\s|$)/m;
 var RE_COMMENT_END   = /^\s*\*\/\s*$/m;
 
 
