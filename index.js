@@ -61,7 +61,15 @@ function parse_chunk(source) {
           name : parent_name
         });
 
-        if (!parent_tag) { return tags; }
+        if (!parent_tag) {
+          parent_tag = {
+            tag         : tag.tag,
+            name        : parent_name,
+            type        : '',
+            description : ''
+          }
+          parent_tags.push(parent_tag);
+        }
 
         parent_tag.tags = parent_tag.tags || [];
         parent_tags = parent_tag.tags;

@@ -193,18 +193,6 @@ describe('Single comment string parsing', function() {
         });
   });
 
-  it('should skip invalid tags', function() {
-      expect(parsed(function(){
-        /**
-         * @my-tag {my.type
-         */
-      })[0])
-        .to.eql({
-          description : '',
-          tags        : []
-        });
-  });
-
   it('should parse multiple tags', function() {
       expect(parsed(function(){
         /**
