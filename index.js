@@ -14,14 +14,16 @@ function parse_chunk(source, opts) {
   source = source
     .reduce(function(sections, line) {
       if (line.value.match(/^@(\w+)/)) { sections.push([]); }
-      sections[sections.length - 1].push(line.value);
+      var section = sections[sections.length - 1];
+      section.line = section.line || line.line;
+      section.push(line.value);
       return sections;
     }, [[]])
     .map(function(section) {
-      return {value: section.join('\n').trim()};
+      return {value: section.join('\n').trim(), line: section.line};
     });
 
-  var description = source[0].value.match(/^@(\S+)/) ? {value: ''} : source.shift();
+  var description = source[0].value.match(/^@(\S+)/) ? {value: '', line: 0} : source.shift();
 
   var tags = source.reduce(function(tags, tag) {
     var matchs = tag.value.match(/@(\S+)(?:\s+\{([^\}]+)\})?(?:\s+(\S+))?(?:\s+([^$]+))?/);
@@ -30,6 +32,7 @@ function parse_chunk(source, opts) {
 
     var tag_node = {
       tag         : matchs[1],
+      line        : Number(tag.line),
       type        : matchs[2] || '',
       name        : matchs[3] || '',
       description : matchs[4] || ''
@@ -69,6 +72,7 @@ function parse_chunk(source, opts) {
         if (!parent_tag) {
           parent_tag = {
             tag         : tag_node.tag,
+            line        : Number(tag_node.line),
             name        : parent_name,
             type        : '',
             description : ''
@@ -90,6 +94,7 @@ function parse_chunk(source, opts) {
 
   return {
     tags        : tags,
+    line        : Number(description.line),
     description : description.value
   };
 }
@@ -97,14 +102,17 @@ function parse_chunk(source, opts) {
 function mkextract(opts) {
 
   var chunk = null;
+  var line_number = 0;
 
   return function extract(line) {
+    line_number += 1;
+
     // if start of comment
     // then init the chunk
     if (line.match(RE_COMMENT_START)) {
       // console.log('line (1)', line);
       // console.log('  clean:', line.replace(RE_COMMENT_START, ''));
-      chunk = [{value: line.replace(RE_COMMENT_START, '')}];
+      chunk = [{value: line.replace(RE_COMMENT_START, ''), line: line_number - 1}];
       return null;
     }
 
@@ -113,7 +121,7 @@ function mkextract(opts) {
     if (chunk && line.match(RE_COMMENT_LINE)) {
       // console.log('line (2)', line);
       // console.log('  clean:', line.replace(RE_COMMENT_LINE, ''));
-      chunk.push({value: line.replace(RE_COMMENT_LINE, '')});
+      chunk.push({value: line.replace(RE_COMMENT_LINE, ''), line: line_number - 1});
       return null;
     }
 
@@ -122,13 +130,14 @@ function mkextract(opts) {
     if (chunk && line.match(RE_COMMENT_END)) {
       // console.log('line (3)', line);
       // console.log('  clean:', line.replace(RE_COMMENT_END, ''));
-      chunk.push({value: line.replace(RE_COMMENT_END, '')});
+      chunk.push({value: line.replace(RE_COMMENT_END, ''), line: line_number - 1});
       return parse_chunk(chunk, opts);
     }
 
     // if non-comment line
     // then reset the chunk
     chunk = null;
+    line_number = 0;
   };
 }
 

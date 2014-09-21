@@ -93,8 +93,10 @@ describe('Single comment string parsing', function() {
         var a;
       })[0])
         .to.eql({
+          line        : 0,
           description : '',
           tags: [{
+            line        : 1,
             tag         : 'my-tag',
             type        : '',
             name        : '',
@@ -111,8 +113,10 @@ describe('Single comment string parsing', function() {
         var a;
       })[0])
         .to.eql({
+          line        : 0,
           description : '',
           tags: [{
+            line        : 1,
             tag         : 'my-tag',
             type        : 'my.type',
             name        : '',
@@ -129,9 +133,11 @@ describe('Single comment string parsing', function() {
         var a;
       })[0])
         .to.eql({
+          line        : 0,
           description : '',
           tags: [{
             tag         : 'my-tag',
+            line        : 1,
             type        : 'my.type',
             name        : 'name',
             description : ''
@@ -146,8 +152,10 @@ describe('Single comment string parsing', function() {
          */
       })[0])
         .to.eql({
+          line        : 0,
           description : '',
           tags: [{
+            line        : 1,
             tag         : 'my-tag',
             type        : '',
             name        : 'name',
@@ -163,9 +171,11 @@ describe('Single comment string parsing', function() {
          */
       })[0])
         .to.eql({
+          line        : 0,
           description : '',
           tags: [{
             tag         : 'my-tag',
+            line        : 1,
             type        : 'my.type',
             name        : 'name',
             description : '',
@@ -181,9 +191,11 @@ describe('Single comment string parsing', function() {
          */
       })[0])
         .to.eql({
+          line        : 0,
           description : '',
           tags: [{
             tag         : 'my-tag',
+            line        : 1,
             type        : 'my.type',
             name        : 'name',
             description : '',
@@ -202,14 +214,17 @@ describe('Single comment string parsing', function() {
          */
       })[0])
         .to.eql({
+          line        : 1,
           description : 'Description',
           tags        : [{
             tag         : 'my-tag1',
+            line        : 2,
             type        : '',
             name        : '',
             description : ''
           }, {
             tag         : 'my-tag2',
+            line        : 3,
             type        : '',
             name        : '',
             description : ''
@@ -227,19 +242,23 @@ describe('Single comment string parsing', function() {
          */
       }, {dotted_names: true})[0])
         .to.eql({
+          line        : 1,
           description : 'Description',
           tags        : [{
             tag         : 'my-tag',
+            line        : 2,
             type        : '',
             name        : 'name',
             description : '',
             tags        : [{
               tag         : 'my-tag',
+              line        : 3,
               type        : '',
               name        : 'sub-name',
               description : '',
               tags        : [{
                 tag         : 'my-tag',
+                line        : 4,
                 type        : '',
                 name        : 'sub-sub-name',
                 description : ''
