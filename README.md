@@ -63,3 +63,10 @@ Invalid comment blocks are skipped. Comments starting with `/*` and `/***` are c
 Also you can parse entire file with `parse.file('path/to/file', callback)` or acquire an instance of [Transform](http://nodejs.org/api/stream.html#stream_class_stream_transform) stream with `parse.stream()`.
 
 Happy coding :)
+
+
+Contributors
+============
+
+- [Sergii Iavorskyi](https://github.com/yavorskiy)
+- [Alexej Yaroshevich](https://github.com/zxqfox)
