@@ -1,15 +1,15 @@
-var fs   = require('fs');
-var expect = require('chai').expect
-var parse  = require('../index');
+var fs = require('fs');
+var expect = require('chai').expect;
+var parse = require('../index');
 
 describe('Single comment string parsing', function() {
 
-  function parsed(func) {
+  function parsed(func, opts) {
     var str = func.toString();
     return parse(str.slice(
       str.indexOf('{') + 1,
       str.lastIndexOf('}')
-    ).trim());
+    ).trim(), opts);
   }
 
   it('should split the description', function() {
@@ -93,7 +93,7 @@ describe('Single comment string parsing', function() {
         var a;
       })[0])
         .to.eql({
-          description: '',
+          description : '',
           tags: [{
             tag         : 'my-tag',
             type        : '',
@@ -111,7 +111,7 @@ describe('Single comment string parsing', function() {
         var a;
       })[0])
         .to.eql({
-          description: '',
+          description : '',
           tags: [{
             tag         : 'my-tag',
             type        : 'my.type',
@@ -129,7 +129,7 @@ describe('Single comment string parsing', function() {
         var a;
       })[0])
         .to.eql({
-          description: '',
+          description : '',
           tags: [{
             tag         : 'my-tag',
             type        : 'my.type',
@@ -146,7 +146,7 @@ describe('Single comment string parsing', function() {
          */
       })[0])
         .to.eql({
-          description: '',
+          description : '',
           tags: [{
             tag         : 'my-tag',
             type        : '',
@@ -163,7 +163,7 @@ describe('Single comment string parsing', function() {
          */
       })[0])
         .to.eql({
-          description: '',
+          description : '',
           tags: [{
             tag         : 'my-tag',
             type        : 'my.type',
@@ -181,7 +181,7 @@ describe('Single comment string parsing', function() {
          */
       })[0])
         .to.eql({
-          description: '',
+          description : '',
           tags: [{
             tag         : 'my-tag',
             type        : 'my.type',
@@ -225,7 +225,7 @@ describe('Single comment string parsing', function() {
          * @my-tag name.sub-name
          * @my-tag name.sub-name.sub-sub-name
          */
-      })[0])
+      }, {dotted_names: true})[0])
         .to.eql({
           description : 'Description',
           tags        : [{
