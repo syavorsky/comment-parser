@@ -70,6 +70,7 @@ describe('Single comment string parsing', function() {
       })[0])
         .to.eql({
           description: '',
+          line: 0,
           tags: [{
             tag         : 'my-tag',
             type        : 'my.type',
@@ -77,6 +78,7 @@ describe('Single comment string parsing', function() {
             description : '',
             optional    : true,
             default     : 'value',
+            line        : 1,
             value       : '@my-tag {my.type} [name=value]'
           }]
         });
@@ -92,17 +94,20 @@ describe('Single comment string parsing', function() {
       })[0])
         .to.eql({
           description : 'Description',
+          line        : 1,
           tags        : [{
             tag         : 'my-tag1',
             type        : '',
             name        : '',
             description : '',
+            line        : 2,
             value       : '@my-tag1'
           }, {
             tag         : 'my-tag2',
             type        : '',
             name        : '',
             description : '',
+            line        : 3,
             value       : '@my-tag2'
           }]
         });
@@ -119,23 +124,27 @@ describe('Single comment string parsing', function() {
       }, {dotted_names: true})[0])
         .to.eql({
           description : 'Description',
+          line        : 1,
           tags        : [{
             tag         : 'my-tag',
             type        : '',
             name        : 'name',
             description : '',
+            line        : 2,
             value       : '@my-tag name',
             tags        : [{
               tag         : 'my-tag',
               type        : '',
               name        : 'sub-name',
               description : '',
+              line        : 3,
               value       : '@my-tag name.sub-name',
               tags        : [{
                 tag         : 'my-tag',
                 type        : '',
                 name        : 'sub-sub-name',
                 description : '',
+                line        : 4,
                 value       : '@my-tag name.sub-name.sub-sub-name'
               }]
             }]
