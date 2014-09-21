@@ -37,6 +37,9 @@ function parse_chunk(source, opts) {
       name        : matchs[3] || '',
       description : matchs[4] || ''
     };
+    if (opts.raw_value) {
+      tag_node.value = tag.value;
+    }
 
     // used for split results below
     var parts;
