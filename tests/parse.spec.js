@@ -267,4 +267,43 @@ describe('Single comment string parsing', function() {
           }]
         });
   });
+
+  it('should parse complex types `@tag {{a: type}} name`', function() {
+      expect(parsed(function(){
+        /**
+         * @my-tag {{a: number}} name
+         */
+      })[0])
+        .to.eql({
+          line: 0,
+          description: '',
+          tags: [{
+            tag         : 'my-tag',
+            line        : 1,
+            type        : '{a: number}',
+            name        : 'name',
+            description : ''
+          }]
+        });
+  });
+
+  it('should gracefully fail on syntax errors `@tag {{a: type} name`', function() {
+      expect(parsed(function(){
+        /**
+         * @my-tag {{a: number} name
+         */
+      })[0])
+        .to.eql({
+          line: 0,
+          description: '',
+          tags: [{
+            tag         : 'my-tag',
+            line        : 1,
+            type        : '',
+            name        : '',
+            description : '{{a: number} name',
+            error       : 'Unpaired curly in type doc'
+          }]
+        });
+  });
 });
