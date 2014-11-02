@@ -9,8 +9,77 @@ var RE_COMMENT_START = /^\s*\/\*\*\s*$/m;
 var RE_COMMENT_LINE  = /^\s*\*(?:\s|$)/m;
 var RE_COMMENT_END   = /^\s*\*\/\s*$/m;
 
-function parse_chunk(source, opts) {
+/**
+ * analogue of str.match(/@(\S+)(?:\s+\{([^\}]+)\})?(?:\s+(\S+))?(?:\s+([^$]+))?/);
+ * @param {string} str raw jsdoc string
+ * @returns {object} parsed tag node
+ */
+function parse_tag_line(str) {
+  if (typeof str !== 'string') { return false; }
 
+  if (str[0] !== '@') { return false; }
+
+  var pos = 1;
+  var l = str.length;
+  var error = null;
+  var res = {
+    tag         : _tag(),
+    type        : _type() || '',
+    name        : _name() || '',
+    description : _rest() || ''
+  };
+
+  if (error) {
+    res.error = error;
+  }
+
+  return res;
+
+  function _skipws() {
+    while (str[pos] === ' ' && pos < l) { pos ++; }
+  }
+  function _tag() { // @(\S+)
+    var sp = str.indexOf(' ', pos);
+    sp = sp < 0 ? l : sp;
+    var res = str.substr(pos, sp - pos);
+    pos = sp;
+    return res;
+  }
+  function _type() { // (?:\s+\{([^\}]+)\})?
+    _skipws();
+    if (str[pos] !== '{') { return ''; }
+    var ch;
+    var res = '';
+    var curlies = 0;
+    while (pos < l) {
+      ch = str[pos];
+      curlies += ch === '{' ? 1 : ch === '}' ? -1 : 0;
+      res += ch;
+      pos ++;
+      if (!curlies) {
+        break;
+      }
+    }
+    if (curlies) {
+      // throw new Error('Unpaired curly in type doc');
+      error = 'Unpaired curly in type doc';
+      pos -= res.length;
+      return '';
+    }
+    return res.substr(1, res.length - 2);
+  }
+  function _name() { // (?:\s+(\S+))?
+    if (error) { return ''; }
+    _skipws();
+    return _tag();
+  }
+  function _rest() { // (?:\s+([^$]+))?
+    _skipws();
+    return str.substr(pos);
+  }
+}
+
+function parse_chunk(source, opts) {
   source = source
     .reduce(function(sections, line) {
       if (line.value.match(/^@(\w+)/)) { sections.push([]); }
@@ -26,17 +95,10 @@ function parse_chunk(source, opts) {
   var description = source[0].value.match(/^@(\S+)/) ? {value: '', line: 0} : source.shift();
 
   var tags = source.reduce(function(tags, tag) {
-    var matchs = tag.value.match(/@(\S+)(?:\s+\{([^\}]+)\})?(?:\s+(\S+))?(?:\s+([^$]+))?/);
+    var tag_node = parse_tag_line(tag.value);
+    if (!tag_node) { return tags; }
 
-    if (!matchs) { return tags; }
-
-    var tag_node = {
-      tag         : matchs[1],
-      line        : Number(tag.line),
-      type        : matchs[2] || '',
-      name        : matchs[3] || '',
-      description : matchs[4] || ''
-    };
+    tag_node.line = Number(tag.line);
     if (opts.raw_value) {
       tag_node.value = tag.value;
     }
