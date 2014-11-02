@@ -58,6 +58,8 @@ this would be parsed into following
 
 By default dotted names like `name.subname.subsubname` will be expanded into nested sections, this can be prevented by passing `opts.dotted_names = false`.
 
+You can also make raw line available in parsed results by passing `opts.raw_value = true`.
+
 Invalid comment blocks are skipped. Comments starting with `/*` and `/***` are considered not valid.
 
 Also you can parse entire file with `parse.file('path/to/file', callback)` or acquire an instance of [Transform](http://nodejs.org/api/stream.html#stream_class_stream_transform) stream with `parse.stream()`.

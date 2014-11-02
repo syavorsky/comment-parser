@@ -1,3 +1,11 @@
+# v0.2.1
+
+- `refactor` make line pasing mechanism more tolerable
+
+# v0.2.0
+
+- `feature` include source line numbers in parsed data
+- `feature` optionally prevent dotten names expanding
 
 # v0.1.2
 
