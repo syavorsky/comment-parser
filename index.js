@@ -60,7 +60,7 @@ function parse_tag_line(str) {
         break;
       }
     }
-    if (curlies) {
+    if (curlies !== 0) {
       // throw new Error('Unpaired curly in type doc');
       error = 'Unpaired curly in type doc';
       pos -= res.length;
@@ -71,7 +71,26 @@ function parse_tag_line(str) {
   function _name() { // (?:\s+(\S+))?
     if (error) { return ''; }
     _skipws();
-    return _tag();
+    var ch;
+    var res = '';
+    var brackets = 0;
+    var re = /\s/;
+    while (pos < l) {
+      ch = str[pos];
+      brackets += ch === '[' ? 1 : ch === ']' ? -1 : 0;
+      res += ch;
+      pos ++;
+      if (brackets === 0 && re.test(str[pos])) {
+        break;
+      }
+    }
+    if (brackets) {
+      // throw new Error('Unpaired curly in type doc');
+      error = 'Unpaired brackets in type doc';
+      pos -= res.length;
+      return '';
+    }
+    return res;
   }
   function _rest() { // (?:\s+([^$]+))?
     _skipws();
@@ -108,15 +127,15 @@ function parse_chunk(source, opts) {
 
     // parsing optional and default value if exists
     // probably if should be hidden with option or moved out to some jsdoc standard
-    if (tag_node.name.match(/^\[(\S+)\]$/)) {
+    if (tag_node.name[0] === '[' && tag_node.name[tag_node.name.length - 1] === ']') {
       tag_node.optional = true;
-      tag_node.name = RegExp.$1;
+      tag_node.name = tag_node.name.substr(1, tag_node.name.length - 2);
 
       // default value here
       if (tag_node.name.indexOf('=') !== -1) {
         parts = tag_node.name.split('=');
         tag_node.name    = parts[0];
-        tag_node.default = parts[1];
+        tag_node.default = parts[1].replace(/^(["'])(.+)(\1)$/, '$2');
       }
     }
 
