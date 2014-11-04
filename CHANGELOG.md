@@ -1,3 +1,7 @@
+# v0.2.2
+
+- `feature` allow spaces in default values `@my-tag {my.type} [name=John Doe]`
+
 # v0.2.1
 
 - `refactor` make line pasing mechanism more tolerable
