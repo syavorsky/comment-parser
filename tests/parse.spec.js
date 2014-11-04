@@ -184,10 +184,11 @@ describe('Single comment string parsing', function() {
         });
   });
 
-  it('should parse `@tag {my.type} [name=value]`', function() {
+  // http://usejsdoc.org/tags-param.html
+  it('should parse `@tag {my.type} [name=John Doe]`', function() {
       expect(parsed(function(){
         /**
-         * @my-tag {my.type} [name=value]
+         * @my-tag {my.type} [name=John Doe]
          */
       })[0])
         .to.eql({
@@ -200,7 +201,70 @@ describe('Single comment string parsing', function() {
             name        : 'name',
             description : '',
             optional    : true,
-            default     : 'value'
+            default     : 'John Doe'
+          }]
+        });
+  });
+
+  // https://github.com/senchalabs/jsduck/wiki/@param
+  it('should parse quoted optionals like `@tag [name="yay"] desc`', function() {
+      expect(parsed(function(){
+        /**
+         * @tag {t} [name="yay!"] desc
+         */
+      })[0])
+        .to.eql({
+          line: 0,
+          description: '',
+          tags: [{
+            tag         : 'tag',
+            line        : 1,
+            type        : 't',
+            name        : 'name',
+            default     : 'yay!',
+            optional    : true,
+            description : 'desc'
+          }]
+        });
+  });
+
+  it('shouldn\'t strip different quotes in `@tag [name="yay\'] desc`', function() {
+      expect(parsed(function(){
+        /**
+         * @tag {t} [name="yay!'] desc
+         */
+      })[0])
+        .to.eql({
+          line: 0,
+          description: '',
+          tags: [{
+            tag         : 'tag',
+            line        : 1,
+            type        : 't',
+            name        : 'name',
+            default     : '"yay!\'',
+            optional    : true,
+            description : 'desc'
+          }]
+        });
+  });
+
+  it('should parse optional names like `@tag [...name] desc`', function() {
+      expect(parsed(function(){
+        /**
+         * @tag {t} [...name] desc
+         */
+      })[0])
+        .to.eql({
+          line: 0,
+          description: '',
+          tags: [{
+            tag         : 'tag',
+            line        : 1,
+            type        : 't',
+            name        : '...name',
+            optional    : true,
+            description : 'desc'
           }]
         });
   });
