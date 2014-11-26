@@ -3,8 +3,6 @@ var fs     = require('fs');
 var stream = require('stream');
 var util   = require('util');
 
-var _      = require('lodash');
-
 var RE_COMMENT_START = /^\s*\/\*\*\s*$/m;
 var RE_COMMENT_LINE  = /^\s*\*(?:\s|$)/m;
 var RE_COMMENT_END   = /^\s*\*\/\s*$/m;
@@ -148,7 +146,7 @@ function parse_chunk(source, opts) {
 
       while (parts.length > 1) {
         parent_name = parts.shift();
-        parent_tag  = _.findWhere(parent_tags, {
+        parent_tag  = _find(parent_tags, {
           tag  : tag_node.tag,
           name : parent_name
         });
@@ -290,3 +288,19 @@ module.exports.file = function file(file_path, done) {
 module.exports.stream = function stream(opts) {
   return new Parser(opts);
 };
+
+function _find(list, filter) {
+  var i, l, k, yes, item;
+  for (i = 0, l = list.length; i < l; i++) {
+    item = list[i];
+    yes = true;
+    for (k in filter) {
+      if (filter.hasOwnProperty(k)) {
+        yes = yes && filter[k] === list[i][k];
+      }
+    }
+    if (yes) {
+      return item;
+    }
+  }
+}
