@@ -1,3 +1,8 @@
+# v0.2.3
+
+- `bugfix` Accept `/** one line */` comments
+- `refactor` Get rid of `lodash` to avoid unnecessary extra size when bundled
+
 # v0.2.2
 
 - `feature` allow spaces in default values `@my-tag {my.type} [name=John Doe]`
