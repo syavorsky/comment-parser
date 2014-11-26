@@ -8,6 +8,7 @@ var _      = require('lodash');
 var RE_COMMENT_START = /^\s*\/\*\*\s*$/m;
 var RE_COMMENT_LINE  = /^\s*\*(?:\s|$)/m;
 var RE_COMMENT_END   = /^\s*\*\/\s*$/m;
+var RE_COMMENT_1LINE = /^\s*\/\*\*\s*(.*)\s*\*\/\s*$/;
 
 /**
  * analogue of str.match(/@(\S+)(?:\s+\{([^\}]+)\})?(?:\s+(\S+))?(?:\s+([^$]+))?/);
@@ -178,7 +179,7 @@ function parse_chunk(source, opts) {
 
   return {
     tags        : tags,
-    line        : Number(description.line),
+    line        : Number(description.line || 0),
     description : description.value
   };
 }
@@ -189,6 +190,14 @@ function mkextract(opts) {
   var line_number = 0;
 
   return function extract(line) {
+    // if oneliner
+    // then parse it immediately
+    if (!line_number && line.match(RE_COMMENT_1LINE)) {
+      // console.log('line (1)', line);
+      // console.log('  clean:', line.replace(RE_COMMENT_1LINE, '$1'));
+      return parse_chunk([{value: line.replace(RE_COMMENT_1LINE, '$1'), line: 0}], opts);
+    }
+
     line_number += 1;
 
     // if start of comment
