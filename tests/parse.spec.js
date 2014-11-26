@@ -12,6 +12,45 @@ describe('Single comment string parsing', function() {
     ).trim(), opts);
   }
 
+  it('should parse one-liner doc block', function() {
+    expect(parsed(function(){
+      /** Description */
+      var a;
+    })[0].description)
+      .to.eq('Description');
+  });
+
+  it('should gracefully parse one-liner with tag', function() {
+    var p = parsed(function(){
+      /** @tag */
+      var a;
+    });
+
+    expect(p[0].description)
+      .to.eq('');
+
+    expect(p[0].line)
+      .to.eq(0);
+
+    expect(p[0].tags.length)
+      .to.eq(1);
+
+    expect(p[0].tags[0].tag)
+      .to.eq('tag');
+
+    expect(p[0].tags[0].line)
+      .to.eq(0);
+  });
+
+  it('should parse simple doc block with description', function() {
+    expect(parsed(function(){
+      /**
+       * Description
+       */
+    })[0].description)
+      .to.eq('Description');
+  });
+
   it('should split the description', function() {
     expect(parsed(function(){
       /**
@@ -55,14 +94,6 @@ describe('Single comment string parsing', function() {
 
     expect(p[1].description)
       .to.eq('Description second line');
-  });
-
-  it('should not parse one line comment', function() {
-    expect(parsed(function(){
-      /** Description */
-      var a;
-    }).length)
-      .to.eq(0);
   });
 
   it('should return `null` for `/* */` comments', function() {
