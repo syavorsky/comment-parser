@@ -1,4 +1,6 @@
 
+'use strict';
+
 var fs     = require('fs');
 var stream = require('stream');
 var util   = require('util');
@@ -8,7 +10,26 @@ var RE_COMMENT_LINE  = /^\s*\*(?:\s|$)/m;
 var RE_COMMENT_END   = /^\s*\*\/\s*$/m;
 var RE_COMMENT_1LINE = /^\s*\/\*\*\s*(.*)\s*\*\/\s*$/;
 
+
+function _find(list, filter) {
+  var i, l, k, yes, item;
+  for (i = 0, l = list.length; i < l; i++) {
+    item = list[i];
+    yes = true;
+    for (k in filter) {
+      if (filter.hasOwnProperty(k)) {
+        yes = yes && filter[k] === list[i][k];
+      }
+    }
+    if (yes) {
+      return item;
+    }
+  }
+}
+
+
 /**
+ * Matchs "@tag [{type}] [description]"
  * analogue of str.match(/@(\S+)(?:\s+\{([^\}]+)\})?(?:\s+(\S+))?(?:\s+([^$]+))?/);
  * @param {string} str raw jsdoc string
  * @returns {object} parsed tag node
@@ -18,25 +39,14 @@ function parse_tag_line(str) {
 
   if (str[0] !== '@') { return false; }
 
-  var pos = 1;
-  var l = str.length;
+  var pos   = 1;
+  var l     = str.length;
   var error = null;
-  var res = {
-    tag         : _tag(),
-    type        : _type() || '',
-    name        : _name() || '',
-    description : _rest() || ''
-  };
-
-  if (error) {
-    res.error = error;
-  }
-
-  return res;
 
   function _skipws() {
     while (str[pos] === ' ' && pos < l) { pos ++; }
   }
+
   function _tag() { // @(\S+)
     var sp = str.indexOf(' ', pos);
     sp = sp < 0 ? l : sp;
@@ -44,6 +54,7 @@ function parse_tag_line(str) {
     pos = sp;
     return res;
   }
+
   function _type() { // (?:\s+\{([^\}]+)\})?
     _skipws();
     if (str[pos] !== '{') { return ''; }
@@ -67,6 +78,7 @@ function parse_tag_line(str) {
     }
     return res.substr(1, res.length - 2);
   }
+
   function _name() { // (?:\s+(\S+))?
     if (error) { return ''; }
     _skipws();
@@ -83,18 +95,34 @@ function parse_tag_line(str) {
         break;
       }
     }
+
     if (brackets) {
       // throw new Error('Unpaired curly in type doc');
       error = 'Unpaired brackets in type doc';
       pos -= res.length;
       return '';
     }
+
     return res;
   }
+
   function _rest() { // (?:\s+([^$]+))?
     _skipws();
     return str.substr(pos);
   }
+
+  var res = {
+    tag         : _tag(),
+    type        : _type() || '',
+    name        : _name() || '',
+    description : _rest() || ''
+  };
+
+  if (error) {
+    res.error = error;
+  }
+
+  return res;
 }
 
 function parse_chunk(source, opts) {
@@ -297,19 +325,3 @@ module.exports.file = function file(file_path, done) {
 module.exports.stream = function stream(opts) {
   return new Parser(opts);
 };
-
-function _find(list, filter) {
-  var i, l, k, yes, item;
-  for (i = 0, l = list.length; i < l; i++) {
-    item = list[i];
-    yes = true;
-    for (k in filter) {
-      if (filter.hasOwnProperty(k)) {
-        yes = yes && filter[k] === list[i][k];
-      }
-    }
-    if (yes) {
-      return item;
-    }
-  }
-}
