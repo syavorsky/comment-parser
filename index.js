@@ -29,15 +29,15 @@ function _find(list, filter) {
 
 
 /**
- * Matchs "@tag [{type}] [description]"
+ * Matchs "@tag {type} name description"
  * analogue of str.match(/@(\S+)(?:\s+\{([^\}]+)\})?(?:\s+(\S+))?(?:\s+([^$]+))?/);
  * @param {string} str raw jsdoc string
  * @returns {object} parsed tag node
  */
-function parse_tag_line(str) {
-  if (typeof str !== 'string') { return false; }
+function parse_tag(str) {
+  if (typeof str !== 'string') { return null; }
 
-  if (str[0] !== '@') { return false; }
+  if (str[0] !== '@') { return null; }
 
   var pos   = 1;
   var l     = str.length;
@@ -125,23 +125,29 @@ function parse_tag_line(str) {
   return res;
 }
 
-function parse_chunk(source, opts) {
+/**
+ * Parses comment block (array of String lines)
+ */
+function parse_block(source, opts) {
+  // group source lines into tags
+  // we assume tag starts with "@"
   source = source
-    .reduce(function(sections, line) {
-      if (line.value.match(/^@(\w+)/)) { sections.push([]); }
-      var section = sections[sections.length - 1];
-      section.line = section.line || line.line;
-      section.push(line.value);
-      return sections;
+    .reduce(function(tags, line) {
+      if (line.value.match(/^@(\w+)/)) { tags.push([]); }
+      var tag = tags[tags.length - 1];
+      tag.line = tag.line || line.line;
+      tag.push(line.value);
+      return tags;
     }, [[]])
-    .map(function(section) {
-      return {value: section.join('\n').trim(), line: section.line};
+    .map(function(tag) {
+      return {value: tag.join('\n').trim(), line: tag.line};
     });
 
+  // file description, first comment on top
   var description = source[0].value.match(/^@(\S+)/) ? {value: '', line: 0} : source.shift();
 
   var tags = source.reduce(function(tags, tag) {
-    var tag_node = parse_tag_line(tag.value);
+    var tag_node = parse_tag(tag.value);
     if (!tag_node) { return tags; }
 
     tag_node.line = Number(tag.line);
@@ -210,18 +216,25 @@ function parse_chunk(source, opts) {
   };
 }
 
+/**
+ * Produces `extract` function with internal state initialized
+ */
 function mkextract(opts) {
 
   var chunk = null;
   var line_number = 0;
 
+  /**
+   * Cumulatively reading lines until they make one comment block
+   * Returns block object or null.
+   */
   return function extract(line) {
     // if oneliner
     // then parse it immediately
     if (!line_number && line.match(RE_COMMENT_1LINE)) {
       // console.log('line (1)', line);
       // console.log('  clean:', line.replace(RE_COMMENT_1LINE, '$1'));
-      return parse_chunk([{value: line.replace(RE_COMMENT_1LINE, '$1'), line: 0}], opts);
+      return parse_block([{value: line.replace(RE_COMMENT_1LINE, '$1'), line: 0}], opts);
     }
 
     line_number += 1;
@@ -250,7 +263,7 @@ function mkextract(opts) {
       // console.log('line (3)', line);
       // console.log('  clean:', line.replace(RE_COMMENT_END, ''));
       chunk.push({value: line.replace(RE_COMMENT_END, ''), line: line_number - 1});
-      return parse_chunk(chunk, opts);
+      return parse_block(chunk, opts);
     }
 
     // if non-comment line
@@ -260,7 +273,7 @@ function mkextract(opts) {
   };
 }
 
-/* ------- Transform strean ------- */
+/* ------- Transform stream ------- */
 
 function Parser(opts) {
   opts = opts || {};
