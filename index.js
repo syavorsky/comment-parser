@@ -12,19 +12,14 @@ var RE_COMMENT_1LINE = /^\s*\/\*\*\s*(.*)\s*\*\/\s*$/;
 
 
 function _find(list, filter) {
-  var i, l, k, yes, item;
-  for (i = 0, l = list.length; i < l; i++) {
-    item = list[i];
-    yes = true;
-    for (k in filter) {
-      if (filter.hasOwnProperty(k)) {
-        yes = yes && filter[k] === list[i][k];
-      }
-    }
-    if (yes) {
-      return item;
-    }
+  var k, i = list.length, matchs = true;
+  while (i--) {
+    for (k in filter) { if (filter.hasOwnProperty(k)) {
+        matchs = (filter[k] === list[i][k]) && matchs;
+    }}
+    if (matchs) { return list[i]; }
   }
+  return null;
 }
 
 
