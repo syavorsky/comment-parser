@@ -396,8 +396,8 @@ describe('Single comment string parsing', function() {
             line        : 1,
             type        : '',
             name        : '',
-            description : '{{a: number} name',
-            error       : 'Unpaired curly in type doc'
+            description : '',
+            errors      : ['parse_type: Invalid `{type}`, unpaired curlies']
           }]
         });
   });

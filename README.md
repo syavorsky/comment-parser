@@ -64,6 +64,58 @@ Invalid comment blocks are skipped. Comments starting with `/*` and `/***` are c
 
 Also you can parse entire file with `parse.file('path/to/file', callback)` or acquire an instance of [Transform](http://nodejs.org/api/stream.html#stream_class_stream_transform) stream with `parse.stream()`.
 
+Custom parsers
+==============
+
+In case you need to parse tags in different way you can pass `opts.parsers = [parser1, ..., parserN]`, where each parser is `function name(str:String, data:Object):{source:String, data:Object}`.
+	
+Each parser function takes string left after previous parsers applied and data produced by them. And returns `null` or `{source: '', data:{}}` where `source` is consumed substring and `data` is a payload with tag node fields.
+
+Tag node data is build by merging result bits from all parsers. Here is some example that is not doing actual parsing but is demonstrating the flow:
+
+```
+/**
+ * Source to be parsed below
+ * @tag {type} name Description
+ */
+parse(source, {parsers: [
+	// takes entire string
+	function parse_tag(str, data) { 
+		return {source: ' @tag', data: {tag: 'tag'}}; 
+	}, 
+	// parser throwing exception
+	function check_tag(str, data) {
+		if (allowed_tags.indexOf(data.tag) === -1) { 
+			throw new Error('Unrecognized tag "' + data.tag + '"');
+		}				},
+	// takes the rest of the string after ' @tag''
+	function parse_name1(str, data) { 
+		return {source: ' name', data: {name: 'name'}}; 
+	},
+	// alternative name parser
+	function parse_name2(str, data) { 
+		return {source: ' name', data: {name: 'name'}}; 
+	}	]});
+```
+
+This would produce following:
+
+```
+[{
+    "tags": [{
+        "errors": [
+          "check_tag: Unrecognized tag \"tag\""
+        ],
+        "type": "",
+        "name": "",
+        "description": "",
+        "line": 2
+    }],
+    "line": 1,
+    "description": "Source to be parsed below"
+}]
+```
+
 Happy coding :)
 
 
