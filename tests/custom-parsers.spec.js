@@ -2,7 +2,7 @@ var fs = require('fs');
 var expect = require('chai').expect;
 var parse = require('../index');
 
-describe.only('parse() with custom tag parsers', function() {
+describe('parse() with custom tag parsers', function() {
 
   function parsed(func, opts) {
     var str = func.toString();
@@ -18,38 +18,6 @@ describe.only('parse() with custom tag parsers', function() {
      */
     var a;
   }
-
-  it.only('test', function() {
-    function sample() {
-      /**
-       * Source to be parsed below
-       * @tag {type} name Description
-       */
-      var a;
-    }
-    var allowed_tags = [];
-    var res = parsed(sample,  {parsers: [
-      // takes entire string
-      function parse_tag(str, data) {
-        return {source: ' @tag', data: {tag: 'tag'}};
-      },
-      // parser throwing exception
-      function check_tag(str, data) {
-        if (allowed_tags.indexOf(data.tag) === -1) {
-          throw new Error('Unrecognized tag "' + data.tag + '"');
-        }
-      },
-      // takes the rest of the string after ' @tag''
-      function parse_name1(str, data) {
-        return {source: ' name', data: {name: 'name'}};
-      },
-      // alternative name parser
-      function parse_name2(str, data) {
-        return {source: ' name', data: {name: 'name'}};
-      }
-    ]});
-    console.log(JSON.stringify(res, null, 2));
-  });
 
   it('should use `opts.parsers`', function() {
     var parsers = [
