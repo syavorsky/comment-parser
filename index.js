@@ -34,97 +34,89 @@ function find(list, filter) {
   return null;
 }
 
+function skipws(str) {
+  var i = 0;
+  do {
+    if (str[i] !== ' ') { return i; }
+  } while (++i < str.length);
+  return i;
+}
+
 /* ------- default parsers ------- */
 
-var default_parsers = (function() {
+var PARSERS = {};
 
-  function skipws(str) {
-    var i = 0;
-    do {
-      if (str[i] !== ' ') { return i; }
-    } while (++i < str.length);
-    return i;
+PARSERS.parse_tag = function parse_tag(str) {
+  var result = str.match(/^\s*@(\S+)/);
+
+  if (!result) { throw new Error('Invalid `@tag`, missing @ symbol'); }
+
+  return {
+    source : result[0],
+    data   : {tag: result[1]}
+  };
+};
+
+PARSERS.parse_type = function parse_type(str, data) {
+  if (data.errors && data.errors.length) { return null; }
+
+  var pos = skipws(str);
+  var res = '';
+  var curlies = 0;
+
+  if (str[pos] !== '{') { return null; }
+
+  while (pos < str.length) {
+    curlies += (str[pos] === '{' ? 1 : (str[pos] === '}' ? -1 : 0));
+    res += str[pos];
+    pos ++;
+    if (curlies === 0) { break; }
   }
 
-  function parse_tag(str) {
-    var result = str.match(/^\s*@(\S+)/);
-    if (result) {
-      return {
-        source : result[0],
-        data   : {tag: result[1]}
-      };
-    } else {
-      throw new Error('Invalid `@tag`, missing @ symbol');
-    }
+  if (curlies !== 0) { throw new Error('Invalid `{type}`, unpaired curlies'); }
+
+  return {
+    source : str.slice(0, pos),
+    data   : {type: res.slice(1, -1)}
+  };
+};
+
+PARSERS.parse_name = function parse_name(str, data) {
+  if (data.errors && data.errors.length) { return null; }
+
+  var pos = skipws(str);
+  var res = '';
+  var brackets = 0;
+
+  while (pos < str.length) {
+    brackets += (str[pos] === '[' ? 1 : (str[pos] === ']' ? -1 : 0));
+    res += str[pos];
+    pos ++;
+    if (brackets === 0 && /\s/.test(str[pos])) { break; }
   }
 
-  function parse_type(str, data) {
-    if (data.errors && data.errors) { return null; }
+  if (brackets !== 0) { throw new Error('Invalid `name`, unpaired brackets'); }
 
-    var pos = skipws(str);
-    var res = '';
-    var curlies = 0;
+  return {
+    source : str.slice(0, pos),
+    data   : {name: res}
+  };
+};
 
-    if (str[pos] !== '{') { return null; }
+PARSERS.parse_description = function parse_description(str, data) {
+  if (data.errors && data.errors.length) { return null; }
 
-    while (pos < str.length) {
-      curlies += (str[pos] === '{' ? 1 : (str[pos] === '}' ? -1 : 0));
-      res += str[pos];
-      pos ++;
-      if (curlies === 0) { break; }
-    }
+  var result = str.match(/^\s+([^$]+)?/);
 
-    if (curlies !== 0) {
-      throw new Error('Invalid `{type}`, unpaired curlies');
-    } else {
-      return {
-        source : str.slice(0, pos),
-        data   : {type: res.slice(1, -1)}
-      };
-    }
+  if (result) {
+    return {
+      source : result[0],
+      data   : {description: result[1] === undefined ? '' : result[1]}
+    };
   }
 
-  function parse_name(str, data) {
-    if (data.errors && data.errors) { return null; }
-
-    var pos = skipws(str);
-    var res = '';
-    var brackets = 0;
-
-    while (pos < str.length) {
-      brackets += (str[pos] === '[' ? 1 : (str[pos] === ']' ? -1 : 0));
-      res += str[pos];
-      pos ++;
-      if (brackets === 0 && /\s/.test(str[pos])) { break; }
-    }
-
-    if (brackets !== 0) {
-      throw new Error('Invalid `name`, unpaired brackets');
-    } else {
-      return {
-        source : str.slice(0, pos),
-        data   : {name: res}
-      };
-    }
-  }
-
-  function parse_description(str, data) {
-    if (data.errors && data.errors) { return null; }
-
-    var result = str.match(/^\s+([^$]+)?/);
-
-    if (result) {
-      return {
-        source : result[0],
-        data   : {description: result[1] === undefined ? '' : result[1]}
-      };
-    }
-
-    return null;
-  }
-
-  return [parse_tag, parse_type, parse_name, parse_description];
-}());
+  return null;
+};
 
 /* ------- parsing ------- */
 
@@ -190,7 +182,13 @@ function parse_block(source, opts) {
   var description = source[0].value.match(/^@(\S+)/) ? {value: '', line: 0} : source.shift();
 
   var tags = source.reduce(function(tags, tag) {
-    var tag_node = parse_tag(tag.value, opts.parsers || default_parsers);
+    var tag_node = parse_tag(tag.value, opts.parsers || [
+      PARSERS.parse_tag,
+      PARSERS.parse_type,
+      PARSERS.parse_name,
+      PARSERS.parse_description
+    ]);
+
     if (!tag_node) { return tags; }
 
     tag_node.line = Number(tag.line);
@@ -361,7 +359,7 @@ module.exports = function parse(source, opts) {
   return blocks;
 };
 
-module.exports.DEFAULT_PARSERS = default_parsers;
+module.exports.PARSERS = PARSERS;
 
 module.exports.file = function file(file_path, done) {
 
