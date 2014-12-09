@@ -179,6 +179,12 @@ function parse_tag(str, parsers) {
  * Parses comment block (array of String lines)
  */
 function parse_block(source, opts) {
+
+  var source_str = source
+      .map(function(line) { return line.value; })
+      .join('\n')
+      .replace(/^\s+|\s+$/g, '');
+
   // group source lines into tags
   // we assume tag starts with "@"
   source = source
@@ -206,10 +212,8 @@ function parse_block(source, opts) {
 
     if (!tag_node) { return tags; }
 
-    tag_node.line = Number(tag.line);
-    if (opts.raw_value) {
-      tag_node.value = tag.value;
-    }
+    tag_node.line   = Number(tag.line);
+    tag_node.source = tag.value;
 
     if (opts.dotted_names && tag_node.name.indexOf('.') !== -1) {
       var parent_name;
@@ -250,7 +254,8 @@ function parse_block(source, opts) {
   return {
     tags        : tags,
     line        : Number(description.line || 0),
-    description : description.value
+    description : description.value,
+    source      : source_str
   };
 }
 
