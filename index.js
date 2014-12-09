@@ -84,22 +84,37 @@ PARSERS.parse_type = function parse_type(str, data) {
 PARSERS.parse_name = function parse_name(str, data) {
   if (data.errors && data.errors.length) { return null; }
 
-  var pos = skipws(str);
-  var res = '';
+  var pos      = skipws(str);
+  var name     = '';
   var brackets = 0;
 
   while (pos < str.length) {
     brackets += (str[pos] === '[' ? 1 : (str[pos] === ']' ? -1 : 0));
-    res += str[pos];
+    name += str[pos];
     pos ++;
     if (brackets === 0 && /\s/.test(str[pos])) { break; }
   }
 
   if (brackets !== 0) { throw new Error('Invalid `name`, unpaired brackets'); }
 
+  var res = {name: name};
+
+  if (name[0] === '[' && name[name.length - 1] === ']') {
+    res.optional = true;
+    name = name.slice(1, -1);
+
+    if (name.indexOf('=') !== -1) {
+      var parts = name.split('=');
+      name = parts[0];
+      res.default = parts[1].replace(/^(["'])(.+)(\1)$/, '$2');
+    }
+  }
+
+  res.name = name;
+
   return {
     source : str.slice(0, pos),
-    data   : {name: res}
+    data   : res
   };
 };
 
@@ -196,29 +211,11 @@ function parse_block(source, opts) {
       tag_node.value = tag.value;
     }
 
-    // used for split results below
-    var parts;
-
-    // parsing optional and default value if exists
-    // probably if should be hidden with option or moved out to some jsdoc standard
-    if (tag_node.name[0] === '[' && tag_node.name[tag_node.name.length - 1] === ']') {
-      tag_node.optional = true;
-      tag_node.name = tag_node.name.substr(1, tag_node.name.length - 2);
-
-      // default value here
-      if (tag_node.name.indexOf('=') !== -1) {
-        parts = tag_node.name.split('=');
-        tag_node.name    = parts[0];
-        tag_node.default = parts[1].replace(/^(["'])(.+)(\1)$/, '$2');
-      }
-    }
-
-    // hidden with `dotted_names` parsing of `obj.value` naming standard
     if (opts.dotted_names && tag_node.name.indexOf('.') !== -1) {
       var parent_name;
       var parent_tag;
       var parent_tags = tags;
-      parts = tag_node.name.split('.');
+      var parts = tag_node.name.split('.');
 
       while (parts.length > 1) {
         parent_name = parts.shift();
