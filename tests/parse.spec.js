@@ -195,6 +195,35 @@ describe('Single comment string parsing', function() {
         });
   });
 
+  it('should parse multiline tags', function() {
+    var p = parsed(function(){
+      /**
+       * @example
+       * // here is example
+       * call('value');
+       */
+      var a;
+    });
+
+    expect(p[0].line)
+      .to.eq(0);
+
+    expect(p[0].tags.length)
+      .to.eq(1);
+
+    expect(p[0].tags[0].tag)
+      .to.eq('example');
+
+    expect(p[0].tags[0].line)
+      .to.eq(1);
+
+    expect(p[0].tags[0].name)
+      .to.eq('');
+
+    expect(p[0].tags[0].description)
+      .to.eq('// here is example\ncall(\'value\');');
+  });
+
   it('should parse `@tag {my.type} [name]`', function() {
       expect(parsed(function(){
         /**

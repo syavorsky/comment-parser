@@ -7,6 +7,7 @@ var RE_COMMENT_START = /^\s*\/\*\*\s*$/m;
 var RE_COMMENT_LINE  = /^\s*\*(?:\s|$)/m;
 var RE_COMMENT_END   = /^\s*\*\/\s*$/m;
 var RE_COMMENT_1LINE = /^\s*\/\*\*\s*(.*)\s*\*\/\s*$/;
+var RE_SPACE = /\s/;
 
 /**
  * analogue of str.match(/@(\S+)(?:\s+\{([^\}]+)\})?(?:\s+(\S+))?(?:\s+([^$]+))?/);
@@ -21,10 +22,11 @@ function parse_tag_line(str) {
   var pos = 1;
   var l = str.length;
   var error = null;
+  var new_line = false;
   var res = {
     tag         : _tag(),
-    type        : _type() || '',
-    name        : _name() || '',
+    type        : !new_line && _type() || '',
+    name        : !new_line && _name() || '',
     description : _rest() || ''
   };
 
@@ -35,10 +37,14 @@ function parse_tag_line(str) {
   return res;
 
   function _skipws() {
-    while (str[pos] === ' ' && pos < l) { pos ++; }
+    var prev_pos = pos;
+    while (pos < l && RE_SPACE.test(str[pos])) {
+      new_line = new_line || str[pos] === '\n';
+      pos++;
+    }
   }
   function _tag() { // @(\S+)
-    var sp = str.indexOf(' ', pos);
+    var sp = str.search(RE_SPACE, pos);
     sp = sp < 0 ? l : sp;
     var res = str.substr(pos, sp - pos);
     pos = sp;
