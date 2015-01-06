@@ -69,9 +69,9 @@ describe('Single comment string parsing', function() {
          */
       })[0])
         .to.eql({
-          description: '',
-          line: 0,
-          tags: [{
+          description : '',
+          line        : 0,
+          tags        : [{
             tag         : 'my-tag',
             type        : 'my.type',
             name        : 'name',

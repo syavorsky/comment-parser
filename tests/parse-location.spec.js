@@ -6,7 +6,6 @@ describe('Single comment string parsing', function() {
 
   function parsed(func, opts) {
     opts = opts || {};
-    opts.line_numbers = true;
     var str = func.toString();
     return parse(str.slice(
       str.indexOf('{') + 1,
@@ -39,24 +38,46 @@ describe('Single comment string parsing', function() {
   it('should locate multiple comments separately', function() {
     var p = parsed(function(){
       /**
-       * Description first line
+       * Description first line :1
        */
       var a;
 
       /**
-       * Description second line
+       * Description second line :6
+       * @tag :7
        */
       var b;
+
+      /** Description third line :11 */
+      var c;
+
+      /**
+       * Description second line :15
+       * @tag :16
+       */
+      var d;
     });
 
     expect(p.length)
-      .to.eq(2);
+      .to.eq(4);
 
     expect(p[0].line)
       .to.eq(1);
 
     expect(p[1].line)
-      .to.eq(1);
+      .to.eq(6);
+
+    expect(p[1].tags[0].line)
+      .to.eq(7);
+
+    expect(p[2].line)
+      .to.eq(11);
+
+    expect(p[3].line)
+      .to.eq(15);
+
+    expect(p[3].tags[0].line)
+      .to.eq(16);
   });
 
   it('should locate parsed `@tag {my.type} [name=value]`', function() {
