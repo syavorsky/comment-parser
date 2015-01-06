@@ -97,7 +97,7 @@ PARSERS.parse_name = function parse_name(str, data) {
 
   if (brackets !== 0) { throw new Error('Invalid `name`, unpaired brackets'); }
 
-  var res = {name: name};
+  var res = {name: name, optional: false};
 
   if (name[0] === '[' && name[name.length - 1] === ']') {
     res.optional = true;
@@ -168,6 +168,7 @@ function parse_tag(str, parsers) {
     data   : {}
   }).data;
 
+  data.optional    = !!data.optional;
   data.type        = data.type === undefined        ? '' : data.type;
   data.name        = data.name === undefined        ? '' : data.name;
   data.description = data.description === undefined ? '' : data.description;
@@ -181,29 +182,42 @@ function parse_tag(str, parsers) {
 function parse_block(source, opts) {
 
   var source_str = source
-      .map(function(line) { return line.value; })
+      .map(function(line) { return line.source; })
       .join('\n')
-      .replace(/^\s+|\s+$/g, '');
+      .trim();
 
-  // group source lines into tags
+  var start = source[0].number;
+
+  // merge source lines into tags
   // we assume tag starts with "@"
   source = source
     .reduce(function(tags, line) {
-      if (line.value.match(/^@(\w+)/)) { tags.push([]); }
-      var tag = tags[tags.length - 1];
-      tag.line = tag.line || line.line;
-      tag.push(line.value);
+      line.source = line.source.trim();
+      
+      if (line.source.match(/^@(\w+)/)) { 
+        tags.push({source: [line.source], line: line.number});
+      } else {
+        var tag = tags[tags.length - 1];
+        tag.source.push(line.source);
+      }
+
       return tags;
-    }, [[]])
+    }, [{source: []}])
     .map(function(tag) {
-      return {value: tag.join('\n').trim(), line: tag.line};
+      tag.source = tag.source.join('\n').trim();
+      return tag;
     });
 
-  // file description, first comment on top
-  var description = source[0].value.match(/^@(\S+)/) ? {value: '', line: 0} : source.shift();
+  // Block description
+  var description = source.shift();
+
+  // skip if no descriptions and no tags
+  if (description.source === '' && source.length === 0) { 
+    return null; 
+  }
 
   var tags = source.reduce(function(tags, tag) {
-    var tag_node = parse_tag(tag.value, opts.parsers || [
+    var tag_node = parse_tag(tag.source, opts.parsers || [
       PARSERS.parse_tag,
       PARSERS.parse_type,
       PARSERS.parse_name,
@@ -212,8 +226,8 @@ function parse_block(source, opts) {
 
     if (!tag_node) { return tags; }
 
-    tag_node.line   = Number(tag.line);
-    tag_node.source = tag.value;
+    tag_node.line   = tag.line;
+    tag_node.source = tag.source;
 
     if (opts.dotted_names && tag_node.name.indexOf('.') !== -1) {
       var parent_name;
@@ -250,11 +264,14 @@ function parse_block(source, opts) {
 
     return tags.concat(tag_node);
   }, []);
-
+  
+  // console.log('-----------');
+  // console.log(description, tags);
+  
   return {
     tags        : tags,
-    line        : Number(description.line || 0),
-    description : description.value,
+    line        : start,
+    description : description.source,
     source      : source_str
   };
 }
@@ -265,29 +282,32 @@ function parse_block(source, opts) {
 function mkextract(opts) {
 
   var chunk = null;
-  var line_number = 0;
+  var number = 0;
 
   /**
    * Cumulatively reading lines until they make one comment block
    * Returns block object or null.
    */
   return function extract(line) {
+
     // if oneliner
     // then parse it immediately
-    if (!line_number && line.match(RE_COMMENT_1LINE)) {
+    if (line.match(RE_COMMENT_1LINE)) {
       // console.log('line (1)', line);
       // console.log('  clean:', line.replace(RE_COMMENT_1LINE, '$1'));
-      return parse_block([{value: line.replace(RE_COMMENT_1LINE, '$1'), line: 0}], opts);
+      return parse_block([{
+        source: line.replace(RE_COMMENT_1LINE, '$1'), 
+        number: number}], opts);
     }
 
-    line_number += 1;
+    number += 1;
 
     // if start of comment
     // then init the chunk
     if (line.match(RE_COMMENT_START)) {
       // console.log('line (1)', line);
       // console.log('  clean:', line.replace(RE_COMMENT_START, ''));
-      chunk = [{value: line.replace(RE_COMMENT_START, ''), line: line_number - 1}];
+      chunk = [{source: line.replace(RE_COMMENT_START, ''), number: number - 1}];
       return null;
     }
 
@@ -296,7 +316,7 @@ function mkextract(opts) {
     if (chunk && line.match(RE_COMMENT_LINE)) {
       // console.log('line (2)', line);
       // console.log('  clean:', line.replace(RE_COMMENT_LINE, ''));
-      chunk.push({value: line.replace(RE_COMMENT_LINE, ''), line: line_number - 1});
+      chunk.push({source: line.replace(RE_COMMENT_LINE, ''), number: number - 1});
       return null;
     }
 
@@ -305,14 +325,13 @@ function mkextract(opts) {
     if (chunk && line.match(RE_COMMENT_END)) {
       // console.log('line (3)', line);
       // console.log('  clean:', line.replace(RE_COMMENT_END, ''));
-      chunk.push({value: line.replace(RE_COMMENT_END, ''), line: line_number - 1});
+      chunk.push({source: line.replace(RE_COMMENT_END, ''), number: number - 1});
       return parse_block(chunk, opts);
     }
 
     // if non-comment line
     // then reset the chunk
     chunk = null;
-    line_number = 0;
   };
 }
 

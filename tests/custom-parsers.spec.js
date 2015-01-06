@@ -28,6 +28,7 @@ describe('parse() with custom tag parsers', function() {
             tag         : 'tag',
             type        : 'type',
             name        : 'name',
+            optional    : false,
             description : 'description'
           }
         };
@@ -36,13 +37,16 @@ describe('parse() with custom tag parsers', function() {
 
     expect(parsed(sample, {parsers: parsers})[0])
       .to.eql({
-        line: 0,
-        description: '',
+        line        : 0,
+        description : '',
+        source      : '@tag {type} name description',
         tags: [{
           tag         : 'tag',
           type        : 'type',
           name        : 'name',
           description : 'description',
+          optional    : false,
+          source      : '@tag {type} name description',
           line        : 1
         }]
       });
@@ -75,13 +79,16 @@ describe('parse() with custom tag parsers', function() {
 
     expect(parsed(sample, {parsers: parsers})[0])
       .to.eql({
-        line: 0,
-        description: '',
+        line        : 0,
+        description : '',
+        source      : '@tag {type} name description',
         tags: [{
           tag         : 'tag',
           type        : 'type',
           name        : 'name',
           description : 'description',
+          optional    : false,
+          source      : '@tag {type} name description',
           line        : 1
         }]
       });
@@ -111,13 +118,16 @@ describe('parse() with custom tag parsers', function() {
 
     expect(parsed(sample, {parsers: parsers})[0])
       .to.eql({
-        line: 0,
-        description: '',
+        line        : 0,
+        description : '',
+        source      : '@tag {type} name description',
         tags: [{
           tag         : 'tag',
           type        : '',
           name        : 'name',
           description : '',
+          optional    : false,
+          source      : '@tag {type} name description',
           errors      : [
             'parser2: error 1',
             'parser3: error 2'
