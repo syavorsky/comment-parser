@@ -25,40 +25,46 @@ this would be parsed into following
 
 ```javascript
 [{
-  tags: [{
-      tag: "some-tag",
-      type: "Type",
-      name: "name",
-      line: 15,
-      description: "Singleline or multiline description text",
-      tags: [{
-          tag: "some-tag",
-          type: "Type",
-          name: "subname",
-          line: 16,
-          description: "Singleline or multiline description text",
-          tags: [{
-              tag: "some-tag",
-              type: "Type",
-              name: "subsubname",
-              line: 17,
-              description: "Singleline or\nmultiline description text"
-            }]
-        }]
-   }, {
-      tag: "another-tag",
-      type: "",
-      name: "",
-      line: 18,
-      description: ""
-   }],
-  description: "Singleline or multiline description text. Line breaks are preserved."
+  "tags": [{
+    "tag": "some-tag",
+    "type": "Type",
+    "name": "name",
+    "optional": false,
+    "description": "Singleline or multiline description text",
+    "line": 3,
+    "source": "@some-tag {Type} name Singleline or multiline description text"
+  }, {
+    "tag": "some-tag",
+    "type": "Type",
+    "name": "name.subname",
+    "optional": false,
+    "description": "Singleline or multiline description text",
+    "line": 4,
+    "source": "@some-tag {Type} name.subname Singleline or multiline description text"
+  }, {
+    "tag": "some-tag",
+    "type": "Type",
+    "name": "name.subname.subsubname",
+    "optional": false,
+    "description": "Singleline or\nmultiline description text",
+    "line": 5,
+    "source": "@some-tag {Type} name.subname.subsubname Singleline or\nmultiline description text"
+  }, {
+    "tag": "another-tag",
+    "name": "",
+    "optional": false,
+    "type": "",
+    "description": "",
+    "line": 7,
+    "source": "@another-tag"
+  }],
+  "line": 0,
+  "description": "Singleline or multiline description text. Line breaks are preserved.",
+  "source": "Singleline or multiline description text. Line breaks are preserved.\n\n@some-tag {Type} name Singleline or multiline description text\n@some-tag {Type} name.subname Singleline or multiline description text\n@some-tag {Type} name.subname.subsubname Singleline or\nmultiline description text\n@another-tag"
 }]
 ```
 
 By default dotted names like `name.subname.subsubname` will be expanded into nested sections, this can be prevented by passing `opts.dotted_names = false`.
-
-You can also make raw line available in parsed results by passing `opts.raw_value = true`.
 
 Invalid comment blocks are skipped. Comments starting with `/*` and `/***` are considered not valid.
 
@@ -102,17 +108,18 @@ This would produce following:
 
 ```
 [{
-    "tags": [{
-        "errors": [
-          "check_tag: Unrecognized tag \"tag\""
-        ],
-        "type": "",
-        "name": "",
-        "description": "",
-        "line": 2
-    }],
-    "line": 1,
-    "description": "Source to be parsed below"
+  "tags": [{
+    "tag": "tag",
+    "type": "type",
+    "name": "name",
+    "optional": false,
+    "description": "Description",
+    "line": 2,
+    "source": "@tag {type} name Description"
+  }],
+  "line": 0,
+  "description": "Source to be parsed below",
+  "source": "Source to be parsed below\n@tag {type} name Description"
 }]
 ```
 
