@@ -93,15 +93,17 @@ parse(source, {parsers: [
 	function check_tag(str, data) {
 		if (allowed_tags.indexOf(data.tag) === -1) { 
 			throw new Error('Unrecognized tag "' + data.tag + '"');
-		}				},
+		}			
+	},
 	// takes the rest of the string after ' @tag''
 	function parse_name1(str, data) { 
-		return {source: ' name', data: {name: 'name'}}; 
+		return {source: ' name', data: {name: 'name1'}}; 
 	},
 	// alternative name parser
 	function parse_name2(str, data) { 
-		return {source: ' name', data: {name: 'name'}}; 
-	}	]});
+		return {source: ' name', data: {name: 'name2'}}; 
+	}	
+]});
 ```
 
 This would produce following:
@@ -110,10 +112,13 @@ This would produce following:
 [{
   "tags": [{
     "tag": "tag",
-    "type": "type",
-    "name": "name",
+    "errors": [
+      "check_tag: Unrecognized tag \\"tag\\""
+    ],
+    "name": "name2",
     "optional": false,
-    "description": "Description",
+    "type": "",
+    "description": "",
     "line": 2,
     "source": "@tag {type} name Description"
   }],
