@@ -384,12 +384,17 @@ module.exports.PARSERS = PARSERS;
 
 module.exports.file = function file(file_path, done) {
 
+  var opts = {};
   var collected = [];
+
+  if (arguments.length === 3) {
+    opts = done;
+    done = arguments[2];
+  }
 
   return fs.createReadStream(file_path, {encoding: 'utf8'})
     .on('error', done)
-
-    .pipe(new Parser())
+    .pipe(new Parser(opts))
     .on('error', done)
     .on('data', function(data) {
       collected.push(data);
