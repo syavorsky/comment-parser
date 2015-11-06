@@ -6,7 +6,9 @@
   "directories": {
     "test": "tests"
   },
-  "dependencies": {},
+  "dependencies": {
+    "readable-stream": "^2.0.4"
+  },
   "devDependencies": {
     "chai": "~1.9.0",
     "jshint": "^2.5.10",

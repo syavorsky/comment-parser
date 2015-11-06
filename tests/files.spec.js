@@ -1,6 +1,6 @@
 
 var fs     = require('fs');
-var stream = require('stream');
+var stream = require('readable-stream');
 var expect = require('chai').expect
 var parse  = require('../index');
 

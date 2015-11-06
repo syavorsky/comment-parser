@@ -2,7 +2,7 @@
 'use strict';
 
 var fs     = require('fs');
-var stream = require('stream');
+var stream = require('readable-stream');
 var util   = require('util');
 
 var RE_COMMENT_START = /^\s*\/\*\*\s*$/m;
@@ -193,7 +193,7 @@ function parse_block(source, opts) {
   source = source
     .reduce(function(tags, line) {
       line.source = line.source.trim();
-      
+
       if (line.source.match(/^@(\w+)/)) { 
         tags.push({source: [line.source], line: line.number});
       } else {
@@ -264,10 +264,10 @@ function parse_block(source, opts) {
 
     return tags.concat(tag_node);
   }, []);
-  
+
   // console.log('-----------');
   // console.log(description, tags);
-  
+
   return {
     tags        : tags,
     line        : start,
