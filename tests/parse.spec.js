@@ -132,6 +132,28 @@ describe('Comment string parsing', function() {
       .to.eq(0);
   });
 
+  it('should preserve indentation with `opts.preserve_indent = true`', function() {
+    expect(parsed(function(){
+      /**
+       *
+       * 
+       *   Description first line
+       *     second line
+       * 
+       *       third line
+       */
+      var a;
+    }, {
+      preserve_indent : true
+    })[0])
+      .eql({
+        description : '  Description first line\n    second line\n\n      third line',
+        source      : '  Description first line\n    second line\n\n      third line',
+        line        : 1,
+        tags        : []
+      });
+  });
+
   it('should parse one line block with tag', function() {
     expect(parsed(function(){
       /** @tag */
@@ -426,7 +448,7 @@ describe('Comment string parsing', function() {
         });
   });
 
-  it('should parse optionalrest names `@tag [...name] desc`', function() {
+  it('should parse optional rest names `@tag [...name] desc`', function() {
       expect(parsed(function(){
         /**
          * @tag {t} [...name] desc

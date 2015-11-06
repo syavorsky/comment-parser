@@ -6,7 +6,7 @@ var stream = require('stream');
 var util   = require('util');
 
 var RE_COMMENT_START = /^\s*\/\*\*\s*$/m;
-var RE_COMMENT_LINE  = /^\s*\*(?:\s|$)/m;
+var RE_COMMENT_LINE  = /^\s*\*(?:\s(\s*)|$)/m;
 var RE_COMMENT_END   = /^\s*\*\/\s*$/m;
 var RE_COMMENT_1LINE = /^\s*\/\*\*\s*(.*)\s*\*\/\s*$/;
 
@@ -181,10 +181,20 @@ function parse_tag(str, parsers) {
  */
 function parse_block(source, opts) {
 
+  function trim(s) {
+    if (opts.preserve_indent) {
+      // preserve spaces on left but trim line breaks if any
+      return s.trimRight().replace(/^\n+/, '');
+    } else {
+      return s.trim();
+    }
+  }
+
   var source_str = source
       .map(function(line) { return line.source; })
-      .join('\n')
-      .trim();
+      .join('\n');
+
+  source_str = trim(source_str);
 
   var start = source[0].number;
 
@@ -192,9 +202,9 @@ function parse_block(source, opts) {
   // we assume tag starts with "@"
   source = source
     .reduce(function(tags, line) {
-      line.source = line.source.trim();
-      
-      if (line.source.match(/^@(\w+)/)) { 
+      line.source = trim(line.source);
+
+      if (line.source.match(/^\s*@(\w+)/)) { 
         tags.push({source: [line.source], line: line.number});
       } else {
         var tag = tags[tags.length - 1];
@@ -204,7 +214,7 @@ function parse_block(source, opts) {
       return tags;
     }, [{source: []}])
     .map(function(tag) {
-      tag.source = tag.source.join('\n').trim();
+      tag.source = trim(tag.source.join('\n'));
       return tag;
     });
 
@@ -316,7 +326,10 @@ function mkextract(opts) {
     if (chunk && line.match(RE_COMMENT_LINE)) {
       // console.log('line (2)', line);
       // console.log('  clean:', line.replace(RE_COMMENT_LINE, ''));
-      chunk.push({source: line.replace(RE_COMMENT_LINE, ''), number: number - 1});
+      chunk.push({
+        number: number - 1,
+        source: line.replace(RE_COMMENT_LINE, opts.preserve_indent ? '$1' : '')
+      });
       return null;
     }
 
