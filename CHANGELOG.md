@@ -1,3 +1,14 @@
+# v0.3.1
+- use `readable-stream` fro Node 0.8 comatibility
+- allow to pass optional parameters to `parse.file(path [,opts], done)`  
+- allow `parse.stream` to work with Buffers in addition to strings
+
+# v0.3.0
+- `feature` allow to use custom parsers
+- `feature` always include source, no `raw_value` option needed
+- `bugfix` always provide `optional` tag property
+- `refactor` clean up tests
+
 # v0.2.3
 
 - `bugfix` Accept `/** one line */` comments
