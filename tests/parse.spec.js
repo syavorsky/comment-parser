@@ -132,7 +132,7 @@ describe('Comment string parsing', function() {
       .to.eq(0);
   });
 
-  it('should preserve indentation with `opts.preserve_indent = true`', function() {
+  it.skip('should preserve indentation with `opts.preserve_indent = true`', function() {
     expect(parsed(function(){
       /**
        *

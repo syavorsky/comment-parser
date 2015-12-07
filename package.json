@@ -18,7 +18,7 @@
   },
   "scripts": {
     "test": "jshint --reporter node_modules/jshint-stylish/stylish.js index.js && mocha tests/*",
-    "watch": "nodemon -q -w index.js -w tests/ -x npm test"
+    "watch": "nodemon -q -w index.js -w parser.js -w tests/ -x npm test"
   },
   "repository": {
     "type": "git",

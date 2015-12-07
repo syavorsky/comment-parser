@@ -173,12 +173,7 @@ function parse_tag(str, parsers) {
 function parse_block(source, opts) {
 
   function trim(s) {
-    if (opts.preserve_indent) {
-      // preserve spaces on left but trim line breaks if any
-      return s.trimRight().replace(/^\n+/, '');
-    } else {
-      return s.trim();
-    }
+    return opts.trim ? s.trim() : s;
   }
 
   var source_str = source
@@ -218,12 +213,7 @@ function parse_block(source, opts) {
   }
 
   var tags = source.reduce(function(tags, tag) {
-    var tag_node = parse_tag(tag.source, opts.parsers || [
-      PARSERS.parse_tag,
-      PARSERS.parse_type,
-      PARSERS.parse_name,
-      PARSERS.parse_description
-    ]);
+    var tag_node = parse_tag(tag.source, opts.parsers);
 
     if (!tag_node) { return tags; }
 
@@ -310,7 +300,7 @@ function mkextract(opts) {
     if (chunk && line.match(RE_COMMENT_LINE)) {
       chunk.push({
         number: number - 1,
-        source: line.replace(RE_COMMENT_LINE, opts.preserve_indent ? '$1' : '')
+        source: line.replace(RE_COMMENT_LINE, opts.trim ? '' : '$1')
       });
       return null;
     }
@@ -331,7 +321,16 @@ function mkextract(opts) {
 /* ------- Public API ------- */
 
 module.exports = function parse(source, opts) {
-  opts = opts || {};
+  opts = merge({}, {
+    trim         : true,
+    dotted_names : false,
+    parsers      : [
+      PARSERS.parse_tag,
+      PARSERS.parse_type,
+      PARSERS.parse_name,
+      PARSERS.parse_description
+    ]
+  }, opts || {});
 
   var block;
   var blocks  = [];
