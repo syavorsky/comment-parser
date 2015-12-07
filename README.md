@@ -1,5 +1,5 @@
-comment-parser
-==============
+# comment-parser
+
 
 Generic JSDoc-like comment parser. This library is not intended to be documentation generator, but rather composite unit for it.
 
@@ -70,8 +70,8 @@ Invalid comment blocks are skipped. Comments starting with `/*` and `/***` are c
 
 Also you can parse entire file with `parse.file('path/to/file', callback)` or acquire an instance of [Transform](http://nodejs.org/api/stream.html#stream_class_stream_transform) stream with `parse.stream()`.
 
-Custom parsers
-==============
+## Custom parsers
+
 
 In case you need to parse tags in different way you can pass `opts.parsers = [parser1, ..., parserN]`, where each parser is `function name(str:String, data:Object):{source:String, data:Object}`.
 	
@@ -128,11 +128,16 @@ This would produce following:
 }]
 ```
 
-Happy coding :)
+## Packaging
 
+`comment-parser` is CommonJS module and was primarely designed to be used with Node. Module `index.js` includes stream and file functionality. Use prser-only module in browser `comment-parser/parse.js`
 
-Contributors
-============
+## Contributors
+
 
 - [Sergii Iavorskyi](https://github.com/yavorskiy)
 - [Alexej Yaroshevich](https://github.com/zxqfox)
+- [Jordan Harband](https://github.com/ljharb)
+
+
+Happy coding :)
