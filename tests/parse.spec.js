@@ -132,7 +132,7 @@ describe('Comment string parsing', function() {
       .to.eq(0);
   });
 
-  it.skip('should preserve indentation with `opts.preserve_indent = true`', function() {
+  it('should preserve empty lines and indentation with `opts.trim = false`', function() {
     expect(parsed(function(){
       /**
        *
@@ -144,11 +144,11 @@ describe('Comment string parsing', function() {
        */
       var a;
     }, {
-      preserve_indent : true
+      trim: false
     })[0])
       .eql({
-        description : '  Description first line\n    second line\n\n      third line',
-        source      : '  Description first line\n    second line\n\n      third line',
+        description : '\n\n\n  Description first line\n    second line\n\n      third line\n',
+        source      : '\n\n\n  Description first line\n    second line\n\n      third line\n',
         line        : 1,
         tags        : []
       });

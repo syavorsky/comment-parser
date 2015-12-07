@@ -177,7 +177,7 @@ function parse_block(source, opts) {
   }
 
   var source_str = source
-      .map(function(line) { return line.source; })
+      .map(function(line) { return trim(line.source); })
       .join('\n');
 
   source_str = trim(source_str);
@@ -268,9 +268,19 @@ function parse_block(source, opts) {
  * Produces `extract` function with internal state initialized
  */
 function mkextract(opts) {
-
   var chunk = null;
   var number = 0;
+
+  opts = merge({}, {
+    trim         : true,
+    dotted_names : false,
+    parsers      : [
+      PARSERS.parse_tag,
+      PARSERS.parse_type,
+      PARSERS.parse_name,
+      PARSERS.parse_description
+    ]
+  }, opts || {});
 
   /**
    * Cumulatively reading lines until they make one comment block
@@ -321,17 +331,6 @@ function mkextract(opts) {
 /* ------- Public API ------- */
 
 module.exports = function parse(source, opts) {
-  opts = merge({}, {
-    trim         : true,
-    dotted_names : false,
-    parsers      : [
-      PARSERS.parse_tag,
-      PARSERS.parse_type,
-      PARSERS.parse_name,
-      PARSERS.parse_description
-    ]
-  }, opts || {});
-
   var block;
   var blocks  = [];
   var extract = mkextract(opts);
