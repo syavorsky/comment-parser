@@ -1,6 +1,6 @@
 
 var RE_COMMENT_START = /^\s*\/\*\*\s*$/m;
-var RE_COMMENT_LINE  = /^\s*\*(?:\s|$)/m;
+var RE_COMMENT_LINE  = /^\s*\*(?:\s(\s*)|$)/m;
 var RE_COMMENT_END   = /^\s*\*\/\s*$/m;
 var RE_COMMENT_1LINE = /^\s*\/\*\*\s*(.*)\s*\*\/\s*$/;
 
@@ -143,10 +143,7 @@ function parse_tag(str, parsers) {
 
     try {
       result = parser(state.source, merge({}, state.data));
-      // console.log('----------------');
-      // console.log(parser.name, ':', result);
     } catch (err) {
-      // console.warn('Parser "%s" failed: %s', parser.name, err.message);
       state.data.errors = (state.data.errors || [])
         .concat(parser.name + ': ' + err.message);
     }
@@ -175,10 +172,15 @@ function parse_tag(str, parsers) {
  */
 function parse_block(source, opts) {
 
+  function trim(s) {
+    return opts.trim ? s.trim() : s;
+  }
+
   var source_str = source
-      .map(function(line) { return line.source; })
-      .join('\n')
-      .trim();
+      .map(function(line) { return trim(line.source); })
+      .join('\n');
+
+  source_str = trim(source_str);
 
   var start = source[0].number;
 
@@ -186,9 +188,9 @@ function parse_block(source, opts) {
   // we assume tag starts with "@"
   source = source
     .reduce(function(tags, line) {
-      line.source = line.source.trim();
+      line.source = trim(line.source);
 
-      if (line.source.match(/^@(\w+)/)) { 
+      if (line.source.match(/^\s*@(\w+)/)) { 
         tags.push({source: [line.source], line: line.number});
       } else {
         var tag = tags[tags.length - 1];
@@ -198,7 +200,7 @@ function parse_block(source, opts) {
       return tags;
     }, [{source: []}])
     .map(function(tag) {
-      tag.source = tag.source.join('\n').trim();
+      tag.source = trim(tag.source.join('\n'));
       return tag;
     });
 
@@ -211,12 +213,7 @@ function parse_block(source, opts) {
   }
 
   var tags = source.reduce(function(tags, tag) {
-    var tag_node = parse_tag(tag.source, opts.parsers || [
-      PARSERS.parse_tag,
-      PARSERS.parse_type,
-      PARSERS.parse_name,
-      PARSERS.parse_description
-    ]);
+    var tag_node = parse_tag(tag.source, opts.parsers);
 
     if (!tag_node) { return tags; }
 
@@ -258,10 +255,7 @@ function parse_block(source, opts) {
 
     return tags.concat(tag_node);
   }, []);
-
-  // console.log('-----------');
-  // console.log(description, tags);
-
+  
   return {
     tags        : tags,
     line        : start,
@@ -274,9 +268,19 @@ function parse_block(source, opts) {
  * Produces `extract` function with internal state initialized
  */
 function mkextract(opts) {
-
   var chunk = null;
   var number = 0;
+
+  opts = merge({}, {
+    trim         : true,
+    dotted_names : false,
+    parsers      : [
+      PARSERS.parse_tag,
+      PARSERS.parse_type,
+      PARSERS.parse_name,
+      PARSERS.parse_description
+    ]
+  }, opts || {});
 
   /**
    * Cumulatively reading lines until they make one comment block
@@ -287,8 +291,6 @@ function mkextract(opts) {
     // if oneliner
     // then parse it immediately
     if (line.match(RE_COMMENT_1LINE)) {
-      // console.log('line (1)', line);
-      // console.log('  clean:', line.replace(RE_COMMENT_1LINE, '$1'));
       return parse_block([{
         source: line.replace(RE_COMMENT_1LINE, '$1'), 
         number: number}], opts);
@@ -299,8 +301,6 @@ function mkextract(opts) {
     // if start of comment
     // then init the chunk
     if (line.match(RE_COMMENT_START)) {
-      // console.log('line (1)', line);
-      // console.log('  clean:', line.replace(RE_COMMENT_START, ''));
       chunk = [{source: line.replace(RE_COMMENT_START, ''), number: number - 1}];
       return null;
     }
@@ -308,17 +308,16 @@ function mkextract(opts) {
     // if comment line and chunk started
     // then append
     if (chunk && line.match(RE_COMMENT_LINE)) {
-      // console.log('line (2)', line);
-      // console.log('  clean:', line.replace(RE_COMMENT_LINE, ''));
-      chunk.push({source: line.replace(RE_COMMENT_LINE, ''), number: number - 1});
+      chunk.push({
+        number: number - 1,
+        source: line.replace(RE_COMMENT_LINE, opts.trim ? '' : '$1')
+      });
       return null;
     }
 
     // if comment end and chunk started
     // then parse the chunk and push
     if (chunk && line.match(RE_COMMENT_END)) {
-      // console.log('line (3)', line);
-      // console.log('  clean:', line.replace(RE_COMMENT_END, ''));
       chunk.push({source: line.replace(RE_COMMENT_END, ''), number: number - 1});
       return parse_block(chunk, opts);
     }
@@ -332,8 +331,6 @@ function mkextract(opts) {
 /* ------- Public API ------- */
 
 module.exports = function parse(source, opts) {
-  opts = opts || {};
-
   var block;
   var blocks  = [];
   var extract = mkextract(opts);
