@@ -55,6 +55,38 @@ describe('Comment string parsing', function() {
       });
   });
 
+  it('should accept a description on the first line', function() {
+    expect(parsed(function(){
+      /** Description first line
+       *
+       * Description second line
+       */
+      var a;
+    })[0])
+      .eql({
+        description : 'Description first line\n\nDescription second line',
+        source      : 'Description first line\n\nDescription second line',
+        line        : 1,
+        tags        : []
+      });
+  });
+
+  it('should accept comment close on a non-empty', function() {
+    expect(parsed(function(){
+      /**
+       * Description first line
+       *
+       * Description second line */
+      var a;
+    })[0])
+      .eql({
+        description : 'Description first line\n\nDescription second line',
+        source      : 'Description first line\n\nDescription second line',
+        line        : 1,
+        tags        : []
+      });
+  });
+
   it('should skip empty blocks', function() {
 
     expect(parsed(function(){

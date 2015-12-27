@@ -1,7 +1,8 @@
 
-var RE_COMMENT_START = /^\s*\/\*\*\s*$/m;
+var RE_COMMENT_START = /^\s*\/\*\*\s*/m;
 var RE_COMMENT_LINE  = /^\s*\*(?:\s(\s*)|$)/m;
 var RE_COMMENT_END   = /^\s*\*\/\s*$/m;
+var RE_COMMENT_JEND  = /^\s*\*\s*(.*)\s*\*\/\s*$/m;
 var RE_COMMENT_1LINE = /^\s*\/\*\*\s*(.*)\s*\*\/\s*$/;
 
 /* ------- util functions ------- */
@@ -303,6 +304,13 @@ function mkextract(opts) {
     if (line.match(RE_COMMENT_START)) {
       chunk = [{source: line.replace(RE_COMMENT_START, ''), number: number - 1}];
       return null;
+    }
+
+    // if comment line with joined end and chunk started
+    // then append and parse
+    if (chunk && line.match(RE_COMMENT_JEND)) {
+      chunk.push({source: line.replace(RE_COMMENT_JEND, '$1'), number: number - 1});
+      return parse_block(chunk, opts);
     }
 
     // if comment line and chunk started
