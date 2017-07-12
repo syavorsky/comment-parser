@@ -1,3 +1,6 @@
+# v0.3.2
+- fix RegExp for `description` extraction to allow $ char
+
 # v0.3.1
 - use `readable-stream` fro Node 0.8 comatibility
 - allow to pass optional parameters to `parse.file(path [,opts], done)`  
