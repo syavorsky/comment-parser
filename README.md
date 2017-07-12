@@ -74,7 +74,7 @@ Also you can parse entire file with `parse.file('path/to/file', callback)` or ac
 
 
 In case you need to parse tags in different way you can pass `opts.parsers = [parser1, ..., parserN]`, where each parser is `function name(str:String, data:Object):{source:String, data:Object}`.
-	
+
 Each parser function takes string left after previous parsers applied and data produced by them. And returns `null` or `{source: '', data:{}}` where `source` is consumed substring and `data` is a payload with tag node fields.
 
 Tag node data is build by merging result bits from all parsers. Here is some example that is not doing actual parsing but is demonstrating the flow:
@@ -86,23 +86,23 @@ Tag node data is build by merging result bits from all parsers. Here is some exa
  */
 parse(source, {parsers: [
 	// takes entire string
-	function parse_tag(str, data) { 
-		return {source: ' @tag', data: {tag: 'tag'}}; 
-	}, 
+	function parse_tag(str, data) {
+		return {source: ' @tag', data: {tag: 'tag'}};
+	},
 	// parser throwing exception
 	function check_tag(str, data) {
-		if (allowed_tags.indexOf(data.tag) === -1) { 
+		if (allowed_tags.indexOf(data.tag) === -1) {
 			throw new Error('Unrecognized tag "' + data.tag + '"');
 		}			
 	},
 	// takes the rest of the string after ' @tag''
-	function parse_name1(str, data) { 
-		return {source: ' name', data: {name: 'name1'}}; 
+	function parse_name1(str, data) {
+		return {source: ' name', data: {name: 'name1'}};
 	},
 	// alternative name parser
-	function parse_name2(str, data) { 
-		return {source: ' name', data: {name: 'name2'}}; 
-	}	
+	function parse_name2(str, data) {
+		return {source: ' name', data: {name: 'name2'}};
+	}
 ]});
 ```
 
@@ -135,9 +135,10 @@ This would produce following:
 ## Contributors
 
 
-- [Sergii Iavorskyi](https://github.com/yavorskiy)
 - [Alexej Yaroshevich](https://github.com/zxqfox)
+- [Evgeny Reznichenko](https://github.com/zxcabs)
 - [Jordan Harband](https://github.com/ljharb)
+- [Sergii Iavorskyi](https://github.com/yavorskiy)
 
 
 Happy coding :)
