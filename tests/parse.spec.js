@@ -10,7 +10,7 @@ describe('Comment string parsing', function() {
    * 0 function() {
    * 1  // source with comments
    * 2 }
-   * 
+   *
    */
 
   function parsed(func, opts) {
@@ -39,11 +39,11 @@ describe('Comment string parsing', function() {
     expect(parsed(function(){
       /**
        *
-       * 
+       *
        * Description first line
        *
        * Description second line
-       * 
+       *
        */
       var a;
     })[0])
@@ -59,7 +59,7 @@ describe('Comment string parsing', function() {
 
     expect(parsed(function(){
       /**
-       * 
+       *
        */
       var a;
     }).length)
@@ -136,10 +136,10 @@ describe('Comment string parsing', function() {
     expect(parsed(function(){
       /**
        *
-       * 
+       *
        *   Description first line
        *     second line
-       * 
+       *
        *       third line
        */
       var a;
@@ -178,7 +178,7 @@ describe('Comment string parsing', function() {
   it('should parse `@tag`', function() {
       expect(parsed(function(){
         /**
-         * 
+         *
          * @my-tag
          */
         var a;
@@ -252,14 +252,14 @@ describe('Comment string parsing', function() {
       })[0])
         .to.eql({
           line        : 1,
-          source      : '@my-tag {my.type} name',    
+          source      : '@my-tag {my.type} name',
           description : '',
           tags: [{
             tag         : 'my-tag',
             line        : 2,
             type        : 'my.type',
             name        : 'name',
-            source      : '@my-tag {my.type} name',    
+            source      : '@my-tag {my.type} name',
             description : '',
             optional    : false
           }]
@@ -281,7 +281,7 @@ describe('Comment string parsing', function() {
             line        : 2,
             type        : 'my.type',
             name        : 'name',
-            source      : '@my-tag {my.type} name description',    
+            source      : '@my-tag {my.type} name description',
             description : 'description',
             optional    : false
           }]
@@ -588,5 +588,27 @@ describe('Comment string parsing', function() {
             errors      : ['parse_type: Invalid `{type}`, unpaired curlies']
           }]
         });
+  });
+
+  it('parses $ in description`', function() {
+    expect(parsed(function(){
+      /**
+       * @my-tag {String} name description with $ char
+       */
+    })[0])
+      .to.eql({
+        line        : 1,
+        source      : '@my-tag {String} name description with $ char',
+        description : '',
+        tags: [{
+          tag         : 'my-tag',
+          line        : 2,
+          type        : 'String',
+          name        : 'name',
+          source      : '@my-tag {String} name description with $ char',
+          optional    : false,
+          description : 'description with $ char'
+        }]
+      });
   });
 });
