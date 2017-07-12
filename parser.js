@@ -115,7 +115,7 @@ PARSERS.parse_name = function parse_name(str, data) {
 PARSERS.parse_description = function parse_description(str, data) {
   if (data.errors && data.errors.length) { return null; }
 
-  var result = str.match(/^\s+([^$]+)?/);
+  var result = str.match(/^\s+((.|\s)+)?/);
 
   if (result) {
     return {
