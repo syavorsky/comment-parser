@@ -11,14 +11,19 @@
   },
   "devDependencies": {
     "chai": "~1.9.0",
-    "jshint": "^2.5.10",
-    "jshint-stylish": "^1.0.0",
-    "mocha": "~1.17.1",
+    "eslint": "^4.7.1",
+    "eslint-config-standard": "^10.2.1",
+    "eslint-plugin-import": "^2.7.0",
+    "eslint-plugin-node": "^5.1.1",
+    "eslint-plugin-promise": "^3.5.0",
+    "eslint-plugin-standard": "^3.0.1",
+    "mocha": "^3.5.3",
     "nodemon": "^1.2.1"
   },
   "scripts": {
-    "test": "jshint --reporter node_modules/jshint-stylish/stylish.js index.js && mocha tests/*",
-    "watch": "nodemon -q -w index.js -w parser.js -w tests/ -x npm test"
+    "pretest": "eslint .",
+    "test": "mocha tests",
+    "watch": "nodemon -q -i node_modules -x npm test"
   },
   "repository": {
     "type": "git",

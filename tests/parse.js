@@ -7,12 +7,12 @@
  * 
  */
 
-var parse = require('../index');
+var parse = require('../index')
 
-module.exports = function(func, opts) {
-  var str = func.toString();
+module.exports = function (func, opts) {
+  var str = func.toString()
   return parse(str.slice(
     str.indexOf('{') + 1,
     str.lastIndexOf('}')
-  ), opts);
-};
+  ), opts)
+}
