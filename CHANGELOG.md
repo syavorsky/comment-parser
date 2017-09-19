@@ -1,3 +1,6 @@
+# v0.4.1
+- refactored parsing, allow to not start lines with "* " inside block
+
 # v0.3.2
 - fix RegExp for `description` extraction to allow $ char
 
