@@ -66,7 +66,29 @@ this would be parsed into following
 
 By default dotted names like `name.subname.subsubname` will be expanded into nested sections, this can be prevented by passing `opts.dotted_names = false`.
 
-Invalid comment blocks are skipped. Comments starting with `/*` and `/***` are considered not valid.
+Below are examples of acceptable comment formats
+
+```
+/** online comment */
+
+/** first line
+ * second line */
+
+/**
+   No *s on middle lines is acceptable too
+   which might be convenient for writing big
+   chunks of text.
+
+ * keeping *s on some lines
+ * would work either
+
+   left bound is dermined by opening marker position
+   and white space will be trimmed as there was '* '
+ */
+
+```
+
+Comments starting with `/***` and `/*` are ignored.
 
 Also you can parse entire file with `parse.file('path/to/file', callback)` or acquire an instance of [Transform](http://nodejs.org/api/stream.html#stream_class_stream_transform) stream with `parse.stream()`.
 
@@ -134,11 +156,7 @@ This would produce following:
 
 ## Contributors
 
-
 - [Alexej Yaroshevich](https://github.com/zxqfox)
 - [Evgeny Reznichenko](https://github.com/zxcabs)
 - [Jordan Harband](https://github.com/ljharb)
 - [Sergii Iavorskyi](https://github.com/yavorskiy)
-
-
-Happy coding :)

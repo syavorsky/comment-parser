@@ -1,8 +1,9 @@
 
-var RE_COMMENT_START = /^\s*\/\*\*\s*$/m;
-var RE_COMMENT_LINE  = /^\s*\*(?:\s(\s*)|$)/m;
-var RE_COMMENT_END   = /^\s*\*\/\s*$/m;
-var RE_COMMENT_1LINE = /^\s*\/\*\*\s*(.*)\s*\*\/\s*$/;
+var PARSERS = require('./parsers');
+
+var MARKER_START = '/**';
+var MARKER_START_SKIP = '/***';
+var MARKER_END   = '*/';
 
 /* ------- util functions ------- */
 
@@ -27,105 +28,6 @@ function find(list, filter) {
   }
   return null;
 }
-
-function skipws(str) {
-  var i = 0;
-  do {
-    if (str[i] !== ' ') { return i; }
-  } while (++i < str.length);
-  return i;
-}
-
-/* ------- default parsers ------- */
-
-var PARSERS = {};
-
-PARSERS.parse_tag = function parse_tag(str) {
-  var result = str.match(/^\s*@(\S+)/);
-
-  if (!result) { throw new Error('Invalid `@tag`, missing @ symbol'); }
-
-  return {
-    source : result[0],
-    data   : {tag: result[1]}
-  };
-};
-
-PARSERS.parse_type = function parse_type(str, data) {
-  if (data.errors && data.errors.length) { return null; }
-
-  var pos = skipws(str);
-  var res = '';
-  var curlies = 0;
-
-  if (str[pos] !== '{') { return null; }
-
-  while (pos < str.length) {
-    curlies += (str[pos] === '{' ? 1 : (str[pos] === '}' ? -1 : 0));
-    res += str[pos];
-    pos ++;
-    if (curlies === 0) { break; }
-  }
-
-  if (curlies !== 0) { throw new Error('Invalid `{type}`, unpaired curlies'); }
-
-  return {
-    source : str.slice(0, pos),
-    data   : {type: res.slice(1, -1)}
-  };
-};
-
-PARSERS.parse_name = function parse_name(str, data) {
-  if (data.errors && data.errors.length) { return null; }
-
-  var pos      = skipws(str);
-  var name     = '';
-  var brackets = 0;
-
-  while (pos < str.length) {
-    brackets += (str[pos] === '[' ? 1 : (str[pos] === ']' ? -1 : 0));
-    name += str[pos];
-    pos ++;
-    if (brackets === 0 && /\s/.test(str[pos])) { break; }
-  }
-
-  if (brackets !== 0) { throw new Error('Invalid `name`, unpaired brackets'); }
-
-  var res = {name: name, optional: false};
-
-  if (name[0] === '[' && name[name.length - 1] === ']') {
-    res.optional = true;
-    name = name.slice(1, -1);
-
-    if (name.indexOf('=') !== -1) {
-      var parts = name.split('=');
-      name = parts[0];
-      res.default = parts[1].replace(/^(["'])(.+)(\1)$/, '$2');
-    }
-  }
-
-  res.name = name;
-
-  return {
-    source : str.slice(0, pos),
-    data   : res
-  };
-};
-
-PARSERS.parse_description = function parse_description(str, data) {
-  if (data.errors && data.errors.length) { return null; }
-
-  var result = str.match(/^\s+((.|\s)+)?/);
-
-  if (result) {
-    return {
-      source : result[0],
-      data   : {description: result[1] === undefined ? '' : result[1]}
-    };
-  }
-
-  return null;
-};
 
 /* ------- parsing ------- */
 
@@ -190,7 +92,7 @@ function parse_block(source, opts) {
     .reduce(function(tags, line) {
       line.source = trim(line.source);
 
-      if (line.source.match(/^\s*@(\w+)/)) { 
+      if (line.source.match(/^\s*@(\w+)/)) {
         tags.push({source: [line.source], line: line.number});
       } else {
         var tag = tags[tags.length - 1];
@@ -208,8 +110,8 @@ function parse_block(source, opts) {
   var description = source.shift();
 
   // skip if no descriptions and no tags
-  if (description.source === '' && source.length === 0) { 
-    return null; 
+  if (description.source === '' && source.length === 0) {
+    return null;
   }
 
   var tags = source.reduce(function(tags, tag) {
@@ -255,7 +157,7 @@ function parse_block(source, opts) {
 
     return tags.concat(tag_node);
   }, []);
-  
+
   return {
     tags        : tags,
     line        : start,
@@ -268,7 +170,8 @@ function parse_block(source, opts) {
  * Produces `extract` function with internal state initialized
  */
 function mkextract(opts) {
-  var chunk = null;
+  var chunk  = null;
+  var indent = 0;
   var number = 0;
 
   opts = merge({}, {
@@ -283,48 +186,39 @@ function mkextract(opts) {
   }, opts || {});
 
   /**
-   * Cumulatively reading lines until they make one comment block
-   * Returns block object or null.
+   * Read lines until they make a block
+   * Return parsed block once fullfilled or null otherwise
    */
   return function extract(line) {
 
-    // if oneliner
-    // then parse it immediately
-    if (line.match(RE_COMMENT_1LINE)) {
-      return parse_block([{
-        source: line.replace(RE_COMMENT_1LINE, '$1'), 
-        number: number}], opts);
+    var result   = null;
+    var startPos = line.indexOf(MARKER_START);
+    var endPos   = line.indexOf(MARKER_END);
+
+    // if open marker detected and it's not skip one
+    if (startPos !== -1 && line.indexOf(MARKER_START_SKIP) !== startPos) {
+      chunk  = [];
+      indent = startPos + MARKER_START.length;
+    }
+
+    // if we are on middle of comment block
+    if (chunk) {
+      // slice the line until end or until closing marker start
+      chunk = chunk.concat({
+        number : number,
+        source : line.slice(indent, endPos === -1 ? line.length : endPos)
+      });
+
+      // finalize block if end marker detected
+      if (endPos !== -1) {
+        result = parse_block(chunk, opts);
+        chunk  = null;
+        indent = 0;
+      }
     }
 
     number += 1;
-
-    // if start of comment
-    // then init the chunk
-    if (line.match(RE_COMMENT_START)) {
-      chunk = [{source: line.replace(RE_COMMENT_START, ''), number: number - 1}];
-      return null;
-    }
-
-    // if comment line and chunk started
-    // then append
-    if (chunk && line.match(RE_COMMENT_LINE)) {
-      chunk.push({
-        number: number - 1,
-        source: line.replace(RE_COMMENT_LINE, opts.trim ? '' : '$1')
-      });
-      return null;
-    }
-
-    // if comment end and chunk started
-    // then parse the chunk and push
-    if (chunk && line.match(RE_COMMENT_END)) {
-      chunk.push({source: line.replace(RE_COMMENT_END, ''), number: number - 1});
-      return parse_block(chunk, opts);
-    }
-
-    // if non-comment line
-    // then reset the chunk
-    chunk = null;
+    return result;
   };
 }
 

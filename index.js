@@ -1,11 +1,11 @@
 
 'use strict';
 
-var fs     = require('fs');
-var stream = require('readable-stream');
-var util   = require('util');
+var fs      = require('fs');
+var stream  = require('readable-stream');
+var util    = require('util');
 
-var parse  = require('./parser.js');
+var parse   = require('./parser');
 
 module.exports = parse;
 
@@ -61,4 +61,3 @@ module.exports.file = function file(file_path, done) {
       done(null, collected);
     });
 };
-

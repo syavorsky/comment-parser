@@ -1,16 +1,8 @@
 var fs = require('fs');
 var expect = require('chai').expect;
-var parse = require('../index');
+var parse = require('./parse');
 
 describe('parse() with custom tag parsers', function() {
-
-  function parsed(func, opts) {
-    var str = func.toString();
-    return parse(str.slice(
-      str.indexOf('{') + 1,
-      str.lastIndexOf('}')
-    ).trim(), opts);
-  }
 
   function sample() {
     /**
@@ -35,9 +27,9 @@ describe('parse() with custom tag parsers', function() {
       }
     ];
 
-    expect(parsed(sample, {parsers: parsers})[0])
+    expect(parse(sample, {parsers: parsers})[0])
       .to.eql({
-        line        : 0,
+        line        : 1,
         description : '',
         source      : '@tag {type} name description',
         tags: [{
@@ -47,7 +39,7 @@ describe('parse() with custom tag parsers', function() {
           description : 'description',
           optional    : false,
           source      : '@tag {type} name description',
-          line        : 1
+          line        : 2
         }]
       });
   });
@@ -77,9 +69,9 @@ describe('parse() with custom tag parsers', function() {
       }
     ];
 
-    expect(parsed(sample, {parsers: parsers})[0])
+    expect(parse(sample, {parsers: parsers})[0])
       .to.eql({
-        line        : 0,
+        line        : 1,
         description : '',
         source      : '@tag {type} name description',
         tags: [{
@@ -89,7 +81,7 @@ describe('parse() with custom tag parsers', function() {
           description : 'description',
           optional    : false,
           source      : '@tag {type} name description',
-          line        : 1
+          line        : 2
         }]
       });
   });
@@ -116,9 +108,9 @@ describe('parse() with custom tag parsers', function() {
       },
     ];
 
-    expect(parsed(sample, {parsers: parsers})[0])
+    expect(parse(sample, {parsers: parsers})[0])
       .to.eql({
-        line        : 0,
+        line        : 1,
         description : '',
         source      : '@tag {type} name description',
         tags: [{
@@ -132,7 +124,7 @@ describe('parse() with custom tag parsers', function() {
             'parser2: error 1',
             'parser3: error 2'
           ],
-          line   : 1
+          line   : 2
         }]
       });
   });
