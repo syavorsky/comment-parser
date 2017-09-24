@@ -689,4 +689,100 @@ describe('Comment string parsing', function () {
         }]
       })
   })
+
+  it('should parse doc block with bound forced to the left', function () {
+    expect(parse(function () {
+      /**
+   * Description text
+   * @tag tagname Tag description
+   */
+    })[0])
+      .to.eql({
+        description: 'Description text',
+        source: 'Description text\n@tag tagname Tag description',
+        line: 1,
+        tags: [{
+          tag: 'tag',
+          name: 'tagname',
+          optional: false,
+          description: 'Tag description',
+          type: '',
+          line: 3,
+          source: '@tag tagname Tag description'
+        }]
+      })
+  })
+
+  it('should parse doc block with bound forced to the right', function () {
+    expect(parse(function () {
+      /**
+           * Description text
+           * @tag tagname Tag description
+           */
+    })[0])
+      .to.eql({
+        description: 'Description text',
+        source: 'Description text\n@tag tagname Tag description',
+        line: 1,
+        tags: [{
+          tag: 'tag',
+          name: 'tagname',
+          optional: false,
+          description: 'Tag description',
+          type: '',
+          line: 3,
+          source: '@tag tagname Tag description'
+        }]
+      })
+  })
+
+  it('should parse doc block with soft bound', function () {
+    expect(parse(function () {
+      /**
+   Description text
+           another line
+   @tag tagname Tag description
+   */
+    })[0])
+      .to.eql({
+        description: 'Description text\nanother line',
+        source: 'Description text\nanother line\n@tag tagname Tag description',
+        line: 1,
+        tags: [{
+          tag: 'tag',
+          name: 'tagname',
+          optional: false,
+          description: 'Tag description',
+          type: '',
+          line: 4,
+          source: '@tag tagname Tag description'
+        }]
+      })
+  })
+
+  it('should parse doc block with soft bound respecting `opts.trim = false`', function () {
+    expect(parse(function () {
+      /**
+   Description text
+           another line
+   @tag tagname Tag description
+   */
+    }, {
+      trim: false
+    })[0])
+      .to.eql({
+        description: '\nDescription text\n  another line',
+        source: '\nDescription text\n  another line\n@tag tagname Tag description\n',
+        line: 1,
+        tags: [{
+          tag: 'tag',
+          name: 'tagname',
+          optional: false,
+          description: 'Tag description\n',
+          type: '',
+          line: 4,
+          source: '@tag tagname Tag description\n'
+        }]
+      })
+  })
 })

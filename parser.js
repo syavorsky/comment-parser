@@ -12,8 +12,8 @@ function merge (/* ...objects */) {
   var res = {}
   var objs = Array.prototype.slice.call(arguments)
 
-  while (objs.length) {
-    obj = objs.shift()
+  for (var i = 0, l = objs.length; i < l; i++) {
+    obj = objs[i]
     for (k in obj) {
       if (obj.hasOwnProperty(k)) {
         res[k] = obj[k]
@@ -83,9 +83,9 @@ function parse_tag (str, parsers) {
  * Parses comment block (array of String lines)
  */
 function parse_block (source, opts) {
-  function trim (s) {
-    return opts.trim ? s.trim() : s
-  }
+  var trim = opts.trim
+    ? function trim (s) { return s.trim() }
+    : function trim (s) { return s }
 
   var source_str = source
     .map(function (line) { return trim(line.source) })
@@ -211,10 +211,26 @@ function mkextract (opts) {
 
     // if we are on middle of comment block
     if (chunk) {
+      var lineStart = indent
+
+      // figure out if we slice from opening marker pos
+      // or line start is shifted to the left
+      var nonSpaceChar = line.match(/\S/)
+
+      // skip for the first line starting with /** (fresh chunk)
+      // it always has the right indentation
+      if (chunk.length > 0 && nonSpaceChar) {
+        if (nonSpaceChar[0] === '*') {
+          lineStart = nonSpaceChar.index + 2
+        } else if (nonSpaceChar.index < indent) {
+          lineStart = nonSpaceChar.index
+        }
+      }
+
       // slice the line until end or until closing marker start
-      chunk = chunk.concat({
+      chunk.push({
         number: number,
-        source: line.slice(indent, endPos === -1 ? line.length : endPos)
+        source: line.slice(lineStart, endPos === -1 ? line.length : endPos)
       })
 
       // finalize block if end marker detected
@@ -238,7 +254,7 @@ module.exports = function parse (source, opts) {
   var extract = mkextract(opts)
   var lines = source.split(/\n/)
 
-  while (lines.length) {
+  for (var i = 0, l = lines.length; i < l; i++) {
     block = extract(lines.shift())
     if (block) {
       blocks.push(block)
