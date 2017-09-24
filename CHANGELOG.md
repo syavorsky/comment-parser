@@ -1,3 +1,6 @@
+# v0.4.2
+- tolerate inconsistent lines alignment within block
+
 # v0.4.1
 - refactored parsing, allow to not start lines with "* " inside block
 
