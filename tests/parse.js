@@ -4,7 +4,7 @@
  * 0 function() {
  * 1  // source with comments
  * 2 }
- * 
+ *
  */
 
 var parse = require('../index')

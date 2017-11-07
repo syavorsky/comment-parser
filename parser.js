@@ -105,8 +105,8 @@ function parse_block (source, opts) {
         tags.push({source: [line.source], line: line.number})
       } else {
         var tag = tags[tags.length - 1]
-        if (opts.join !== undefined && opts.join !== false && opts.join !== 0
-            && !line.startWithStar && tag.source.length > 0) {
+        if (opts.join !== undefined && opts.join !== false && opts.join !== 0 &&
+            !line.startWithStar && tag.source.length > 0) {
           var source
           if (typeof opts.join === 'string') {
             source = opts.join + line.source.replace(/^\s+/, '')
