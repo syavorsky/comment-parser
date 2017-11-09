@@ -785,4 +785,83 @@ describe('Comment string parsing', function () {
         }]
       })
   })
+
+  it('should parse multiline without star as same line respecting `opts.join = true`', function () {
+    expect(parse(function () {
+      /**
+       * @tag name
+       * description
+         same line
+       */
+    }, {
+      join: true
+    })[0])
+      .to.eql({
+        line: 1,
+        description: '',
+        source: '@tag name\ndescription\nsame line',
+        tags: [{
+          tag: 'tag',
+          line: 2,
+          type: '',
+          name: 'name',
+          description: 'description same line',
+          source: '@tag name\ndescription same line',
+          optional: false
+        }]
+      })
+  })
+
+  it('should parse multiline without star as same line respecting `opts.join = "\\t"`', function () {
+    expect(parse(function () {
+      /**
+       * @tag name
+       * description
+         same line
+       */
+    }, {
+      join: '\t'
+    })[0])
+      .to.eql({
+        line: 1,
+        description: '',
+        source: '@tag name\ndescription\nsame line',
+        tags: [{
+          tag: 'tag',
+          line: 2,
+          type: '',
+          name: 'name',
+          description: 'description\tsame line',
+          source: '@tag name\ndescription\tsame line',
+          optional: false
+        }]
+      })
+  })
+
+  it('should parse multiline without star as same line with intent respecting `opts.join = 1` and `opts.trim = false`', function () {
+    expect(parse(function () {
+      /**
+       * @tag name
+       * description
+           intent same line
+       */
+    }, {
+      join: 1,
+      trim: false
+    })[0])
+      .to.eql({
+        line: 1,
+        description: '',
+        source: '\n@tag name\ndescription\n  intent same line\n',
+        tags: [{
+          tag: 'tag',
+          line: 2,
+          type: '',
+          name: 'name',
+          description: 'description  intent same line\n',
+          source: '@tag name\ndescription  intent same line\n',
+          optional: false
+        }]
+      })
+  })
 })

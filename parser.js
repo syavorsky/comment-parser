@@ -105,7 +105,20 @@ function parse_block (source, opts) {
         tags.push({source: [line.source], line: line.number})
       } else {
         var tag = tags[tags.length - 1]
-        tag.source.push(line.source)
+        if (opts.join !== undefined && opts.join !== false && opts.join !== 0 &&
+            !line.startWithStar && tag.source.length > 0) {
+          var source
+          if (typeof opts.join === 'string') {
+            source = opts.join + line.source.replace(/^\s+/, '')
+          } else if (typeof opts.join === 'number') {
+            source = line.source
+          } else {
+            source = ' ' + line.source.replace(/^\s+/, '')
+          }
+          tag.source[tag.source.length - 1] += source
+        } else {
+          tag.source.push(line.source)
+        }
       }
 
       return tags
@@ -212,6 +225,7 @@ function mkextract (opts) {
     // if we are on middle of comment block
     if (chunk) {
       var lineStart = indent
+      var startWithStar = false
 
       // figure out if we slice from opening marker pos
       // or line start is shifted to the left
@@ -222,6 +236,7 @@ function mkextract (opts) {
       if (chunk.length > 0 && nonSpaceChar) {
         if (nonSpaceChar[0] === '*') {
           lineStart = nonSpaceChar.index + 2
+          startWithStar = true
         } else if (nonSpaceChar.index < indent) {
           lineStart = nonSpaceChar.index
         }
@@ -230,6 +245,7 @@ function mkextract (opts) {
       // slice the line until end or until closing marker start
       chunk.push({
         number: number,
+        startWithStar: startWithStar,
         source: line.slice(lineStart, endPos === -1 ? line.length : endPos)
       })
 
