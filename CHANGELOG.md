@@ -1,3 +1,6 @@
+# v0.5.0
+- line wrapping control with `opts.join`
+
 # v0.4.2
 - tolerate inconsistent lines alignment within block
 
