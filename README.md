@@ -17,6 +17,7 @@ It is not trying to detect relations between tags or somehow recognize their mea
  * @some-tag {Type} name.subname Singleline or multiline description text
  * @some-tag {Type} name.subname.subsubname Singleline or
  * multiline description text
+ * @some-tag {Type} [optionalName=someDefault]
  * @another-tag
  */
 ```
@@ -50,12 +51,21 @@ this would be parsed into following
     "line": 5,
     "source": "@some-tag {Type} name.subname.subsubname Singleline or\nmultiline description text"
   }, {
+    "tag": "some-tag",
+    "type": "Type",
+    "name": "optionalName",
+    "optional": true,
+    "description": "",
+    "line": 7,
+    "default": "someDefault",
+    "source": "@some-tag {Type} [optionalName=someDefault]"
+  }, {
     "tag": "another-tag",
     "name": "",
     "optional": false,
     "type": "",
     "description": "",
-    "line": 7,
+    "line": 8,
     "source": "@another-tag"
   }],
   "line": 0,
