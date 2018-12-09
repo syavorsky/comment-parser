@@ -1,7 +1,7 @@
 function skipws (str) {
   var i = 0
   do {
-    if (str[i] !== ' ') { return i }
+    if (str[i] !== ' ' && str[i] !== '\t') { return i }
   } while (++i < str.length)
   return i
 }
