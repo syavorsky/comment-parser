@@ -1,6 +1,6 @@
 {
   "name": "comment-parser",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "description": "Generic JSDoc-like comment parser. ",
   "main": "index.js",
   "directories": {
@@ -35,6 +35,13 @@
     "parser"
   ],
   "author": "Sergii Iavorskyi <yavorskiy.s@gmail.com> (https://github.com/yavorskiy)",
+  "contributors": [
+    "Alexej Yaroshevich (https://github.com/zxqfox)",
+    "Dieter Oberkofler (https://github.com/doberkofler)",
+    "Evgeny Reznichenko (https://github.com/zxcabs)",
+    "Jordan Harband (https://github.com/ljharb)",
+    "tengattack (https://github.com/tengattack)"
+  ],
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/yavorskiy/comment-parser/issues"

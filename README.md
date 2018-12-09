@@ -166,8 +166,6 @@ This would produce following:
 
 ## Contributors
 
-- [Alexej Yaroshevich](https://github.com/zxqfox)
-- [Evgeny Reznichenko](https://github.com/zxcabs)
-- [Jordan Harband](https://github.com/ljharb)
-- [Sergii Iavorskyi](https://github.com/yavorskiy)
-- [tengattack](https://github.com/tengattack)
+```
+> npm info --registry https://registry.npmjs.org comment-parser contributors
+```

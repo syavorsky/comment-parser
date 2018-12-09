@@ -1,3 +1,7 @@
+# v0.5.1
+- Support for tab as separator between tag components.
+- Docs: Indicate when `optional` is `true`; `default` property
+
 # v0.5.0
 - line wrapping control with `opts.join`
 
