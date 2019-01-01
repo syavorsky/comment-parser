@@ -253,21 +253,6 @@ describe('Comment string parsing', function () {
       })
   })
 
-  it('should parse same line closing section', function () {
-    expect(parse(function () {
-      /** 
-       * Start here
-       * Here is more stuff */
-      var a
-    })[0])
-      .to.eql({
-        description: 'Start here\nHere is more stuff',
-        line: 1,
-        source: 'Start here\nHere is more stuff',
-        tags: []
-      })
-  })
-
   it('should parse `@tag`', function () {
     expect(parse(function () {
       /**
@@ -627,7 +612,7 @@ describe('Comment string parsing', function () {
        * @my-tag name.sub-name
        * @my-tag name.sub-name.sub-sub-name
        */
-    }, {dotted_names: true})[0])
+    }, { dotted_names: true })[0])
       .to.eql({
         line: 1,
         description: 'Description',
@@ -902,5 +887,67 @@ describe('Comment string parsing', function () {
           optional: false
         }]
       })
+  })
+
+  it('should parse same line closing section (issue #22)', function () {
+    expect(parse(function () {
+      /** 
+       * Start here
+       * Here is more stuff */
+      var a
+    })[0])
+      .to.eql({
+        description: 'Start here\nHere is more stuff',
+        line: 1,
+        source: 'Start here\nHere is more stuff',
+        tags: []
+      })
+  })
+
+  it('should tolerate inconsistent formatting (issue #29)', function () {
+    expect(parse(function () {
+      /**
+         * @param {Object} options 配置
+         * @return {Any} obj 组件返回的对象
+         * @example
+         * var widget = XX.showWidget('searchlist', {
+         *    onComplete: function() {
+         *          todoSomething();
+         *     }
+         * });
+     */
+    }, {
+      join: 1,
+      trim: false
+    })[0]).to.eql({
+      description: '',
+      line: 1,
+      source: "\n@param {Object} options 配置\n@return {Any} obj 组件返回的对象\n@example\nvar widget = XX.showWidget('searchlist', {\n   onComplete: function() {\n         todoSomething();\n    }\n});\n",
+      tags: [{
+        description: '配置',
+        line: 2,
+        name: 'options',
+        optional: false,
+        source: '@param {Object} options 配置',
+        tag: 'param',
+        type: 'Object'
+      }, {
+        description: '组件返回的对象',
+        line: 3,
+        name: 'obj',
+        optional: false,
+        source: '@return {Any} obj 组件返回的对象',
+        tag: 'return',
+        type: 'Any'
+      }, {
+        description: "widget = XX.showWidget('searchlist', {\n   onComplete: function() {\n         todoSomething();\n    }\n});\n",
+        line: 4,
+        name: '\nvar',
+        optional: false,
+        source: "@example\nvar widget = XX.showWidget('searchlist', {\n   onComplete: function() {\n         todoSomething();\n    }\n});\n",
+        tag: 'example',
+        type: ''
+      }]
+    })
   })
 })
