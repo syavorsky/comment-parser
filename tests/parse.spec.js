@@ -253,6 +253,21 @@ describe('Comment string parsing', function () {
       })
   })
 
+  it('should parse same line closing section', function () {
+    expect(parse(function () {
+      /** 
+       * Start here
+       * Here is more stuff */
+      var a
+    })[0])
+      .to.eql({
+        description: 'Start here\nHere is more stuff',
+        line: 1,
+        source: 'Start here\nHere is more stuff',
+        tags: []
+      })
+  })
+
   it('should parse `@tag`', function () {
     expect(parse(function () {
       /**
