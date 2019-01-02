@@ -891,7 +891,7 @@ describe('Comment string parsing', function () {
 
   it('should parse same line closing section (issue #22)', function () {
     expect(parse(function () {
-      /** 
+      /**
        * Start here
        * Here is more stuff */
       var a

@@ -2,7 +2,7 @@
 'use strict'
 
 var fs = require('fs')
-var stream = require('readable-stream')
+var stream = require('stream')
 var util = require('util')
 
 var parse = require('./parser')
