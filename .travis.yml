@@ -3,3 +3,8 @@ node_js:
   - "10"
   - "8"
   - "6"
+branches:
+  except:
+    - /^v\d+\.\d+\.\d+$/
+git:
+  depth: 1
