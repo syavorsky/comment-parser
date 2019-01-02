@@ -1,3 +1,7 @@
+# v0.5.2
+- added TypeScript definitions
+- removed `readable-stream` dependency
+
 # v0.5.1
 - Support for tab as separator between tag components.
 - Docs: Indicate when `optional` is `true`; `default` property
