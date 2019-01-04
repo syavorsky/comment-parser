@@ -3,6 +3,7 @@
   "version": "0.5.2",
   "description": "Generic JSDoc-like comment parser. ",
   "main": "index.js",
+  "types": "index.d.ts",
   "directories": {
     "test": "tests"
   },
