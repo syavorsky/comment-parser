@@ -3,13 +3,13 @@
 // Definitions by: Javier "Ciberman" Mora <https://github.com/jhm-ciberman/>
 
 declare namespace CommentParser {
-  interface Comment {
+  export interface Comment {
     tags: Tag[];
     line: number;
     description: string;
     source: string;
   }
-  interface Tag {
+  export interface Tag {
     tag: string;
     name: string;
     optional: boolean;
@@ -18,7 +18,7 @@ declare namespace CommentParser {
     line: number;
     source: string;
   }
-  interface Options {
+  export interface Options {
     parsers?: [(str: string, data: any) => { source: string, data: any }];
     dotted_names?: boolean;
   }
