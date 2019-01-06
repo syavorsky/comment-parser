@@ -1,3 +1,6 @@
+# v0.5.3
+- corrected TypeScript definitions
+
 # v0.5.2
 - added TypeScript definitions
 - removed `readable-stream` dependency
