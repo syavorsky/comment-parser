@@ -11,8 +11,8 @@ var parse = require('../index')
 
 module.exports = function (func, opts) {
   var str = func.toString()
-  return parse(str.slice(
-    str.indexOf('{') + 1,
-    str.lastIndexOf('}')
-  ), opts)
+  str = str
+    .slice(str.indexOf('{') + 1, str.lastIndexOf('}'))
+    .replace(/\r\n/g, '\n')
+  return parse(str, opts)
 }
