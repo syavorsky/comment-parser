@@ -51,26 +51,35 @@ PARSERS.parse_name = function parse_name (str, data) {
   var pos = skipws(str)
   var name = ''
   var brackets = 0
+  var res = {optional: false}
 
-  while (pos < str.length) {
-    brackets += (str[pos] === '[' ? 1 : (str[pos] === ']' ? -1 : 0))
-    name += str[pos]
-    pos++
-    if (brackets === 0 && /\s/.test(str[pos])) { break }
-  }
+  // if it starts with quoted group assume it is a literal
+  var quotedGroups = str.slice(pos).split('"')
+  if (quotedGroups.length > 1 && quotedGroups[0] === '' && quotedGroups.length % 2 === 1) {
+    name = quotedGroups[1]
+    pos += name.length + 2
+  // assume name is non-space string or anything wrapped into brackets
+  } else {
+    while (pos < str.length) {
+      brackets += (str[pos] === '[' ? 1 : (str[pos] === ']' ? -1 : 0))
+      name += str[pos]
+      pos++
+      if (brackets === 0 && /\s/.test(str[pos])) { break }
+    }
 
-  if (brackets !== 0) { throw new Error('Invalid `name`, unpaired brackets') }
+    if (brackets !== 0) { throw new Error('Invalid `name`, unpaired brackets') }
 
-  var res = {name: name, optional: false}
+    res = {name: name, optional: false}
 
-  if (name[0] === '[' && name[name.length - 1] === ']') {
-    res.optional = true
-    name = name.slice(1, -1)
+    if (name[0] === '[' && name[name.length - 1] === ']') {
+      res.optional = true
+      name = name.slice(1, -1)
 
-    if (name.indexOf('=') !== -1) {
-      var parts = name.split('=')
-      name = parts[0]
-      res.default = parts[1].replace(/^(["'])(.+)(\1)$/, '$2')
+      if (name.indexOf('=') !== -1) {
+        var parts = name.split('=')
+        name = parts[0]
+        res.default = parts[1].replace(/^(["'])(.+)(\1)$/, '$2')
+      }
     }
   }
 

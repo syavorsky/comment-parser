@@ -950,4 +950,92 @@ describe('Comment string parsing', function () {
       }]
     })
   })
+
+  it('should keep optional names spaces (issue #41)`', function () {
+    expect(parse(function () {
+      /**
+       * @section [Brand Colors] Here you can find all the brand colors
+       */
+    })[0])
+      .to.eql({
+        line: 1,
+        source: '@section [Brand Colors] Here you can find all the brand colors',
+        description: '',
+        tags: [{
+          tag: 'section',
+          line: 2,
+          type: '',
+          name: 'Brand Colors',
+          source: '@section [Brand Colors] Here you can find all the brand colors',
+          optional: true,
+          description: 'Here you can find all the brand colors'
+        }]
+      })
+  })
+
+  it('should keep quotes in description (issue #41)`', function () {
+    expect(parse(function () {
+      /**
+       * @section "Brand Colors" Here you can find all the brand colors
+       */
+    })[0])
+      .to.eql({
+        line: 1,
+        source: '@section "Brand Colors" Here you can find all the brand colors',
+        description: '',
+        tags: [{
+          tag: 'section',
+          line: 2,
+          type: '',
+          name: 'Brand Colors',
+          source: '@section "Brand Colors" Here you can find all the brand colors',
+          optional: false,
+          description: 'Here you can find all the brand colors'
+        }]
+      })
+  })
+
+  it('should use only quoted name (issue #41)`', function () {
+    expect(parse(function () {
+      /**
+       * @section "Brand Colors" Here you can find "all" the brand colors
+       */
+    })[0])
+      .to.eql({
+        line: 1,
+        source: '@section "Brand Colors" Here you can find "all" the brand colors',
+        description: '',
+        tags: [{
+          tag: 'section',
+          line: 2,
+          type: '',
+          name: 'Brand Colors',
+          source: '@section "Brand Colors" Here you can find "all" the brand colors',
+          optional: false,
+          description: 'Here you can find "all" the brand colors'
+        }]
+      })
+  })
+
+  it('should ignore inconsitent quoted groups (issue #41)`', function () {
+    expect(parse(function () {
+      /**
+       * @section "Brand Colors Here you can find all the brand colors
+       */
+    })[0])
+      .to.eql({
+        line: 1,
+        source: '@section "Brand Colors Here you can find all the brand colors',
+        description: '',
+        tags: [{
+          tag: 'section',
+          line: 2,
+          type: '',
+          name: '"Brand',
+          source: '@section "Brand Colors Here you can find all the brand colors',
+          optional: false,
+          description: 'Colors Here you can find all the brand colors'
+        }]
+      })
+  })
 })
