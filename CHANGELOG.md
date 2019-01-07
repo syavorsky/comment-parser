@@ -1,3 +1,6 @@
+# v0.5.4
+- allow quoted literal names, e.g. `@tag "My Var" description`
+
 # v0.5.3
 - corrected TypeScript definitions
 
