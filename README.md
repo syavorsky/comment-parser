@@ -9,7 +9,7 @@ Module provides `parse(s:String[, opts:Object]):Object` function which takes `/*
 
 It is not trying to detect relations between tags or somehow recognize their meaning. Any tag can be used, as long as it satisfies the format.
 
-```
+```javascript
 /**
  * Singleline or multiline description text. Line breaks are preserved.
  *
@@ -24,7 +24,7 @@ It is not trying to detect relations between tags or somehow recognize their mea
 
 this would be parsed into following
 
-```javascript
+```json
 [{
   "tags": [{
     "tag": "some-tag",
@@ -78,7 +78,7 @@ By default dotted names like `name.subname.subsubname` will be expanded into nes
 
 Below are examples of acceptable comment formats
 
-```
+```javascript
 /** online comment */
 
 /** first line
@@ -111,7 +111,7 @@ Each parser function takes string left after previous parsers applied and data p
 
 Tag node data is build by merging result bits from all parsers. Here is some example that is not doing actual parsing but is demonstrating the flow:
 
-```
+```javascript
 /**
  * Source to be parsed below
  * @tag {type} name Description
@@ -140,12 +140,12 @@ parse(source, {parsers: [
 
 This would produce following:
 
-```
+```json
 [{
   "tags": [{
     "tag": "tag",
     "errors": [
-      "check_tag: Unrecognized tag \\"tag\\""
+      "check_tag: Unrecognized tag \"tag\""
     ],
     "name": "name2",
     "optional": false,
