@@ -459,6 +459,47 @@ describe('Comment string parsing', function () {
       })
   })
 
+  it('should tolerate loose tag names', function () {
+    expect(parse(function () {
+      /**
+         Description text
+         @.tag0 tagname Tag 0 description
+         @-tag1 tagname Tag 1 description
+         @+tag2 tagname Tag 2 description
+      */
+    })[0])
+      .eql({
+        description: 'Description text',
+        source: 'Description text\n@.tag0 tagname Tag 0 description\n@-tag1 tagname Tag 1 description\n@+tag2 tagname Tag 2 description',
+        line: 1,
+        tags: [{
+          tag: '.tag0',
+          name: 'tagname',
+          optional: false,
+          description: 'Tag 0 description',
+          type: '',
+          line: 3,
+          source: '@.tag0 tagname Tag 0 description'
+        }, {
+          tag: '-tag1',
+          name: 'tagname',
+          optional: false,
+          description: 'Tag 1 description',
+          type: '',
+          line: 4,
+          source: '@-tag1 tagname Tag 1 description'
+        }, {
+          tag: '+tag2',
+          name: 'tagname',
+          optional: false,
+          description: 'Tag 2 description',
+          type: '',
+          line: 5,
+          source: '@+tag2 tagname Tag 2 description'
+        }]
+      })
+  })
+
   it('should tolerate default value with whitespces `@tag {my.type} [name=John Doe]`', function () {
     expect(parse(function () {
       /**

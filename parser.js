@@ -101,7 +101,7 @@ function parse_block (source, opts) {
     .reduce(function (tags, line) {
       line.source = trim(line.source)
 
-      if (line.source.match(/^\s*@(\w+)/)) {
+      if (line.source.match(/^\s*@(\S+)/)) {
         tags.push({source: [line.source], line: line.number})
       } else {
         var tag = tags[tags.length - 1]
