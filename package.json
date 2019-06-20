@@ -20,8 +20,9 @@
     "nodemon": "^1.18.9"
   },
   "scripts": {
-    "pretest": "eslint .",
-    "test": "mocha tests",
+    "test:lint": "eslint .",
+    "test:unit": "mocha tests",
+    "test": "npm run test:lint && npm run test:unit",
     "watch": "nodemon -q -i node_modules -x npm test"
   },
   "repository": {
