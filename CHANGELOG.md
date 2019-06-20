@@ -1,3 +1,6 @@
+# v0.5.5
+- allow loose tag names, e.g. @.tag, @-tag
+
 # v0.5.4
 - allow quoted literal names, e.g. `@tag "My Var" description`
 
