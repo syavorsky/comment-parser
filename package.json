@@ -10,16 +10,20 @@
   "dependencies": {},
   "devDependencies": {
     "chai": "^4.2.0",
-    "eslint": "^5.16.0",
-    "eslint-config-standard": "^10.2.1",
-    "eslint-plugin-import": "^2.7.0",
-    "eslint-plugin-node": "^5.1.1",
-    "eslint-plugin-promise": "^3.5.0",
-    "eslint-plugin-standard": "^3.0.1",
-    "mocha": "^5.2.0",
-    "nodemon": "^1.18.9"
+    "eslint": "^6.0.1",
+    "eslint-config-standard": "^12.0.0",
+    "eslint-plugin-import": "^2.18.0",
+    "eslint-plugin-node": "^9.1.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-standard": "^4.0.0",
+    "mocha": "^6.1.4",
+    "nodemon": "^1.19.1"
+  },
+  "engines": {
+    "node": ">= 6.0.0"
   },
   "scripts": {
+    "lint:fix": "eslint --fix .",
     "test:lint": "eslint .",
     "test:unit": "mocha tests",
     "test": "npm run test:lint && npm run test:unit",

@@ -102,7 +102,7 @@ function parse_block (source, opts) {
       line.source = trim(line.source)
 
       if (line.source.match(/^\s*@(\S+)/)) {
-        tags.push({source: [line.source], line: line.number})
+        tags.push({ source: [line.source], line: line.number })
       } else {
         var tag = tags[tags.length - 1]
         if (opts.join !== undefined && opts.join !== false && opts.join !== 0 &&
@@ -122,7 +122,7 @@ function parse_block (source, opts) {
       }
 
       return tags
-    }, [{source: []}])
+    }, [{ source: [] }])
     .map(function (tag) {
       tag.source = trim(tag.source.join('\n'))
       return tag

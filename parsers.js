@@ -17,7 +17,7 @@ PARSERS.parse_tag = function parse_tag (str) {
 
   return {
     source: result[0],
-    data: {tag: result[1]}
+    data: { tag: result[1] }
   }
 }
 
@@ -41,7 +41,7 @@ PARSERS.parse_type = function parse_type (str, data) {
 
   return {
     source: str.slice(0, pos),
-    data: {type: res.slice(1, -1)}
+    data: { type: res.slice(1, -1) }
   }
 }
 
@@ -51,7 +51,7 @@ PARSERS.parse_name = function parse_name (str, data) {
   var pos = skipws(str)
   var name = ''
   var brackets = 0
-  var res = {optional: false}
+  var res = { optional: false }
 
   // if it starts with quoted group assume it is a literal
   var quotedGroups = str.slice(pos).split('"')
@@ -69,7 +69,7 @@ PARSERS.parse_name = function parse_name (str, data) {
 
     if (brackets !== 0) { throw new Error('Invalid `name`, unpaired brackets') }
 
-    res = {name: name, optional: false}
+    res = { name: name, optional: false }
 
     if (name[0] === '[' && name[name.length - 1] === ']') {
       res.optional = true
@@ -99,7 +99,7 @@ PARSERS.parse_description = function parse_description (str, data) {
   if (result) {
     return {
       source: result[0],
-      data: {description: result[1] === undefined ? '' : result[1]}
+      data: { description: result[1] === undefined ? '' : result[1] }
     }
   }
 

@@ -13,7 +13,7 @@ module.exports = parse
 
 function Parser (opts) {
   opts = opts || {}
-  stream.Transform.call(this, {objectMode: true})
+  stream.Transform.call(this, { objectMode: true })
   this._extract = parse.mkextract(opts)
 }
 
@@ -48,7 +48,7 @@ module.exports.file = function file (file_path, done) {
     done = arguments[2]
   }
 
-  return fs.createReadStream(file_path, {encoding: 'utf8'})
+  return fs.createReadStream(file_path, { encoding: 'utf8' })
     .on('error', done)
     .pipe(new Parser(opts))
     .on('error', done)
