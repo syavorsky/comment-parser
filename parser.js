@@ -1,4 +1,6 @@
 
+'use strict'
+
 var PARSERS = require('./parsers')
 
 var MARKER_START = '/**'

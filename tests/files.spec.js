@@ -1,4 +1,6 @@
 /* eslint no-unused-vars:off */
+'use strict'
+
 var fs = require('fs')
 var path = require('path')
 var stream = require('readable-stream')

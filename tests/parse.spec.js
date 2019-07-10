@@ -1,5 +1,6 @@
 /* eslint no-unused-vars:off */
 
+'use strict'
 var expect = require('chai').expect
 var parse = require('./parse')
 

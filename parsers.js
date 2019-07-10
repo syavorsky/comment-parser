@@ -1,3 +1,5 @@
+'use strict'
+
 function skipws (str) {
   var i = 0
   do {

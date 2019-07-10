@@ -7,6 +7,8 @@
  *
  */
 
+'use strict'
+
 var parse = require('../index')
 
 module.exports = function (func, opts) {
