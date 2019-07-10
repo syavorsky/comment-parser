@@ -1,37 +1,20 @@
 
 'use strict'
 
-var PARSERS = require('./parsers')
+const PARSERS = require('./parsers')
 
-var MARKER_START = '/**'
-var MARKER_START_SKIP = '/***'
-var MARKER_END = '*/'
+const MARKER_START = '/**'
+const MARKER_START_SKIP = '/***'
+const MARKER_END = '*/'
 
 /* ------- util functions ------- */
 
-function merge (/* ...objects */) {
-  var k, obj
-  var res = {}
-  var objs = Array.prototype.slice.call(arguments)
-
-  for (var i = 0, l = objs.length; i < l; i++) {
-    obj = objs[i]
-    for (k in obj) {
-      if ({}.hasOwnProperty.call(obj, k)) {
-        res[k] = obj[k]
-      }
-    }
-  }
-  return res
-}
-
 function find (list, filter) {
-  var k
-  var i = list.length
-  var matchs = true
+  let i = list.length
+  let matchs = true
 
   while (i--) {
-    for (k in filter) {
+    for (const k in filter) {
       if ({}.hasOwnProperty.call(filter, k)) {
         matchs = (filter[k] === list[i][k]) && matchs
       }
@@ -46,17 +29,17 @@ function find (list, filter) {
 /**
  * Parses "@tag {type} name description"
  * @param {string} str Raw doc string
- * @param {Array[function]} parsers Array of parsers to be applied to the source
+ * @param {Array<function>} parsers Array of parsers to be applied to the source
  * @returns {object} parsed tag node
  */
 function parse_tag (str, parsers) {
   if (typeof str !== 'string' || str[0] !== '@') { return null }
 
-  var data = parsers.reduce(function (state, parser) {
-    var result
+  const data = parsers.reduce(function (state, parser) {
+    let result
 
     try {
-      result = parser(state.source, merge({}, state.data))
+      result = parser(state.source, Object.assign({}, state.data))
     } catch (err) {
       state.data.errors = (state.data.errors || [])
         .concat(parser.name + ': ' + err.message)
@@ -64,7 +47,7 @@ function parse_tag (str, parsers) {
 
     if (result) {
       state.source = state.source.slice(result.source.length)
-      state.data = merge(state.data, result.data)
+      state.data = Object.assign(state.data, result.data)
     }
 
     return state
@@ -85,17 +68,17 @@ function parse_tag (str, parsers) {
  * Parses comment block (array of String lines)
  */
 function parse_block (source, opts) {
-  var trim = opts.trim
+  const trim = opts.trim
     ? function trim (s) { return s.trim() }
     : function trim (s) { return s }
 
-  var source_str = source
-    .map(function (line) { return trim(line.source) })
+  let source_str = source
+    .map((line) => { return trim(line.source) })
     .join('\n')
 
   source_str = trim(source_str)
 
-  var start = source[0].number
+  const start = source[0].number
 
   // merge source lines into tags
   // we assume tag starts with "@"
@@ -104,12 +87,15 @@ function parse_block (source, opts) {
       line.source = trim(line.source)
 
       if (line.source.match(/^\s*@(\S+)/)) {
-        tags.push({ source: [line.source], line: line.number })
+        tags.push({
+          source: [line.source],
+          line: line.number
+        })
       } else {
-        var tag = tags[tags.length - 1]
+        const tag = tags[tags.length - 1]
         if (opts.join !== undefined && opts.join !== false && opts.join !== 0 &&
             !line.startWithStar && tag.source.length > 0) {
-          var source
+          let source
           if (typeof opts.join === 'string') {
             source = opts.join + line.source.replace(/^\s+/, '')
           } else if (typeof opts.join === 'number') {
@@ -125,32 +111,32 @@ function parse_block (source, opts) {
 
       return tags
     }, [{ source: [] }])
-    .map(function (tag) {
+    .map((tag) => {
       tag.source = trim(tag.source.join('\n'))
       return tag
     })
 
   // Block description
-  var description = source.shift()
+  const description = source.shift()
 
   // skip if no descriptions and no tags
   if (description.source === '' && source.length === 0) {
     return null
   }
 
-  var tags = source.reduce(function (tags, tag) {
-    var tag_node = parse_tag(tag.source, opts.parsers)
+  const tags = source.reduce(function (tags, tag) {
+    const tag_node = parse_tag(tag.source, opts.parsers)
 
     if (!tag_node) { return tags }
 
     tag_node.line = tag.line
     tag_node.source = tag.source
 
-    if (opts.dotted_names && tag_node.name.indexOf('.') !== -1) {
-      var parent_name
-      var parent_tag
-      var parent_tags = tags
-      var parts = tag_node.name.split('.')
+    if (opts.dotted_names && tag_node.name.includes('.')) {
+      let parent_name
+      let parent_tag
+      let parent_tags = tags
+      const parts = tag_node.name.split('.')
 
       while (parts.length > 1) {
         parent_name = parts.shift()
@@ -183,7 +169,7 @@ function parse_block (source, opts) {
   }, [])
 
   return {
-    tags: tags,
+    tags,
     line: start,
     description: description.source,
     source: source_str
@@ -194,11 +180,11 @@ function parse_block (source, opts) {
  * Produces `extract` function with internal state initialized
  */
 function mkextract (opts) {
-  var chunk = null
-  var indent = 0
-  var number = 0
+  let chunk = null
+  let indent = 0
+  let number = 0
 
-  opts = merge({}, {
+  opts = Object.assign({}, {
     trim: true,
     dotted_names: false,
     parsers: [
@@ -214,11 +200,11 @@ function mkextract (opts) {
    * Return parsed block once fullfilled or null otherwise
    */
   return function extract (line) {
-    var result = null
-    var startPos = line.indexOf(MARKER_START)
-    var endPos = line.indexOf(MARKER_END)
+    let result = null
+    const startPos = line.indexOf(MARKER_START)
+    const endPos = line.indexOf(MARKER_END)
 
-    // if open marker detected and it's not skip one
+    // if open marker detected and it's not, skip one
     if (startPos !== -1 && line.indexOf(MARKER_START_SKIP) !== startPos) {
       chunk = []
       indent = startPos + MARKER_START.length
@@ -226,12 +212,12 @@ function mkextract (opts) {
 
     // if we are on middle of comment block
     if (chunk) {
-      var lineStart = indent
-      var startWithStar = false
+      let lineStart = indent
+      let startWithStar = false
 
       // figure out if we slice from opening marker pos
       // or line start is shifted to the left
-      var nonSpaceChar = line.match(/\S/)
+      const nonSpaceChar = line.match(/\S/)
 
       // skip for the first line starting with /** (fresh chunk)
       // it always has the right indentation
@@ -246,8 +232,8 @@ function mkextract (opts) {
 
       // slice the line until end or until closing marker start
       chunk.push({
-        number: number,
-        startWithStar: startWithStar,
+        number,
+        startWithStar,
         source: line.slice(lineStart, endPos === -1 ? line.length : endPos)
       })
 
@@ -267,17 +253,16 @@ function mkextract (opts) {
 /* ------- Public API ------- */
 
 module.exports = function parse (source, opts) {
-  var block
-  var blocks = []
-  var extract = mkextract(opts)
-  var lines = source.split(/\n/)
+  const blocks = []
+  const extract = mkextract(opts)
+  const lines = source.split(/\n/)
 
-  for (var i = 0, l = lines.length; i < l; i++) {
-    block = extract(lines.shift())
+  lines.forEach((line) => {
+    const block = extract(line)
     if (block) {
       blocks.push(block)
     }
-  }
+  })
 
   return blocks
 }

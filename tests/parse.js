@@ -9,10 +9,10 @@
 
 'use strict'
 
-var parse = require('../index')
+const parse = require('../index')
 
 module.exports = function (func, opts) {
-  var str = func.toString()
+  let str = func.toString()
   str = str
     .slice(str.indexOf('{') + 1, str.lastIndexOf('}'))
     .replace(/\r\n/g, '\n')

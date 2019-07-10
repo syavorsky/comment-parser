@@ -1,11 +1,11 @@
 /* eslint no-unused-vars:off */
 'use strict'
 
-var fs = require('fs')
-var path = require('path')
-var stream = require('readable-stream')
-var expect = require('chai').expect
-var parse = require('../index')
+const fs = require('fs')
+const path = require('path')
+const stream = require('readable-stream')
+const { expect } = require('chai')
+const parse = require('../index')
 
 describe('File parsing', function () {
   it('should parse the file by path', function (done) {
@@ -43,11 +43,11 @@ describe('File parsing', function () {
   })
 
   it('should return `Transform` stream', function (done) {
-    var count = 0
+    let count = 0
 
-    var readable = fs.createReadStream(path.resolve(__dirname, 'fixtures/sample.js'), { encoding: 'utf8' })
+    const readable = fs.createReadStream(path.resolve(__dirname, 'fixtures/sample.js'), { encoding: 'utf8' })
 
-    var writable = new stream.Writable({ objectMode: true })
+    const writable = new stream.Writable({ objectMode: true })
     writable._write = function (data, encoding, done) {
       count++
       done()

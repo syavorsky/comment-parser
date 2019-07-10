@@ -1,8 +1,8 @@
 /* eslint no-unused-vars:off */
 'use strict'
 
-var expect = require('chai').expect
-var parse = require('./parse')
+const { expect } = require('chai')
+const parse = require('./parse')
 
 describe('parse() with custom tag parsers', function () {
   function sample () {
@@ -13,7 +13,7 @@ describe('parse() with custom tag parsers', function () {
   }
 
   it('should use `opts.parsers`', function () {
-    var parsers = [
+    const parsers = [
       function everything (str) {
         return {
           source: str,
@@ -46,7 +46,7 @@ describe('parse() with custom tag parsers', function () {
   })
 
   it('should merge parsers result', function () {
-    var parsers = [
+    const parsers = [
       function parser1 (str) {
         return {
           source: '',
@@ -88,7 +88,7 @@ describe('parse() with custom tag parsers', function () {
   })
 
   it('should catch parser exceptions and populate `errors` field', function () {
-    var parsers = [
+    const parsers = [
       function parser1 (str) {
         return {
           source: '',
