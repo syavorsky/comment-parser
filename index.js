@@ -6,7 +6,11 @@ const stream = require('stream')
 
 const parse = require('./parser')
 
+const stringify = require('./stringifier')
+
 module.exports = parse
+
+module.exports.stringify = stringify
 
 /* ------- Transform stream ------- */
 
