@@ -17,7 +17,7 @@ function merge (/* ...objects */) {
   for (var i = 0, l = objs.length; i < l; i++) {
     obj = objs[i]
     for (k in obj) {
-      if (obj.hasOwnProperty(k)) {
+      if ({}.hasOwnProperty.call(obj, k)) {
         res[k] = obj[k]
       }
     }
@@ -32,7 +32,7 @@ function find (list, filter) {
 
   while (i--) {
     for (k in filter) {
-      if (filter.hasOwnProperty(k)) {
+      if ({}.hasOwnProperty.call(filter, k)) {
         matchs = (filter[k] === list[i][k]) && matchs
       }
     }
