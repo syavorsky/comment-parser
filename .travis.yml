@@ -17,6 +17,7 @@ before_install:
 before_script:
   - 'if [ -n "${ESLINT-}" ]; then npm install --no-save "eslint@${ESLINT}" ; fi'
   - 'if [ "${ESLINT-}" == "5" ]; then npm install --no-save eslint-plugin-node@8.0.1 ; fi'
+  - 'if [ "${ESLINT-}" == "5" ]; then npm install --no-save eslint-config-standard@12.0.1 ; fi'
 
 script:
   - npm run test
