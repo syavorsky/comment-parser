@@ -1,7 +1,7 @@
 'use strict'
 
 function skipws (str) {
-  var i = 0
+  let i = 0
   do {
     if (str[i] !== ' ' && str[i] !== '\t') { return i }
   } while (++i < str.length)
@@ -10,10 +10,10 @@ function skipws (str) {
 
 /* ------- default parsers ------- */
 
-var PARSERS = {}
+const PARSERS = {}
 
 PARSERS.parse_tag = function parse_tag (str) {
-  var result = str.match(/^\s*@(\S+)/)
+  const result = str.match(/^\s*@(\S+)/)
 
   if (!result) { throw new Error('Invalid `@tag`, missing @ symbol') }
 
@@ -26,9 +26,9 @@ PARSERS.parse_tag = function parse_tag (str) {
 PARSERS.parse_type = function parse_type (str, data) {
   if (data.errors && data.errors.length) { return null }
 
-  var pos = skipws(str)
-  var res = ''
-  var curlies = 0
+  let pos = skipws(str)
+  let res = ''
+  let curlies = 0
 
   if (str[pos] !== '{') { return null }
 
@@ -50,13 +50,13 @@ PARSERS.parse_type = function parse_type (str, data) {
 PARSERS.parse_name = function parse_name (str, data) {
   if (data.errors && data.errors.length) { return null }
 
-  var pos = skipws(str)
-  var name = ''
-  var brackets = 0
-  var res = { optional: false }
+  let pos = skipws(str)
+  let name = ''
+  let brackets = 0
+  let res = { optional: false }
 
   // if it starts with quoted group assume it is a literal
-  var quotedGroups = str.slice(pos).split('"')
+  const quotedGroups = str.slice(pos).split('"')
   if (quotedGroups.length > 1 && quotedGroups[0] === '' && quotedGroups.length % 2 === 1) {
     name = quotedGroups[1]
     pos += name.length + 2
@@ -78,7 +78,7 @@ PARSERS.parse_name = function parse_name (str, data) {
       name = name.slice(1, -1)
 
       if (name.indexOf('=') !== -1) {
-        var parts = name.split('=')
+        const parts = name.split('=')
         name = parts[0]
         res.default = parts[1].replace(/^(["'])(.+)(\1)$/, '$2')
       }
@@ -96,7 +96,7 @@ PARSERS.parse_name = function parse_name (str, data) {
 PARSERS.parse_description = function parse_description (str, data) {
   if (data.errors && data.errors.length) { return null }
 
-  var result = str.match(/^\s+((.|\s)+)?/)
+  const result = str.match(/^\s+((.|\s)+)?/)
 
   if (result) {
     return {

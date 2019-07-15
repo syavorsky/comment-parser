@@ -1,36 +1,35 @@
 
 'use strict'
 
-var fs = require('fs')
-var stream = require('stream')
-var util = require('util')
+const fs = require('fs')
+const stream = require('stream')
 
-var parse = require('./parser')
+const parse = require('./parser')
 
 module.exports = parse
 
 /* ------- Transform stream ------- */
 
-function Parser (opts) {
-  opts = opts || {}
-  stream.Transform.call(this, { objectMode: true })
-  this._extract = parse.mkextract(opts)
-}
-
-util.inherits(Parser, stream.Transform)
-
-Parser.prototype._transform = function transform (data, encoding, done) {
-  var block
-  var lines = data.toString().split(/\n/)
-
-  while (lines.length) {
-    block = this._extract(lines.shift())
-    if (block) {
-      this.push(block)
-    }
+class Parser extends stream.Transform {
+  constructor (opts) {
+    opts = opts || {}
+    super({ objectMode: true })
+    this._extract = parse.mkextract(opts)
   }
 
-  done()
+  _transform (data, encoding, done) {
+    let block
+    const lines = data.toString().split(/\n/)
+
+    while (lines.length) {
+      block = this._extract(lines.shift())
+      if (block) {
+        this.push(block)
+      }
+    }
+
+    done()
+  }
 }
 
 module.exports.stream = function stream (opts) {
@@ -40,8 +39,8 @@ module.exports.stream = function stream (opts) {
 /* ------- File parser ------- */
 
 module.exports.file = function file (file_path, done) {
-  var opts = {}
-  var collected = []
+  let opts = {}
+  const collected = []
 
   if (arguments.length === 3) {
     opts = done

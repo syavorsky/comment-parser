@@ -1,8 +1,8 @@
 /* eslint no-unused-vars:off */
 
 'use strict'
-var expect = require('chai').expect
-var parse = require('./parse')
+const { expect } = require('chai')
+const parse = require('./parse')
 
 describe('Comment string parsing', function () {
   it('should parse doc block with description', function () {
@@ -146,7 +146,7 @@ describe('Comment string parsing', function () {
   })
 
   it('should parse multiple doc blocks', function () {
-    var p = parse(function () {
+    const p = parse(function () {
       /**
        * Description first line
        */
