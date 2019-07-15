@@ -3,30 +3,8 @@ node_js:
   - 12
   - 10
   - 8
-  - 6
 branches:
   except:
     - /^v\d+\.\d+\.\d+$/
 git:
   depth: 1
-
-sudo: false
-
-before_install:
-  - npm config set depth 0
-before_script:
-  - 'if [ "${ESLINT-}" == "5" ]; then npm install --no-save "eslint@${ESLINT}" eslint-plugin-node@8.0.1 eslint-config-standard@12.0.0 ; fi'
-  - 'if [ "${ESLINT-}" == "6" ]; then npm install --no-save "eslint@${ESLINT}" ; fi'
-
-script:
-  - npm run test
-env:
-  matrix:
-    - ESLINT=6
-    - ESLINT=5
-matrix:
-  include:
-    - node_js: 'lts/*'
-  exclude:
-    - node_js: 6
-      env: ESLINT=6
