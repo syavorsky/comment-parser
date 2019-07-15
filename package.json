@@ -1,6 +1,6 @@
 {
   "name": "comment-parser",
-  "version": "0.5.5",
+  "version": "0.6.0",
   "description": "Generic JSDoc-like comment parser. ",
   "main": "index.js",
   "types": "index.d.ts",

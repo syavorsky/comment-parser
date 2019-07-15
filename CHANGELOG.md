@@ -1,3 +1,8 @@
+# v0.6.0
+- soft-drop node@6 support
+- migrate to ES6 syntax
+- allow to generate comments out of parsed data
+
 # v0.5.5
 - allow loose tag names, e.g. @.tag, @-tag
 
