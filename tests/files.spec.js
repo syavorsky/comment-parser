@@ -1,4 +1,6 @@
 /* eslint no-unused-vars:off */
+'use strict'
+
 var fs = require('fs')
 var path = require('path')
 var stream = require('readable-stream')
@@ -43,9 +45,9 @@ describe('File parsing', function () {
   it('should return `Transform` stream', function (done) {
     var count = 0
 
-    var readable = fs.createReadStream(path.resolve(__dirname, 'fixtures/sample.js'), {encoding: 'utf8'})
+    var readable = fs.createReadStream(path.resolve(__dirname, 'fixtures/sample.js'), { encoding: 'utf8' })
 
-    var writable = new stream.Writable({objectMode: true})
+    var writable = new stream.Writable({ objectMode: true })
     writable._write = function (data, encoding, done) {
       count++
       done()

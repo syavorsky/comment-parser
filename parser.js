@@ -1,4 +1,6 @@
 
+'use strict'
+
 var PARSERS = require('./parsers')
 
 var MARKER_START = '/**'
@@ -15,7 +17,7 @@ function merge (/* ...objects */) {
   for (var i = 0, l = objs.length; i < l; i++) {
     obj = objs[i]
     for (k in obj) {
-      if (obj.hasOwnProperty(k)) {
+      if ({}.hasOwnProperty.call(obj, k)) {
         res[k] = obj[k]
       }
     }
@@ -30,7 +32,7 @@ function find (list, filter) {
 
   while (i--) {
     for (k in filter) {
-      if (filter.hasOwnProperty(k)) {
+      if ({}.hasOwnProperty.call(filter, k)) {
         matchs = (filter[k] === list[i][k]) && matchs
       }
     }
@@ -102,7 +104,7 @@ function parse_block (source, opts) {
       line.source = trim(line.source)
 
       if (line.source.match(/^\s*@(\S+)/)) {
-        tags.push({source: [line.source], line: line.number})
+        tags.push({ source: [line.source], line: line.number })
       } else {
         var tag = tags[tags.length - 1]
         if (opts.join !== undefined && opts.join !== false && opts.join !== 0 &&
@@ -122,7 +124,7 @@ function parse_block (source, opts) {
       }
 
       return tags
-    }, [{source: []}])
+    }, [{ source: [] }])
     .map(function (tag) {
       tag.source = trim(tag.source.join('\n'))
       return tag
