@@ -1,3 +1,6 @@
+# v0.6.1
+- adjust strigifier indentation
+
 # v0.6.0
 - soft-drop node@6 support
 - migrate to ES6 syntax
