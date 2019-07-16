@@ -26,7 +26,7 @@ describe('Comment stringifying', function () {
   })
 
   it('should stringify indented doc block with description', function () {
-    const expected = `/**
+    const expected = `   /**
     * Singleline or multiline description text. Line breaks are preserved.
     *
     * @some-tag {Type} name Singleline or multiline description text
@@ -46,7 +46,7 @@ describe('Comment stringifying', function () {
   })
 
   it('should stringify numeric indented doc block with description', function () {
-    const expected = `/**
+    const expected = `   /**
     * Singleline or multiline description text. Line breaks are preserved.
     *
     * @some-tag {Type} name Singleline or multiline description text
@@ -55,6 +55,19 @@ describe('Comment stringifying', function () {
     * multiline description text
     * @some-tag {Type} [optionalName=someDefault]
     * @another-tag
+    */`
+    const parsed = parser(expected)
+
+    expect(parsed).to.be.an('array')
+
+    const stringified = parser.stringify(parsed, { indent: 4 })
+
+    expect(stringified).to.eq(expected)
+  })
+
+  it('should stringify numeric indented doc block without description', function () {
+    const expected = `   /**
+    * @param Foo
     */`
     const parsed = parser(expected)
 

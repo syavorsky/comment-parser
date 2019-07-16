@@ -160,6 +160,21 @@ This would produce following:
 }]
 ```
 
+## Stringifying
+
+One may also convert `comment-parser` JSON structures back into strings using
+the `stringify` method (`stringify(o:(Object|Array) [, opts:Object]):String`).
+
+This method accepts the JSON as its first argument and an optional options
+object with an `indent` property set to either a string or a number that
+will be used to determine the number of spaces of indent. The indent of the
+start of the doc block will be one space less than the indent of each line of
+asterisks for the sake of alignment as per usual practice.
+
+The `stringify` export delegates to the specialized methods `stringifyBlocks`,
+`stringifyBlock`, and `stringifyTag`, which are available on the `stringify`
+function object.
+
 ## Packaging
 
 `comment-parser` is CommonJS module and was primarely designed to be used with Node. Module `index.js` includes stream and file functionality. Use prser-only module in browser `comment-parser/parse.js`
