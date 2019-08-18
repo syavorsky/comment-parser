@@ -161,7 +161,7 @@ declare namespace parse {
   /**
    * The default list of parsers that is used to parse comments.
    */
-  export const PARSERS: Parser[];
+  export const PARSERS: Record<"parse_tag" | "parse_type" | "parse_description" | "parse_name", Parser>
 }
 
 /**
