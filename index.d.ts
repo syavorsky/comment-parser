@@ -117,11 +117,11 @@ declare namespace parse {
      * 
      * The stringify export delegates to the specialized methods `stringifyBlocks`, `stringifyBlock`, and
      * `stringifyTag`, which are available on the stringify function object.
-     * @param comment A comment or a list of comments to stringify.
+     * @param comment A tag, comment or a list of comments to stringify.
      * @param options Options to control how the comment or comments are stringified.
      * @return The stringified doc comment(s).
      */
-    (comment: Comment | Comment[], options?: Partial<StringifyOptions>): string;
+    (comment: Tag | Comment | Comment[], options?: Partial<StringifyOptions>): string;
     /**
      * Similar to `stringify`, but only accepts a list of doc comments.
      * @param comments A list of comments to stringify.
