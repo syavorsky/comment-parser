@@ -3,6 +3,14 @@
 // Definitions by: Javier "Ciberman" Mora <https://github.com/jhm-ciberman/>
 
 declare namespace parse {
+
+  /**
+   * In case you need to parse tags in a different way you can specify custom parsers here.
+   * Each parser function takes string left after previous parsers were applied and the data produced by them.
+   * It should return either `undefined` or the new object, where `source` is the consumed substring.
+   */
+  export type Parser = (str: string, data: any) => { source: string, data: any };
+
   /**
    * Represents a parsed doc comment.
    */
@@ -78,11 +86,14 @@ declare namespace parse {
    */
   export interface Options {
     /**
-     * In case you need to parse tags in different way you can specify custom parsers here.
+     * In case you need to parse tags in a different way you can specify custom parsers here.
      * Each parser function takes string left after previous parsers were applied and the data produced by them.
      * It should return either `undefined` or the new object, where `source` is the consumed substring.
+     * 
+     * If you specify custom parsers, the default parsers are overwritten, but you can access them via the constant
+     * `PARSERS`. 
      */
-    parsers: [(str: string, data: any) => { source: string, data: any }];
+    parsers: Parser[];
     /**
      * By default dotted names like `name.subname.subsubname` will be expanded into nested sections, this can be
      * prevented by passing `opts.dotted_names = false`.
@@ -146,6 +157,11 @@ declare namespace parse {
   }
 
   export const stringify: parse.Stringify;
+
+  /**
+   * The default list of parsers that is used to parse comments.
+   */
+  export const PARSERS: Parser[];
 }
 
 /**
