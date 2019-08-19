@@ -1,3 +1,6 @@
+# v0.6.2
+- document TypeScript definitions
+
 # v0.6.1
 - adjust strigifier indentation
 

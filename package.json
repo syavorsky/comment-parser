@@ -1,6 +1,6 @@
 {
   "name": "comment-parser",
-  "version": "0.6.1",
+  "version": "0.6.2",
   "description": "Generic JSDoc-like comment parser. ",
   "main": "index.js",
   "types": "index.d.ts",
@@ -41,6 +41,7 @@
   "author": "Sergii Iavorskyi <yavorskiy.s@gmail.com> (https://github.com/yavorskiy)",
   "contributors": [
     "Alexej Yaroshevich (https://github.com/zxqfox)",
+    "Andre Wachsmuth (https://github.com/blutorange)",
     "Brett Zamir (https://github.com/brettz9)",
     "Dieter Oberkofler (https://github.com/doberkofler)",
     "Evgeny Reznichenko (https://github.com/zxcabs)",
