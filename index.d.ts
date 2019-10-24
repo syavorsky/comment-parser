@@ -104,6 +104,12 @@ declare namespace parse {
      * `true` to trim whitespace at the start of each line, `false` otherwise.
      */
     trim: boolean;
+    /**
+     * Can return `"ongoing"` so as to prevent the current line from being
+     * interpreted as a new jsdoc tag; can be set to another value to
+     * indicate that new tags can now be created.
+     */
+    check: (source: string, tag: Tag) => "ongoing"|any;
   }
 
     /**
