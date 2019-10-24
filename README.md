@@ -5,7 +5,7 @@ Generic JSDoc-like comment parser. This library is not intended to be documentat
 
 `npm install comment-parser`
 
-Module provides `parse(s:String[, opts:Object]):Object` function which takes `/** ... */` comment string and returns array  of objects with parsed data.
+Module provides `parse(s: string[, opts: object]): object[]` function which takes `/** ... */` comment string and returns array  of objects with parsed data.
 
 It is not trying to detect relations between tags or somehow recognize their meaning. Any tag can be used, as long as it satisfies the format.
 
@@ -163,7 +163,7 @@ This would produce following:
 ## Stringifying
 
 One may also convert `comment-parser` JSON structures back into strings using
-the `stringify` method (`stringify(o:(Object|Array) [, opts:Object]):String`).
+the `stringify` method (`stringify(o: (object|Array) [, opts: object]): string`).
 
 This method accepts the JSON as its first argument and an optional options
 object with an `indent` property set to either a string or a number that

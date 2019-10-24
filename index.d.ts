@@ -80,7 +80,7 @@ declare namespace parse {
      */
     tags?: Tag[];
   }
-  
+
   /**
    * Options for parsing doc comments.
    */
@@ -89,9 +89,9 @@ declare namespace parse {
      * In case you need to parse tags in a different way you can specify custom parsers here.
      * Each parser function takes string left after previous parsers were applied and the data produced by them.
      * It should return either `undefined` or the new object, where `source` is the consumed substring.
-     * 
+     *
      * If you specify custom parsers, the default parsers are overwritten, but you can access them via the constant
-     * `PARSERS`. 
+     * `PARSERS`.
      */
     parsers: Parser[];
     /**
@@ -120,12 +120,12 @@ declare namespace parse {
   export interface Stringify {
     /**
      * One may also convert comment-parser JSON structures back into strings using this stringify method.
-     * 
+     *
      * This method accepts the JSON as its first argument and an optional options object with an indent property set to
      * either a string or a number that will be used to determine the number of spaces of indent. The indent of the start
      * of the doc block will be one space less than the indent of each line of asterisks for the sake of alignment as per
      * usual practice.
-     * 
+     *
      * The stringify export delegates to the specialized methods `stringifyBlocks`, `stringifyBlock`, and
      * `stringifyTag`, which are available on the stringify function object.
      * @param comment A tag, comment or a list of comments to stringify.
@@ -172,6 +172,6 @@ declare namespace parse {
  * @param opts Options to control how the source string is parsed.
  * @return The parsed list of doc comments.
  */
-declare function parse(str: string, opts?: Partial<parse.Options>): [parse.Comment];
+declare function parse(str: string, opts?: Partial<parse.Options>): parse.Comment[];
 
 export = parse;
