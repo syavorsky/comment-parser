@@ -86,13 +86,20 @@ function parse_block (source, opts) {
     .reduce(function (tags, line) {
       line.source = trim(line.source)
 
-      if (line.source.match(/^\s*@(\S+)/)) {
+      const tag = tags[tags.length - 1]
+
+      let extensionState
+      if (typeof opts.check === 'function') {
+        extensionState = opts.check(line.source, tag)
+      }
+
+      if (extensionState !== 'ongoing' && line.source.match(/^\s*@(\S+)/)) {
         tags.push({
           source: [line.source],
-          line: line.number
+          line: line.number,
+          extensionState
         })
       } else {
-        const tag = tags[tags.length - 1]
         if (opts.join !== undefined && opts.join !== false && opts.join !== 0 &&
             !line.startWithStar && tag.source.length > 0) {
           let source
