@@ -69,8 +69,12 @@ function parse_tag (str, parsers) {
  */
 function parse_block (source, opts) {
   const trim = opts.trim
-    ? function trim (s) { return s.trim() }
-    : function trim (s) { return s }
+    ? s => s.trim()
+    : s => s
+
+  const toggleFence = (typeof opts.fence === 'function')
+    ? opts.fence
+    : line => line.split(opts.fence).length % 2 === 0
 
   let source_str = source
     .map((line) => { return trim(line.source) })
@@ -83,16 +87,18 @@ function parse_block (source, opts) {
   // merge source lines into tags
   // we assume tag starts with "@"
   source = source
-    .reduce(function (tags, line) {
+    .reduce(function (state, line) {
       line.source = trim(line.source)
 
-      if (line.source.match(/^\s*@(\S+)/)) {
-        tags.push({
+      // start of a new tag detected
+      if (line.source.match(/^\s*@(\S+)/) && !state.isFenced) {
+        state.tags.push({
           source: [line.source],
           line: line.number
         })
+      // keep appending source to the current tag
       } else {
-        const tag = tags[tags.length - 1]
+        const tag = state.tags[state.tags.length - 1]
         if (opts.join !== undefined && opts.join !== false && opts.join !== 0 &&
             !line.startWithStar && tag.source.length > 0) {
           let source
@@ -109,8 +115,15 @@ function parse_block (source, opts) {
         }
       }
 
-      return tags
-    }, [{ source: [] }])
+      if (toggleFence(line.source)) {
+        state.isFenced = !state.isFenced
+      }
+      return state
+    }, {
+      tags: [{ source: [] }],
+      isFenced: false
+    })
+    .tags
     .map((tag) => {
       tag.source = trim(tag.source.join('\n'))
       return tag
@@ -187,6 +200,7 @@ function mkextract (opts) {
   opts = Object.assign({}, {
     trim: true,
     dotted_names: false,
+    fence: '```',
     parsers: [
       PARSERS.parse_tag,
       PARSERS.parse_type,

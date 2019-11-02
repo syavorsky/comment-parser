@@ -951,7 +951,7 @@ describe('Comment string parsing', function () {
       /**
          * @param {Object} options 配置
          * @return {Any} obj 组件返回的对象
-         * @example
+         * @example name
          * var widget = XX.showWidget('searchlist', {
          *    onComplete: function() {
          *          todoSomething();
@@ -964,7 +964,7 @@ describe('Comment string parsing', function () {
     })[0]).to.eql({
       description: '',
       line: 1,
-      source: "\n@param {Object} options 配置\n@return {Any} obj 组件返回的对象\n@example\nvar widget = XX.showWidget('searchlist', {\n   onComplete: function() {\n         todoSomething();\n    }\n});\n",
+      source: "\n@param {Object} options 配置\n@return {Any} obj 组件返回的对象\n@example name\nvar widget = XX.showWidget('searchlist', {\n   onComplete: function() {\n         todoSomething();\n    }\n});\n",
       tags: [{
         description: '配置',
         line: 2,
@@ -982,11 +982,11 @@ describe('Comment string parsing', function () {
         tag: 'return',
         type: 'Any'
       }, {
-        description: "widget = XX.showWidget('searchlist', {\n   onComplete: function() {\n         todoSomething();\n    }\n});\n",
+        description: "var widget = XX.showWidget('searchlist', {\n   onComplete: function() {\n         todoSomething();\n    }\n});\n",
         line: 4,
-        name: '\nvar',
+        name: 'name',
         optional: false,
-        source: "@example\nvar widget = XX.showWidget('searchlist', {\n   onComplete: function() {\n         todoSomething();\n    }\n});\n",
+        source: "@example name\nvar widget = XX.showWidget('searchlist', {\n   onComplete: function() {\n         todoSomething();\n    }\n});\n",
         tag: 'example',
         type: ''
       }]
@@ -1077,6 +1077,141 @@ describe('Comment string parsing', function () {
           source: '@section "Brand Colors Here you can find all the brand colors',
           optional: false,
           description: 'Colors Here you can find all the brand colors'
+        }]
+      })
+  })
+
+  it('should handle fenced description (issue #61)`', function () {
+    expect(parse(function () {
+      /**
+       * @example "" ```ts
+      @transient()
+      class Foo { }
+      ```
+       * @tag name description
+       */
+    })[0])
+      .to.eql({
+        line: 1,
+        source: '@example "" ```ts\n@transient()\nclass Foo { }\n```\n@tag name description',
+        description: '',
+        tags: [{
+          tag: 'example',
+          name: '',
+          optional: false,
+          description: '```ts\n@transient()\nclass Foo { }\n```',
+          type: '',
+          line: 2,
+          source: '@example "" ```ts\n@transient()\nclass Foo { }\n```'
+        }, {
+          tag: 'tag',
+          name: 'name',
+          optional: false,
+          description: 'description',
+          type: '',
+          line: 6,
+          source: '@tag name description'
+        }]
+      })
+  })
+
+  it('should handle one line fenced description (issue #61)`', function () {
+    expect(parse(function () {
+      /**
+       * @example "" ```fenced text```
+       * @tag name description
+       */
+    })[0])
+      .to.eql({
+        line: 1,
+        source: '@example "" ```fenced text```\n@tag name description',
+        description: '',
+        tags: [{
+          tag: 'example',
+          name: '',
+          optional: false,
+          description: '```fenced text```',
+          type: '',
+          line: 2,
+          source: '@example "" ```fenced text```'
+        }, {
+          tag: 'tag',
+          name: 'name',
+          optional: false,
+          description: 'description',
+          type: '',
+          line: 3,
+          source: '@tag name description'
+        }]
+      })
+  })
+
+  it('should handle description with multiple fences (issue #61)`', function () {
+    expect(parse(function () {
+      /**
+       * @example "" ```fenced text``` not fenced text ```ts
+      @transient()
+      class Foo { }
+      ```
+       * @tag name description
+       */
+    })[0])
+      .to.eql({
+        line: 1,
+        source: '@example "" ```fenced text``` not fenced text ```ts\n@transient()\nclass Foo { }\n```\n@tag name description',
+        description: '',
+        tags: [{
+          tag: 'example',
+          name: '',
+          optional: false,
+          description: '```fenced text``` not fenced text ```ts\n@transient()\nclass Foo { }\n```',
+          type: '',
+          line: 2,
+          source: '@example "" ```fenced text``` not fenced text ```ts\n@transient()\nclass Foo { }\n```'
+        }, {
+          tag: 'tag',
+          name: 'name',
+          optional: false,
+          description: 'description',
+          type: '',
+          line: 6,
+          source: '@tag name description'
+        }]
+      })
+  })
+
+  it('should allow custom fence detection logic (issue #61)`', function () {
+    expect(parse(function () {
+      /**
+       * @example "" ###ts
+      @transient()
+      class Foo { }
+      ###
+       * @tag name description
+       */
+    }, {
+      fence: line => line.indexOf('###') !== -1
+    })[0])
+      .to.eql({
+        line: 1,
+        source: '@example "" ###ts\n@transient()\nclass Foo { }\n###\n@tag name description',
+        description: '',
+        tags: [{
+          tag: 'example',
+          name: '',
+          optional: false,
+          description: '###ts\n@transient()\nclass Foo { }\n###',
+          type: '',
+          line: 2,
+          source: '@example "" ###ts\n@transient()\nclass Foo { }\n###'
+        }, {
+          tag: 'tag',
+          name: 'name',
+          optional: false,
+          description: 'description',
+          type: '',
+          line: 6,
+          source: '@tag name description'
         }]
       })
   })
