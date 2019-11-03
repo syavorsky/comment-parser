@@ -1,3 +1,6 @@
+# v0.7.0
+- allow fenced blocks in tag description, see opts.fence
+
 # v0.6.2
 - document TypeScript definitions
 
