@@ -1,6 +1,5 @@
 # comment-parser
 
-
 Generic JSDoc-like comment parser. This library is not intended to be documentation generator, but rather composite unit for it.
 
 `npm install comment-parser`
@@ -74,8 +73,6 @@ this would be parsed into following
 }]
 ```
 
-By default dotted names like `name.subname.subsubname` will be expanded into nested sections, this can be prevented by passing `opts.dotted_names = false`.
-
 Below are examples of acceptable comment formats
 
 ```javascript
@@ -102,8 +99,46 @@ Comments starting with `/***` and `/*` are ignored.
 
 Also you can parse entire file with `parse.file('path/to/file', callback)` or acquire an instance of [Transform](http://nodejs.org/api/stream.html#stream_class_stream_transform) stream with `parse.stream()`.
 
-## Custom parsers
+## Options
 
+### `dotted_names: boolean`
+
+By default dotted names like `name.subname.subsubname` will be expanded into
+nested sections, this can be prevented by passing `opts.dotted_names = false`.
+
+### `trim: boolean`
+
+Set this to `true` to trim whitespace at the start and end of each line,
+`false` otherwise.
+
+### `join: string | number | boolean`
+
+If the following lines of a multiline comment do not start with a star, `join` will have the following effect on *tag* `source` (and `description`) when joining the lines together:
+
+1. If a string, use that string in place of the leading whitespace (and avoid newlines).
+2. If a non-zero number (e.g., `1`), do no trimming and avoid newlines.
+3. If `undefined`, `false`, or `0`, use the default behavior of not trimming
+    but adding a newline.
+4. Otherwise (e.g., if `join` is `true`), replace any leading whitespace with a single space and avoid newlines.
+
+Note that if a multi-line comment has lines that start with a star, these will
+be appended with initial whitespace as is and with newlines regardless of the
+`join` setting.
+
+Note also that the *comment* `source` will not be changed by this setting.
+
+### `fence: string | RegExp | ((source: string) => boolean)`
+
+Set to a string or regular expression to toggle state upon finding an
+odd number of matches within a line. Defaults to \`\`\`.
+
+If set to a function, it should return `true` to toggle fenced state;
+upon returning `true` the first time, this will prevent subsequent lines
+from being interpreted as starting a new jsdoc tag until such time as the
+function returns `true` again to indicate that the state has toggled
+back.
+
+### `parsers: Parser[]` (Custom parsers)
 
 In case you need to parse tags in different way you can pass `opts.parsers = [parser1, ..., parserN]`, where each parser is `function name(str:String, data:Object):{source:String, data:Object}`.
 

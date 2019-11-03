@@ -99,11 +99,26 @@ declare namespace parse {
      * prevented by passing `opts.dotted_names = false`.
      */
     dotted_names: boolean;
+    /**
+     * Impacts behavior of joining non-asterisked multiline comments. Strings,
+     * non-zero numbers, or `true` will collapse newlines. Strings will
+     * additionally replace leading whitespace and `true` will replace with
+     * a single space.
+     */
     join: string | number | boolean;
     /**
-     * `true` to trim whitespace at the start of each line, `false` otherwise.
+     * `true` to trim whitespace at the start and end of each line, `false` otherwise.
      */
     trim: boolean;
+    /**
+     * Return `true` to toggle fenced state; upon returning `true` the
+     * first time, will prevent subsequent lines from being interpreted as
+     * starting a new jsdoc tag until such time as the function returns
+     * `true` again to indicate that the state has toggled back; can also
+     * be simply set to a string or regular expression which will toggle
+     * state upon finding an odd number of matches within a line.
+     */
+    fence: string | RegExp | ((source: string) => boolean);
   }
 
     /**
