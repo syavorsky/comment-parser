@@ -89,7 +89,7 @@ Below are examples of acceptable comment formats
  * keeping *s on some lines
  * would work either
 
-   left bound is dermined by opening marker position
+   left bound is determined by opening marker position
    and white space will be trimmed as there was '* '
  */
 
