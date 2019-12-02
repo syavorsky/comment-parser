@@ -108,8 +108,8 @@ nested sections, this can be prevented by passing `opts.dotted_names = false`.
 
 ### `trim: boolean`
 
-Set this to `true` to trim whitespace at the start and end of each line,
-`false` otherwise.
+Set this to `false` to avoid the default of trimming whitespace at the start and
+end of each line.
 
 ### `join: string | number | boolean`
 
