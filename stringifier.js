@@ -33,10 +33,16 @@ const stringifyBlock = exports.stringifyBlock = function stringifyBlock (
 ) {
   // block.line
   const indnt = getIndent(indent)
-  return (block.description ? `${indnt}${block.description.replace(/^/gm, '* ')}\n${indnt}*\n` : '') +
-    block.tags.reduce((s, tag) => {
-      return s + stringifyTag(tag, { indent })
-    }, '')
+
+  return (
+    block.description
+      ? block.description.replace(/^\n/, '').replace(/^(.*)\n?/gm, (n0, descLine) => {
+        return `${indnt}*${descLine ? ` ${descLine}` : ''}\n`
+      })
+      : ''
+  ) + block.tags.reduce((s, tag) => {
+    return s + stringifyTag(tag, { indent })
+  }, '')
 }
 
 const stringifyTag = exports.stringifyTag = function stringifyTag (
@@ -46,11 +52,12 @@ const stringifyTag = exports.stringifyTag = function stringifyTag (
   const {
     type, name, optional, description, tag: tagName, default: deflt //, line , source
   } = tag
+
   return indnt + `* @${tagName}` +
     (type ? ` {${type}}` : '') +
-    (name ? ` ${
+    (name.trim() ? ` ${
       optional ? '[' : ''
-    }${name}${deflt ? `=${deflt}` : ''}${
+    }${name.trimEnd()}${deflt ? `=${deflt}` : ''}${
       optional ? ']' : ''
     }` : '') +
     (description ? ` ${description.replace(/\n/g, '\n' + indnt + '* ')}` : '') + '\n'

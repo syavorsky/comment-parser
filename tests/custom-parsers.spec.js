@@ -30,7 +30,7 @@ describe('parse() with custom tag parsers', function () {
       }
     ]
 
-    expect(parse(sample, { parsers: parsers })[0])
+    expect(parse(sample, { parsers })[0])
       .to.eql({
         line: 1,
         description: '',
@@ -72,7 +72,7 @@ describe('parse() with custom tag parsers', function () {
       }
     ]
 
-    expect(parse(sample, { parsers: parsers })[0])
+    expect(parse(sample, { parsers })[0])
       .to.eql({
         line: 1,
         description: '',
@@ -111,7 +111,7 @@ describe('parse() with custom tag parsers', function () {
       }
     ]
 
-    expect(parse(sample, { parsers: parsers })[0])
+    expect(parse(sample, { parsers })[0])
       .to.eql({
         line: 1,
         description: '',
@@ -149,7 +149,7 @@ describe('parse() with custom tag parsers', function () {
       }
     ]
 
-    expect(parse(sample, { parsers: parsers })[0])
+    expect(parse(sample, { parsers })[0])
       .to.eql({
         line: 1,
         description: '',

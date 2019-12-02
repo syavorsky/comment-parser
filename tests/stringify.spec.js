@@ -16,7 +16,7 @@ describe('Comment stringifying', function () {
 * @some-tag {Type} [optionalName=someDefault]
 * @another-tag
 */`
-    const parsed = parser(expected)
+    const parsed = parser(expected, { trim: false })
 
     expect(parsed).to.be.an('array')
 
@@ -37,11 +37,31 @@ describe('Comment stringifying', function () {
 * @some-tag {Type} [optionalName=someDefault]
 * @another-tag
 */`
-    const parsed = parser(expected)
+    const parsed = parser(expected, { trim: false })
 
     expect(parsed).to.be.an('array')
 
     const stringified = parser.stringify(parsed)
+
+    expect(stringified).to.eq(expected)
+  })
+
+  it('should stringify doc block with multiline description and indent', function () {
+    const expected = ` /**
+  * Singleline or multiline description text.
+  * Line breaks are preserved.
+  * @some-tag {Type} name Singleline or multiline description text
+  * @some-tag {Type} name.subname Singleline or multiline description text
+  * @some-tag {Type} name.subname.subsubname Singleline or
+  * multiline description text
+  * @some-tag {Type} [optionalName=someDefault]
+  * @another-tag
+  */`
+    const parsed = parser(expected, { trim: false })
+
+    expect(parsed).to.be.an('array')
+
+    const stringified = parser.stringify(parsed, { indent: '  ' })
 
     expect(stringified).to.eq(expected)
   })
@@ -56,7 +76,7 @@ describe('Comment stringifying', function () {
 * @some-tag {Type} [optionalName=someDefault]
 * @another-tag
 `
-    const parsed = parser('/**\n' + expected + '*/')
+    const parsed = parser('/**\n' + expected + '*/', { trim: false })
 
     expect(parsed).to.be.an('array')
 
@@ -97,7 +117,7 @@ describe('Comment stringifying', function () {
     * @some-tag {Type} [optionalName=someDefault]
     * @another-tag
     */`
-    const parsed = parser(expected)
+    const parsed = parser(expected, { trim: false })
 
     expect(parsed).to.be.an('array')
 
@@ -117,7 +137,7 @@ describe('Comment stringifying', function () {
     * @some-tag {Type} [optionalName=someDefault]
     * @another-tag
     */`
-    const parsed = parser(expected)
+    const parsed = parser(expected, { trim: false })
 
     expect(parsed).to.be.an('array')
 
