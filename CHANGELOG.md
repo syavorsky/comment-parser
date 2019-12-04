@@ -1,3 +1,6 @@
+# v0.7.1
+- ensure non-space characters after asterisk are included in source
+
 # v0.7.0
 - allow fenced blocks in tag description, see opts.fence
 
