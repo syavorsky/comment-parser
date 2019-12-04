@@ -1081,6 +1081,31 @@ describe('Comment string parsing', function () {
       })
   })
 
+  it('should include non-space immediately after asterisk`', function () {
+    expect(parse(function () {
+      /**
+       * @example
+       *```typescript
+       * ```
+       */
+      function A () {}
+    })[0])
+      .to.eql({
+        line: 1,
+        source: '@example\n```typescript\n```',
+        description: '',
+        tags: [{
+          tag: 'example',
+          name: '\n```typescript',
+          optional: false,
+          description: '```',
+          type: '',
+          line: 2,
+          source: '@example\n```typescript\n```'
+        }]
+      })
+  })
+
   it('should handle fenced description (issue #61)`', function () {
     expect(parse(function () {
       /**

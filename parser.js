@@ -237,7 +237,9 @@ function mkextract (opts) {
       // it always has the right indentation
       if (chunk.length > 0 && nonSpaceChar) {
         if (nonSpaceChar[0] === '*') {
-          lineStart = nonSpaceChar.index + 2
+          const afterNonSpaceCharIdx = nonSpaceChar.index + 1
+          const extraCharIsSpace = line.charAt(afterNonSpaceCharIdx) === ' '
+          lineStart = afterNonSpaceCharIdx + (extraCharIsSpace ? 1 : 0)
           startWithStar = true
         } else if (nonSpaceChar.index < indent) {
           lineStart = nonSpaceChar.index
