@@ -735,6 +735,95 @@ describe('Comment string parsing', function () {
       })
   })
 
+  it('should parse nested tags with missing parent', function () {
+    expect(parse(function () {
+      /**
+       * Description
+       * @my-tag name.sub-name
+       * @my-tag name.sub-name.sub-sub-name
+       */
+    }, { dotted_names: true })[0])
+      .to.eql({
+        line: 1,
+        description: 'Description',
+        source: 'Description\n@my-tag name.sub-name\n@my-tag name.sub-name.sub-sub-name',
+        tags: [{
+          tag: 'my-tag',
+          line: 3,
+          type: '',
+          name: 'name',
+          description: '',
+          tags: [{
+            tag: 'my-tag',
+            line: 3,
+            type: '',
+            name: 'sub-name',
+            optional: false,
+            source: '@my-tag name.sub-name',
+            description: '',
+            tags: [{
+              tag: 'my-tag',
+              line: 4,
+              type: '',
+              name: 'sub-sub-name',
+              optional: false,
+              source: '@my-tag name.sub-name.sub-sub-name',
+              description: ''
+            }]
+          }]
+        }]
+      })
+  })
+
+  it('should parse nested tags with missing parent but with matching tag name', function () {
+    expect(parse(function () {
+      /**
+       * Description
+       * @my-tag
+       * @my-tag name.sub-name
+       * @my-tag name.sub-name.sub-sub-name
+       */
+    }, { dotted_names: true })[0])
+      .to.eql({
+        line: 1,
+        description: 'Description',
+        source: 'Description\n@my-tag\n@my-tag name.sub-name\n@my-tag name.sub-name.sub-sub-name',
+        tags: [{
+          tag: 'my-tag',
+          line: 3,
+          type: '',
+          name: '',
+          source: '@my-tag',
+          optional: false,
+          description: ''
+        }, {
+          tag: 'my-tag',
+          line: 4,
+          type: '',
+          name: 'name',
+          description: '',
+          tags: [{
+            tag: 'my-tag',
+            line: 4,
+            type: '',
+            name: 'sub-name',
+            optional: false,
+            source: '@my-tag name.sub-name',
+            description: '',
+            tags: [{
+              tag: 'my-tag',
+              line: 5,
+              type: '',
+              name: 'sub-sub-name',
+              optional: false,
+              source: '@my-tag name.sub-name.sub-sub-name',
+              description: ''
+            }]
+          }]
+        }]
+      })
+  })
+
   it('should parse complex types `@tag {{a: type}} name`', function () {
     expect(parse(function () {
       /**
@@ -973,6 +1062,31 @@ describe('Comment string parsing', function () {
           description: 'description  intent same line\n',
           source: '@tag name\ndescription  intent same line\n',
           optional: false
+        }]
+      })
+  })
+
+  it('should parse doc block with star and initial whitespace respecting `opts.trim = false`', function () {
+    expect(parse(function () {
+      /**
+       * Description text
+       *  @tag tagname Tag description
+       */
+    }, {
+      trim: false
+    })[0])
+      .to.eql({
+        description: '\nDescription text',
+        source: '\nDescription text\n @tag tagname Tag description\n',
+        line: 1,
+        tags: [{
+          tag: 'tag',
+          name: 'tagname',
+          optional: false,
+          description: 'Tag description\n',
+          type: '',
+          line: 3,
+          source: ' @tag tagname Tag description\n'
         }]
       })
   })

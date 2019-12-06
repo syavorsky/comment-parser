@@ -14,11 +14,9 @@ function find (list, filter) {
   let matchs = true
 
   while (i--) {
-    for (const k in filter) {
-      if ({}.hasOwnProperty.call(filter, k)) {
-        matchs = (filter[k] === list[i][k]) && matchs
-      }
-    }
+    Object.keys(filter).forEach((k) => {
+      matchs = (filter[k] === list[i][k]) && matchs
+    })
     if (matchs) { return list[i] }
   }
   return null
@@ -33,7 +31,10 @@ function find (list, filter) {
  * @returns {object} parsed tag node
  */
 function parse_tag (str, parsers) {
-  if (typeof str !== 'string' || str[0] !== '@') { return null }
+  // Should not get here as enforcing that string begin with whitespace
+  //  and an at-sign
+  /* istanbul ignore next */
+  if (typeof str !== 'string' || !(/\s*@/).test(str)) { return null }
 
   const data = parsers.reduce(function (state, parser) {
     let result
@@ -140,6 +141,9 @@ function parse_block (source, opts) {
   const tags = source.reduce(function (tags, tag) {
     const tag_node = parse_tag(tag.source, opts.parsers)
 
+    // Should not get here as enforcing that string begin with whitespace
+    //  and an at-sign and return non-nullish value
+    /* istanbul ignore next */
     if (!tag_node) { return tags }
 
     tag_node.line = tag.line
