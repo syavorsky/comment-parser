@@ -391,6 +391,29 @@ describe('Comment string parsing', function () {
   })
   /* eslint-enable no-tabs */
 
+  it('should parse tag with whitespace description and `opts.trim = false`', function () {
+    expect(parse(`
+      /**
+       * @my-tag {my.type} name\t
+       */
+    `, { trim: false })[0])
+      .to.eql({
+        line: 1,
+        source: '\n@my-tag {my.type} name\t\n',
+        description: '',
+        tags: [{
+          tag: 'my-tag',
+          line: 2,
+          type: 'my.type',
+          name: 'name',
+          source: '@my-tag {my.type} name\t\n',
+          // Default parser trims regardless of `trim` setting
+          description: '',
+          optional: false
+        }]
+      })
+  })
+
   it('should parse tag with multiline description', function () {
     expect(parse(function () {
       /**
@@ -411,6 +434,29 @@ describe('Comment string parsing', function () {
           source: '@my-tag {my.type} name description line 1\ndescription line 2\ndescription line 3',
           description: 'description line 1\ndescription line 2\ndescription line 3',
           optional: false
+        }]
+      })
+  })
+
+  it('should gracefully fail on syntax errors `@tag [name`', function () {
+    expect(parse(function () {
+      /**
+       * @my-tag [name
+       */
+    })[0])
+      .to.eql({
+        line: 1,
+        description: '',
+        source: '@my-tag [name',
+        tags: [{
+          tag: 'my-tag',
+          line: 2,
+          type: '',
+          name: '',
+          description: '',
+          source: '@my-tag [name',
+          optional: false,
+          errors: ['parse_name: Invalid `name`, unpaired brackets']
         }]
       })
   })
