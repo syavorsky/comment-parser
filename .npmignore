@@ -1,0 +1,3 @@
+tests
+.nyc_output
+.travis.yml
