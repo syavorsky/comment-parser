@@ -17,10 +17,8 @@
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^4.0.1",
     "mocha": "^6.2.2",
-    "node-static": "^0.7.11",
     "nodemon": "^1.19.4",
     "nyc": "^14.1.1",
-    "open-cli": "^5.0.0",
     "typescript": "^3.6.4"
   },
   "engines": {
@@ -28,8 +26,6 @@
   },
   "scripts": {
     "typescript": "tsc index.d.ts",
-    "start": "static -p 8065",
-    "cov:open": "open-cli http://localhost:8065/coverage/ && npm start",
     "lint:fix": "eslint --fix .",
     "test:lint": "eslint .",
     "test:typescript": "tsc index.d.ts",
@@ -40,10 +36,6 @@
   "nyc": {
     "exclude": [
       "tests"
-    ],
-    "reporter": [
-      "text",
-      "html"
     ]
   },
   "repository": {

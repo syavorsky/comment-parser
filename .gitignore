@@ -15,6 +15,5 @@ package-lock.json
 npm-debug.log
 node_modules
 .nyc_output
-coverage
 
 .vscode
