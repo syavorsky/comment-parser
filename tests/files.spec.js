@@ -34,6 +34,32 @@ describe('File parsing', function () {
     })
   })
 
+  it('should parse the file by path (with stream options argument)', function (done) {
+    parse.file(path.resolve(__dirname, 'fixtures/sample.js'), {}, function (err, parsed) {
+      if (err) { done(err) }
+
+      expect(parsed)
+        .to.be.an('array')
+
+      expect(parsed.length)
+        .to.eq(4)
+
+      expect(parsed[0].description)
+        .to.eq('File description')
+
+      expect(parsed[1].tags[0].tag)
+        .to.eq('class')
+
+      expect(parsed[2].tags[0].tag)
+        .to.eq('property')
+
+      expect(parsed[3].tags[0].tag)
+        .to.eq('method')
+
+      done()
+    })
+  })
+
   it('should path the error if file dows not exist', function (done) {
     parse.file('does/not/exists', function (err, parsed) {
       expect(err)
