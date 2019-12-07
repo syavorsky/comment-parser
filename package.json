@@ -34,6 +34,10 @@
     "watch": "nodemon -q -i node_modules -x npm test"
   },
   "nyc": {
+    "branches": 85,
+    "lines": 85,
+    "functions": 85,
+    "statements": 85,
     "exclude": [
       "tests"
     ]
