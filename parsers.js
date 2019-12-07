@@ -14,7 +14,6 @@ const PARSERS = {}
 
 PARSERS.parse_tag = function parse_tag (str) {
   const result = str.match(/^\s*@(\S+)/)
-
   if (!result) { throw new Error('Invalid `@tag`, missing @ symbol') }
 
   return {

@@ -18,6 +18,7 @@
     "eslint-plugin-standard": "^4.0.1",
     "mocha": "^6.2.2",
     "nodemon": "^1.19.4",
+    "nyc": "^14.1.1",
     "typescript": "^3.6.4"
   },
   "engines": {
@@ -28,9 +29,18 @@
     "lint:fix": "eslint --fix .",
     "test:lint": "eslint .",
     "test:typescript": "tsc index.d.ts",
-    "test:unit": "mocha tests",
+    "test:unit": "nyc mocha tests",
     "test": "npm run test:typescript && npm run test:lint && npm run test:unit",
     "watch": "nodemon -q -i node_modules -x npm test"
+  },
+  "nyc": {
+    "branches": 85,
+    "lines": 85,
+    "functions": 85,
+    "statements": 85,
+    "exclude": [
+      "tests"
+    ]
   },
   "repository": {
     "type": "git",

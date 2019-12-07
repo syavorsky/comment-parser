@@ -3,6 +3,7 @@
 
 const { expect } = require('chai')
 const parse = require('./parse')
+const builtinParsers = require('../parsers')
 
 describe('parse() with custom tag parsers', function () {
   function sample () {
@@ -123,6 +124,43 @@ describe('parse() with custom tag parsers', function () {
           source: '@tag {type} name description',
           errors: [
             'parser2: error 1',
+            'parser3: error 2'
+          ],
+          line: 2
+        }]
+      })
+  })
+
+  it('should catch parser exceptions and populate `errors` field (with built-in `parse_type`)', function () {
+    const parsers = [
+      function parser1 (str) {
+        throw new Error('error 1')
+      },
+      builtinParsers.parse_type,
+      function parser3 (str) {
+        throw new Error('error 2')
+      },
+      function parser4 (str) {
+        return {
+          source: '',
+          data: { name: 'name' }
+        }
+      }
+    ]
+
+    expect(parse(sample, { parsers: parsers })[0])
+      .to.eql({
+        line: 1,
+        description: '',
+        source: '@tag {type} name description',
+        tags: [{
+          type: '',
+          name: 'name',
+          description: '',
+          optional: false,
+          source: '@tag {type} name description',
+          errors: [
+            'parser1: error 1',
             'parser3: error 2'
           ],
           line: 2

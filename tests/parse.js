@@ -12,9 +12,12 @@
 const parse = require('../index')
 
 module.exports = function (func, opts) {
-  let str = func.toString()
-  str = str
-    .slice(str.indexOf('{') + 1, str.lastIndexOf('}'))
-    .replace(/\r\n/g, '\n')
+  let str = func
+  if (typeof func === 'function') {
+    str = func.toString()
+    str = str
+      .slice(str.indexOf('{') + 1, str.lastIndexOf('}'))
+      .replace(/\r\n/g, '\n')
+  }
   return parse(str, opts)
 }
