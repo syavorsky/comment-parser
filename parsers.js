@@ -5,10 +5,6 @@ function skipws (str) {
   do {
     if (str[i] !== ' ' && str[i] !== '\t') { return i }
   } while (++i < str.length)
-  // When not trimming, `str` will always end with a newline, and when
-  //  trimming, will end with end-of-string, so this `return` is not
-  //  really needed
-  /* istanbul ignore next */
   return i
 }
 
@@ -18,9 +14,6 @@ const PARSERS = {}
 
 PARSERS.parse_tag = function parse_tag (str) {
   const result = str.match(/^\s*@(\S+)/)
-
-  // If there is no at-sign or not followed by non-whitespace, won't get here
-  /* istanbul ignore next */
   if (!result) { throw new Error('Invalid `@tag`, missing @ symbol') }
 
   return {
