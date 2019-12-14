@@ -25,6 +25,27 @@ describe('Comment stringifying', function () {
     expect(stringified).to.eq(expected)
   })
 
+  it('should stringify doc block with multiline description', function () {
+    const expected = `/**
+* Singleline or multiline description text. Line breaks are preserved.
+* Multiline descriptions are preserved.
+*
+* @some-tag {Type} name Singleline or multiline description text
+* @some-tag {Type} name.subname Singleline or multiline description text
+* @some-tag {Type} name.subname.subsubname Singleline or
+* multiline description text
+* @some-tag {Type} [optionalName=someDefault]
+* @another-tag
+*/`
+    const parsed = parser(expected)
+
+    expect(parsed).to.be.an('array')
+
+    const stringified = parser.stringify(parsed)
+
+    expect(stringified).to.eq(expected)
+  })
+
   it('should stringify doc block with description (supplied tags object)', function () {
     const expected = `* Singleline or multiline description text. Line breaks are preserved.
 *
