@@ -33,7 +33,7 @@ const stringifyBlock = exports.stringifyBlock = function stringifyBlock (
 ) {
   // block.line
   const indnt = getIndent(indent)
-  return (block.description ? `${indnt}* ${block.description}\n${indnt}*\n` : '') +
+  return (block.description ? `${indnt}${block.description.replace(/^/gm, '* ')}\n${indnt}*\n` : '') +
     block.tags.reduce((s, tag) => {
       return s + stringifyTag(tag, { indent })
     }, '')
