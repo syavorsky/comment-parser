@@ -1,3 +1,6 @@
+# v0.7.2
+- make stringify to start each line with * in multiline comments
+
 # v0.7.1
 - ensure non-space characters after asterisk are included in source
 
