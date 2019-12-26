@@ -693,6 +693,8 @@ describe('Comment string parsing', function () {
   })
 
   it('should parse nested tags', function () {
+    // eslint-disable-next-line no-extend-native
+    Object.prototype.ensureFilteringPrototype = true
     expect(parse(function () {
       /**
        * Description
@@ -733,6 +735,8 @@ describe('Comment string parsing', function () {
           }]
         }]
       })
+    // Restore
+    delete Object.prototype.ensureFilteringPrototype
   })
 
   it('should parse nested tags with missing parent', function () {

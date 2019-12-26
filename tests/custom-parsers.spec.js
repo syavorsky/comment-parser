@@ -3,6 +3,7 @@
 
 const { expect } = require('chai')
 const parse = require('./parse')
+const { PARSERS } = require('../index')
 const builtinParsers = require('../parsers')
 
 describe('parse() with custom tag parsers', function () {
@@ -166,5 +167,17 @@ describe('parse() with custom tag parsers', function () {
           line: 2
         }]
       })
+  })
+
+  it('should allow custom parsers to skip trailing whitespace', function () {
+    const typeParsedInfo = PARSERS.parse_type(' ', {})
+
+    expect(typeParsedInfo).to.eql(null)
+  })
+
+  it('should allow `parse_tag` parser to throw upon bad tag', function () {
+    expect(() => {
+      PARSERS.parse_tag('@')
+    }).to.throw(Error, 'Invalid `@tag`, missing @ symbol')
   })
 })
