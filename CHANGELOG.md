@@ -1,3 +1,6 @@
+# v0.7.4
+- node 8 backward compatibility fixes
+
 # v0.7.3
 - make stringify result more close to the source
 
