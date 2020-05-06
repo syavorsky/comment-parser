@@ -33,8 +33,6 @@ function find (list, filter) {
  * @returns {object} parsed tag node
  */
 function parse_tag (str, parsers) {
-  if (typeof str !== 'string' || !(/\s*@/).test(str)) { return null }
-
   const data = parsers.reduce(function (state, parser) {
     let result
 
@@ -139,7 +137,6 @@ function parse_block (source, opts) {
 
   const tags = source.reduce(function (tags, tag) {
     const tag_node = parse_tag(tag.source, opts.parsers)
-    if (!tag_node) { return tags }
 
     tag_node.line = tag.line
     tag_node.source = tag.source

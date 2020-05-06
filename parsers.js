@@ -70,7 +70,7 @@ PARSERS.parse_name = function parse_name (str, data) {
 
     if (brackets !== 0) { throw new Error('Invalid `name`, unpaired brackets') }
 
-    res = { name: name, optional: false }
+    res = { name, optional: false }
 
     if (name[0] === '[' && name[name.length - 1] === ']') {
       res.optional = true
