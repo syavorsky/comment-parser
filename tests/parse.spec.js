@@ -592,7 +592,7 @@ describe('Comment string parsing', function () {
       })
   })
 
-  it('should tolerate default value with whitespces `@tag {my.type} [name=John Doe]`', function () {
+  it('should tolerate default value with whitespace `@tag {my.type} [name=John Doe]`', function () {
     expect(parse(function () {
       /**
        * @my-tag {my.type} [name=John Doe]
@@ -1291,7 +1291,7 @@ describe('Comment string parsing', function () {
       })
   })
 
-  it('should ignore inconsitent quoted groups (issue #41)`', function () {
+  it('should ignore inconsistent quoted groups (issue #41)`', function () {
     expect(parse(function () {
       /**
        * @section "Brand Colors Here you can find all the brand colors
