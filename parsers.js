@@ -79,7 +79,7 @@ PARSERS.parse_name = function parse_name (str, data) {
       if (name.indexOf('=') !== -1) {
         const parts = name.split('=')
         name = parts[0]
-        res.default = parts[1].replace(/^(["'])(.+)(\1)$/, '$2')
+        res.default = parts[1]
       }
     }
   }

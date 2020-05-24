@@ -586,7 +586,7 @@ describe('Comment string parsing', function () {
           type: 't',
           name: 'name',
           source: '@tag {t} [name="yay!"]',
-          default: 'yay!',
+          default: '"yay!"',
           optional: true,
           description: ''
         }]
