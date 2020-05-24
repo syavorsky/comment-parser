@@ -483,6 +483,28 @@ describe('Comment string parsing', function () {
       })
   })
 
+  it('should parse tag with type and optional name with whitespace `@tag {my.type} [spaced name]`', function () {
+    expect(parse(function () {
+      /**
+       * @my-tag {my.type} [spaced name]
+       */
+    })[0])
+      .to.eql({
+        line: 1,
+        description: '',
+        source: '@my-tag {my.type} [spaced name]',
+        tags: [{
+          tag: 'my-tag',
+          line: 2,
+          type: 'my.type',
+          name: 'spaced name',
+          description: '',
+          source: '@my-tag {my.type} [spaced name]',
+          optional: true
+        }]
+      })
+  })
+
   it('should parse tag with type and optional name with default value `@tag {my.type} [name=value]`', function () {
     expect(parse(function () {
       /**
@@ -500,6 +522,29 @@ describe('Comment string parsing', function () {
           name: 'name',
           default: 'value',
           source: '@my-tag {my.type} [name=value]',
+          description: '',
+          optional: true
+        }]
+      })
+  })
+
+  it('should parse tag with type and optional name with spacing `@tag {my.type} [ name = John Doe ]`', function () {
+    expect(parse(function () {
+      /**
+       * @my-tag {my.type} [ name = John Doe ]
+       */
+    })[0])
+      .to.eql({
+        line: 1,
+        description: '',
+        source: '@my-tag {my.type} [ name = John Doe ]',
+        tags: [{
+          tag: 'my-tag',
+          line: 2,
+          type: 'my.type',
+          name: 'name',
+          default: 'John Doe',
+          source: '@my-tag {my.type} [ name = John Doe ]',
           description: '',
           optional: true
         }]
@@ -586,7 +631,30 @@ describe('Comment string parsing', function () {
           type: 't',
           name: 'name',
           source: '@tag {t} [name="yay!"]',
-          default: 'yay!',
+          default: '"yay!"',
+          optional: true,
+          description: ''
+        }]
+      })
+  })
+
+  it('should tolerate quoted default value containing `=` `@tag [name="="]`', function () {
+    expect(parse(function () {
+      /**
+       * @tag {t} [name="="]
+       */
+    })[0])
+      .to.eql({
+        line: 1,
+        source: '@tag {t} [name="="]',
+        description: '',
+        tags: [{
+          tag: 'tag',
+          line: 2,
+          type: 't',
+          name: 'name',
+          source: '@tag {t} [name="="]',
+          default: '"="',
           optional: true,
           description: ''
         }]

@@ -74,13 +74,14 @@ PARSERS.parse_name = function parse_name (str, data) {
 
     if (name[0] === '[' && name[name.length - 1] === ']') {
       res.optional = true
-      name = name.slice(1, -1)
 
-      if (name.indexOf('=') !== -1) {
-        const parts = name.split('=')
-        name = parts[0]
-        res.default = parts[1].replace(/^(["'])(.+)(\1)$/, '$2')
-      }
+      const result = name.slice(1, -1).match(
+        /^\s*([^=]+?)(?:\s*=\s*(.+?))?\s*(?=$)/
+      )
+
+      name = result[1]
+
+      if (result[2]) res.default = result[2]
     }
   }
 
