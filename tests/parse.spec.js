@@ -476,11 +476,12 @@ describe('Comment string parsing', function () {
         tag: 'my-tag',
         line: 2,
         type: '',
-        name: '',
+        name: 'name',
         source: '@my-tag [name=]',
+        default: '',
         description: '',
-        optional: false,
-        errors: ['parse_name: Invalid `name`, bad syntax']
+        optional: true,
+        errors: ['parse_name: Empty `name`, bad syntax']
       }]
     }])
   })

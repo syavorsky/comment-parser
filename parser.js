@@ -33,11 +33,16 @@ function find (list, filter) {
  * @returns {object} parsed tag node
  */
 function parse_tag (str, parsers) {
-  const data = parsers.reduce(function (state, parser) {
+  const { data } = parsers.reduce(function (state, parser) {
     let result
 
     try {
       result = parser(state.source, Object.assign({}, state.data))
+      if (result && result.data && result.data.warning) {
+        state.data.warnings = (state.data.warnings || [])
+          .concat(parser.name + ': ' + result.data.warning)
+        delete result.data.warning
+      }
     } catch (err) {
       state.data.errors = (state.data.errors || [])
         .concat(parser.name + ': ' + err.message)
@@ -52,7 +57,7 @@ function parse_tag (str, parsers) {
   }, {
     source: str,
     data: {}
-  }).data
+  })
 
   data.optional = !!data.optional
   data.type = data.type === undefined ? '' : data.type
@@ -176,6 +181,13 @@ function parse_block (source, opts) {
 
     return tags.concat(tag_node)
   }, [])
+
+  for (const tag of tags) {
+    if (!tag.errors && tag.warnings) {
+      tag.errors = [...tag.warnings]
+      delete tag.warnings
+    }
+  }
 
   return {
     tags,

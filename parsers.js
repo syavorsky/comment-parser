@@ -77,13 +77,19 @@ PARSERS.parse_name = function parse_name (str, data) {
       name = name.slice(1, -1)
 
       const match = name.match(
-        /^\s*([^=]+?)(?:\s*=\s*(.+?))?\s*(?=$)/
+        /^\s*([^=]+?)(?:\s*=\s*(.*?))?\s*(?=$)/
       )
 
       if (!match) throw new SyntaxError('Invalid `name`, bad syntax')
 
       name = match[1]
       if (match[2]) res.default = match[2]
+      // We will throw this later after processing other tags (so we
+      //  will collect enough data for the user to be able to fully recover)
+      else if (match[2] === '') {
+        res.default = match[2]
+        res.warning = 'Empty `name`, bad syntax'
+      }
     }
   }
 
