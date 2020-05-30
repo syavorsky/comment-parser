@@ -1,3 +1,6 @@
+# v0.7.5
+- name parsing fixes
+
 # v0.7.4
 - node 8 backward compatibility fixes
 
