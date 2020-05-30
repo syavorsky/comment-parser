@@ -10,13 +10,13 @@ describe('Comment string parsing', function () {
       /**
        * Description
        */
-    })[0])
-      .to.eql({
+    }))
+      .to.eql([{
         description: 'Description',
         source: 'Description',
         line: 1,
         tags: []
-      })
+      }])
   })
 
   it('should parse doc block with no mid stars', function () {
@@ -24,13 +24,13 @@ describe('Comment string parsing', function () {
       /**
          Description
        */
-    })[0])
-      .to.eql({
+    }))
+      .to.eql([{
         description: 'Description',
         source: 'Description',
         line: 1,
         tags: []
-      })
+      }])
   })
 
   it('should skip surrounding empty lines while preserving line numbers', function () {
@@ -44,13 +44,13 @@ describe('Comment string parsing', function () {
        *
        */
       var a
-    })[0])
-      .eql({
+    }))
+      .eql([{
         description: 'Description first line\n\nDescription second line',
         source: 'Description first line\n\nDescription second line',
         line: 1,
         tags: []
-      })
+      }])
   })
 
   it('should accept a description on the first line', function () {
@@ -60,13 +60,13 @@ describe('Comment string parsing', function () {
        * Description second line
        */
       var a
-    })[0])
-      .eql({
+    }))
+      .eql([{
         description: 'Description first line\n\nDescription second line',
         source: 'Description first line\n\nDescription second line',
         line: 1,
         tags: []
-      })
+      }])
   })
 
   it('should parse not starred middle lines with `opts.trim = true`', function () {
@@ -77,8 +77,8 @@ describe('Comment string parsing', function () {
       */
     }, {
       trim: true
-    })[0])
-      .eql({
+    }))
+      .eql([{
         description: 'Description text',
         source: 'Description text\n@tag tagname Tag description',
         line: 1,
@@ -91,7 +91,7 @@ describe('Comment string parsing', function () {
           line: 3,
           source: '@tag tagname Tag description'
         }]
-      })
+      }])
   })
 
   it('should parse not starred middle lines with `opts.trim = false`', function () {
@@ -102,8 +102,8 @@ describe('Comment string parsing', function () {
       */
     }, {
       trim: false
-    })[0])
-      .eql({
+    }))
+      .eql([{
         description: '\nDescription text',
         source: '\nDescription text\n@tag tagname Tag description\n',
         line: 1,
@@ -116,7 +116,7 @@ describe('Comment string parsing', function () {
           line: 3,
           source: '@tag tagname Tag description\n'
         }]
-      })
+      }])
   })
 
   it('should accept comment close on a non-empty', function () {
@@ -126,13 +126,13 @@ describe('Comment string parsing', function () {
        *
        * Description second line */
       var a
-    })[0])
-      .eql({
+    }))
+      .eql([{
         description: 'Description first line\n\nDescription second line',
         source: 'Description first line\n\nDescription second line',
         line: 1,
         tags: []
-      })
+      }])
   })
 
   it('should skip empty blocks', function () {
@@ -182,13 +182,13 @@ describe('Comment string parsing', function () {
     expect(parse(function () {
       /** Description */
       var a
-    })[0])
-      .to.eql({
+    }))
+      .to.eql([{
         description: 'Description',
         source: 'Description',
         line: 1,
         tags: []
-      })
+      }])
   })
 
   it('should skip `/* */` comments', function () {
@@ -224,21 +224,21 @@ describe('Comment string parsing', function () {
       var a
     }, {
       trim: false
-    })[0])
-      .eql({
+    }))
+      .eql([{
         description: '\n\n\n  Description first line\n    second line\n\n      third line\n',
         source: '\n\n\n  Description first line\n    second line\n\n      third line\n',
         line: 1,
         tags: []
-      })
+      }])
   })
 
   it('should parse one line block with tag', function () {
     expect(parse(function () {
       /** @tag */
       var a
-    })[0])
-      .to.eql({
+    }))
+      .to.eql([{
         description: '',
         line: 1,
         source: '@tag',
@@ -251,7 +251,7 @@ describe('Comment string parsing', function () {
           optional: false,
           source: '@tag'
         }]
-      })
+      }])
   })
 
   it('should parse `@tag`', function () {
@@ -261,8 +261,8 @@ describe('Comment string parsing', function () {
        * @my-tag
        */
       var a
-    })[0])
-      .to.eql({
+    }))
+      .to.eql([{
         line: 1,
         source: '@my-tag',
         description: '',
@@ -275,7 +275,7 @@ describe('Comment string parsing', function () {
           optional: false,
           description: ''
         }]
-      })
+      }])
   })
 
   it('should parse `@tag {my.type}`', function () {
@@ -284,8 +284,8 @@ describe('Comment string parsing', function () {
        * @my-tag {my.type}
        */
       var a
-    })[0])
-      .to.eql({
+    }))
+      .to.eql([{
         line: 1,
         source: '@my-tag {my.type}',
         description: '',
@@ -298,7 +298,7 @@ describe('Comment string parsing', function () {
           optional: false,
           description: ''
         }]
-      })
+      }])
   })
 
   it('should parse tag with name only `@tag name`', function () {
@@ -306,8 +306,8 @@ describe('Comment string parsing', function () {
       /**
        * @my-tag name
        */
-    })[0])
-      .to.eql({
+    }))
+      .to.eql([{
         line: 1,
         description: '',
         source: '@my-tag name',
@@ -320,7 +320,7 @@ describe('Comment string parsing', function () {
           optional: false,
           description: ''
         }]
-      })
+      }])
   })
 
   it('should parse tag with type and name `@tag {my.type} name`', function () {
@@ -328,8 +328,8 @@ describe('Comment string parsing', function () {
       /**
        * @my-tag {my.type} name
        */
-    })[0])
-      .to.eql({
+    }))
+      .to.eql([{
         line: 1,
         source: '@my-tag {my.type} name',
         description: '',
@@ -342,7 +342,7 @@ describe('Comment string parsing', function () {
           description: '',
           optional: false
         }]
-      })
+      }])
   })
 
   it('should parse tag with type, name and description `@tag {my.type} name description`', function () {
@@ -350,8 +350,8 @@ describe('Comment string parsing', function () {
       /**
        * @my-tag {my.type} name description
        */
-    })[0])
-      .to.eql({
+    }))
+      .to.eql([{
         line: 1,
         source: '@my-tag {my.type} name description',
         description: '',
@@ -364,17 +364,20 @@ describe('Comment string parsing', function () {
           description: 'description',
           optional: false
         }]
-      })
+      }])
   })
 
-  /* eslint-disable no-tabs */
-  it('should parse tag with type, name and description `@tag {my.type} name description separated by tab`', function () {
-    expect(parse(function () {
+  it('should parse tag with type, name and description separated by tab `@tag {my.type} name  description`', function () {
+    expect(parse(
+      /* eslint-disable no-tabs */
+      function () {
       /**
        * @my-tag	{my.type}	name	description
        */
-    })[0])
-      .to.eql({
+      }
+      /* eslint-enable no-tabs */
+    ))
+      .to.eql([{
         line: 1,
         source: '@my-tag\t{my.type}\tname\tdescription',
         description: '',
@@ -387,17 +390,16 @@ describe('Comment string parsing', function () {
           description: 'description',
           optional: false
         }]
-      })
+      }])
   })
-  /* eslint-enable no-tabs */
 
   it('should parse tag with whitespace description and `opts.trim = false`', function () {
     expect(parse(`
       /**
        * @my-tag {my.type} name\t
        */
-    `, { trim: false })[0])
-      .to.eql({
+    `, { trim: false }))
+      .to.eql([{
         line: 1,
         source: '\n@my-tag {my.type} name\t\n',
         description: '',
@@ -411,7 +413,7 @@ describe('Comment string parsing', function () {
           description: '',
           optional: false
         }]
-      })
+      }])
   })
 
   it('should parse tag with multiline description', function () {
@@ -421,8 +423,8 @@ describe('Comment string parsing', function () {
        * description line 2
        * description line 3
        */
-    })[0])
-      .to.eql({
+    }))
+      .to.eql([{
         line: 1,
         source: '@my-tag {my.type} name description line 1\ndescription line 2\ndescription line 3',
         description: '',
@@ -435,7 +437,7 @@ describe('Comment string parsing', function () {
           description: 'description line 1\ndescription line 2\ndescription line 3',
           optional: false
         }]
-      })
+      }])
   })
 
   it('should gracefully fail on syntax errors `@tag [name`', function () {
@@ -443,8 +445,8 @@ describe('Comment string parsing', function () {
       /**
        * @my-tag [name
        */
-    })[0])
-      .to.eql({
+    }))
+      .to.eql([{
         line: 1,
         description: '',
         source: '@my-tag [name',
@@ -458,7 +460,95 @@ describe('Comment string parsing', function () {
           optional: false,
           errors: ['parse_name: Invalid `name`, unpaired brackets']
         }]
-      })
+      }])
+  })
+
+  it('should gracefully fail on syntax errors `@tag [name=]`', function () {
+    expect(parse(function () {
+      /**
+       * @my-tag [name=]
+       */
+    })).to.eql([{
+      line: 1,
+      description: '',
+      source: '@my-tag [name=]',
+      tags: [{
+        tag: 'my-tag',
+        line: 2,
+        type: '',
+        name: '',
+        source: '@my-tag [name=]',
+        description: '',
+        optional: false,
+        errors: ['parse_name: Invalid `name`, bad syntax']
+      }]
+    }])
+  })
+
+  it('should gracefully fail on syntax errors `@tag [=value]`', function () {
+    expect(parse(function () {
+      /**
+       * @my-tag [=value]
+       */
+    })).to.eql([{
+      line: 1,
+      description: '',
+      source: '@my-tag [=value]',
+      tags: [{
+        tag: 'my-tag',
+        line: 2,
+        type: '',
+        name: '',
+        source: '@my-tag [=value]',
+        description: '',
+        optional: false,
+        errors: ['parse_name: Invalid `name`, bad syntax']
+      }]
+    }])
+  })
+
+  it('should gracefully fail on syntax errors `@tag [=]`', function () {
+    expect(parse(function () {
+      /**
+       * @my-tag [=]
+       */
+    })).to.eql([{
+      line: 1,
+      description: '',
+      source: '@my-tag [=]',
+      tags: [{
+        tag: 'my-tag',
+        line: 2,
+        type: '',
+        name: '',
+        source: '@my-tag [=]',
+        description: '',
+        optional: false,
+        errors: ['parse_name: Invalid `name`, bad syntax']
+      }]
+    }])
+  })
+
+  it('should gracefully fail on syntax errors `@tag [==]`', function () {
+    expect(parse(function () {
+      /**
+       * @my-tag [==]
+       */
+    })).to.eql([{
+      line: 1,
+      description: '',
+      source: '@my-tag [==]',
+      tags: [{
+        tag: 'my-tag',
+        line: 2,
+        type: '',
+        name: '',
+        source: '@my-tag [==]',
+        description: '',
+        optional: false,
+        errors: ['parse_name: Invalid `name`, bad syntax']
+      }]
+    }])
   })
 
   it('should parse tag with type and optional name `@tag {my.type} [name]`', function () {
@@ -466,8 +556,8 @@ describe('Comment string parsing', function () {
       /**
        * @my-tag {my.type} [name]
        */
-    })[0])
-      .to.eql({
+    }))
+      .to.eql([{
         line: 1,
         description: '',
         source: '@my-tag {my.type} [name]',
@@ -480,30 +570,7 @@ describe('Comment string parsing', function () {
           source: '@my-tag {my.type} [name]',
           optional: true
         }]
-      })
-  })
-
-  it('should parse tag with type and optional name with default value `@tag {my.type} [name=value]`', function () {
-    expect(parse(function () {
-      /**
-       * @my-tag {my.type} [name=value]
-       */
-    })[0])
-      .to.eql({
-        line: 1,
-        description: '',
-        source: '@my-tag {my.type} [name=value]',
-        tags: [{
-          tag: 'my-tag',
-          line: 2,
-          type: 'my.type',
-          name: 'name',
-          default: 'value',
-          source: '@my-tag {my.type} [name=value]',
-          description: '',
-          optional: true
-        }]
-      })
+      }])
   })
 
   it('should tolerate loose tag names', function () {
@@ -514,8 +581,8 @@ describe('Comment string parsing', function () {
          @-tag1 tagname Tag 1 description
          @+tag2 tagname Tag 2 description
       */
-    })[0])
-      .eql({
+    }))
+      .eql([{
         description: 'Description text',
         source: 'Description text\n@.tag0 tagname Tag 0 description\n@-tag1 tagname Tag 1 description\n@+tag2 tagname Tag 2 description',
         line: 1,
@@ -544,76 +611,144 @@ describe('Comment string parsing', function () {
           line: 5,
           source: '@+tag2 tagname Tag 2 description'
         }]
-      })
+      }])
   })
 
-  it('should tolerate default value with whitespces `@tag {my.type} [name=John Doe]`', function () {
+  it('should parse tag with optional name containing whitespace `@tag [spaced name]`', function () {
     expect(parse(function () {
       /**
-       * @my-tag {my.type} [name=John Doe]
+       * @my-tag [spaced name]
        */
-    })[0])
-      .to.eql({
+    }))
+      .to.eql([{
         line: 1,
         description: '',
-        source: '@my-tag {my.type} [name=John Doe]',
+        source: '@my-tag [spaced name]',
         tags: [{
           tag: 'my-tag',
           line: 2,
-          type: 'my.type',
-          name: 'name',
+          type: '',
+          name: 'spaced name',
           description: '',
-          source: '@my-tag {my.type} [name=John Doe]',
-          optional: true,
-          default: 'John Doe'
+          source: '@my-tag [spaced name]',
+          optional: true
         }]
-      })
+      }])
   })
 
-  it('should tolerate quoted default value `@tag [name="yay!"]`', function () {
+  it('should parse tag with optional name, default value unquoted `@tag [name=value]`', function () {
     expect(parse(function () {
       /**
-       * @tag {t} [name="yay!"]
+       * @my-tag [name=value]
        */
-    })[0])
-      .to.eql({
+    }))
+      .to.eql([{
         line: 1,
-        source: '@tag {t} [name="yay!"]',
+        description: '',
+        source: '@my-tag [name=value]',
+        tags: [{
+          tag: 'my-tag',
+          line: 2,
+          type: '',
+          name: 'name',
+          default: 'value',
+          source: '@my-tag [name=value]',
+          description: '',
+          optional: true
+        }]
+      }])
+  })
+
+  it('should parse tag with optional name containing whitespace, default value unquoted containing whitespace, spaced `@tag [ spaced name = spaced value ]`', function () {
+    expect(parse(function () {
+      /**
+       * @my-tag [ spaced name = spaced value ]
+       */
+    }))
+      .to.eql([{
+        line: 1,
+        description: '',
+        source: '@my-tag [ spaced name = spaced value ]',
+        tags: [{
+          tag: 'my-tag',
+          line: 2,
+          type: '',
+          name: 'spaced name',
+          default: 'spaced value',
+          source: '@my-tag [ spaced name = spaced value ]',
+          description: '',
+          optional: true
+        }]
+      }])
+  })
+
+  it('should parse tag with optional name, default value quoted `@tag [name="value"]`', function () {
+    expect(parse(function () {
+      /**
+       * @tag [name="value"]
+       */
+    }))
+      .to.eql([{
+        line: 1,
+        source: '@tag [name="value"]',
+        description: '',
+        tags: [{
+          tag: 'tag',
+          line: 2,
+          type: '',
+          name: 'name',
+          source: '@tag [name="value"]',
+          default: '"value"',
+          description: '',
+          optional: true
+        }]
+      }])
+  })
+
+  it('should parse tag with optional name, default value quoted containing `=` `@tag [name="="]`', function () {
+    expect(parse(function () {
+      /**
+       * @tag {t} [name="="]
+       */
+    }))
+      .to.eql([{
+        line: 1,
+        source: '@tag {t} [name="="]',
         description: '',
         tags: [{
           tag: 'tag',
           line: 2,
           type: 't',
           name: 'name',
-          source: '@tag {t} [name="yay!"]',
-          default: 'yay!',
+          source: '@tag {t} [name="="]',
+          default: '"="',
           optional: true,
           description: ''
         }]
-      })
+      }])
   })
 
-  it('should keep value as is if quotes are mismatched `@tag [name="yay\']`', function () {
+  it('should keep value as is if quotes are mismatched `@tag [name="value\']`', function () {
     expect(parse(function () {
       /**
-       * @tag {t} [name="yay!'] desc
+       * @tag [name="value'] desc
        */
-    })[0])
-      .to.eql({
+    }))
+      .to.eql([{
         line: 1,
         description: '',
-        source: '@tag {t} [name="yay!\'] desc',
+        source: '@tag [name="value\'] desc',
         tags: [{
           tag: 'tag',
           line: 2,
-          type: 't',
+          type: '',
           name: 'name',
-          source: '@tag {t} [name="yay!\'] desc',
-          default: '"yay!\'',
-          optional: true,
-          description: 'desc'
+          source: '@tag [name="value\'] desc',
+          default: '"value\'',
+          description: 'desc',
+          optional: true
         }]
-      })
+      }])
   })
 
   it('should parse rest names `@tag ...name desc`', function () {
@@ -621,8 +756,8 @@ describe('Comment string parsing', function () {
       /**
        * @tag {t} ...name desc
        */
-    })[0])
-      .to.eql({
+    }))
+      .to.eql([{
         line: 1,
         description: '',
         source: '@tag {t} ...name desc',
@@ -635,7 +770,7 @@ describe('Comment string parsing', function () {
           source: '@tag {t} ...name desc',
           description: 'desc'
         }]
-      })
+      }])
   })
 
   it('should parse optional rest names `@tag [...name] desc`', function () {
@@ -643,8 +778,8 @@ describe('Comment string parsing', function () {
       /**
        * @tag {t} [...name] desc
        */
-    })[0])
-      .to.eql({
+    }))
+      .to.eql([{
         line: 1,
         description: '',
         source: '@tag {t} [...name] desc',
@@ -657,7 +792,7 @@ describe('Comment string parsing', function () {
           source: '@tag {t} [...name] desc',
           description: 'desc'
         }]
-      })
+      }])
   })
 
   it('should parse multiple tags', function () {
@@ -667,8 +802,8 @@ describe('Comment string parsing', function () {
        * @my-tag1
        * @my-tag2
        */
-    })[0])
-      .to.eql({
+    }))
+      .to.eql([{
         line: 1,
         description: 'Description',
         source: 'Description\n@my-tag1\n@my-tag2',
@@ -689,7 +824,7 @@ describe('Comment string parsing', function () {
           source: '@my-tag2',
           description: ''
         }]
-      })
+      }])
   })
 
   it('should parse nested tags', function () {
@@ -702,8 +837,8 @@ describe('Comment string parsing', function () {
        * @my-tag name.sub-name
        * @my-tag name.sub-name.sub-sub-name
        */
-    }, { dotted_names: true })[0])
-      .to.eql({
+    }, { dotted_names: true }))
+      .to.eql([{
         line: 1,
         description: 'Description',
         source: 'Description\n@my-tag name\n@my-tag name.sub-name\n@my-tag name.sub-name.sub-sub-name',
@@ -734,7 +869,7 @@ describe('Comment string parsing', function () {
             }]
           }]
         }]
-      })
+      }])
     // Restore
     delete Object.prototype.ensureFilteringPrototype
   })
@@ -746,8 +881,8 @@ describe('Comment string parsing', function () {
        * @my-tag name.sub-name
        * @my-tag name.sub-name.sub-sub-name
        */
-    }, { dotted_names: true })[0])
-      .to.eql({
+    }, { dotted_names: true }))
+      .to.eql([{
         line: 1,
         description: 'Description',
         source: 'Description\n@my-tag name.sub-name\n@my-tag name.sub-name.sub-sub-name',
@@ -776,7 +911,7 @@ describe('Comment string parsing', function () {
             }]
           }]
         }]
-      })
+      }])
   })
 
   it('should parse nested tags with missing parent but with matching tag name', function () {
@@ -787,8 +922,8 @@ describe('Comment string parsing', function () {
        * @my-tag name.sub-name
        * @my-tag name.sub-name.sub-sub-name
        */
-    }, { dotted_names: true })[0])
-      .to.eql({
+    }, { dotted_names: true }))
+      .to.eql([{
         line: 1,
         description: 'Description',
         source: 'Description\n@my-tag\n@my-tag name.sub-name\n@my-tag name.sub-name.sub-sub-name',
@@ -825,7 +960,7 @@ describe('Comment string parsing', function () {
             }]
           }]
         }]
-      })
+      }])
   })
 
   it('should parse complex types `@tag {{a: type}} name`', function () {
@@ -833,8 +968,8 @@ describe('Comment string parsing', function () {
       /**
        * @my-tag {{a: number}} name
        */
-    })[0])
-      .to.eql({
+    }))
+      .to.eql([{
         line: 1,
         source: '@my-tag {{a: number}} name',
         description: '',
@@ -847,7 +982,7 @@ describe('Comment string parsing', function () {
           optional: false,
           description: ''
         }]
-      })
+      }])
   })
 
   it('should gracefully fail on syntax errors `@tag {{a: type} name`', function () {
@@ -855,8 +990,8 @@ describe('Comment string parsing', function () {
       /**
        * @my-tag {{a: number} name
        */
-    })[0])
-      .to.eql({
+    }))
+      .to.eql([{
         line: 1,
         description: '',
         source: '@my-tag {{a: number} name',
@@ -870,7 +1005,7 @@ describe('Comment string parsing', function () {
           optional: false,
           errors: ['parse_type: Invalid `{type}`, unpaired curlies']
         }]
-      })
+      }])
   })
 
   it('should parse $ in description`', function () {
@@ -878,8 +1013,8 @@ describe('Comment string parsing', function () {
       /**
        * @my-tag {String} name description with $ char
        */
-    })[0])
-      .to.eql({
+    }))
+      .to.eql([{
         line: 1,
         source: '@my-tag {String} name description with $ char',
         description: '',
@@ -892,7 +1027,7 @@ describe('Comment string parsing', function () {
           optional: false,
           description: 'description with $ char'
         }]
-      })
+      }])
   })
 
   it('should parse doc block with bound forced to the left', function () {
@@ -901,8 +1036,8 @@ describe('Comment string parsing', function () {
    * Description text
    * @tag tagname Tag description
    */
-    })[0])
-      .to.eql({
+    }))
+      .to.eql([{
         description: 'Description text',
         source: 'Description text\n@tag tagname Tag description',
         line: 1,
@@ -915,7 +1050,7 @@ describe('Comment string parsing', function () {
           line: 3,
           source: '@tag tagname Tag description'
         }]
-      })
+      }])
   })
 
   it('should parse doc block with bound forced to the right', function () {
@@ -924,8 +1059,8 @@ describe('Comment string parsing', function () {
            * Description text
            * @tag tagname Tag description
            */
-    })[0])
-      .to.eql({
+    }))
+      .to.eql([{
         description: 'Description text',
         source: 'Description text\n@tag tagname Tag description',
         line: 1,
@@ -938,7 +1073,7 @@ describe('Comment string parsing', function () {
           line: 3,
           source: '@tag tagname Tag description'
         }]
-      })
+      }])
   })
 
   it('should parse doc block with soft bound', function () {
@@ -948,8 +1083,8 @@ describe('Comment string parsing', function () {
            another line
    @tag tagname Tag description
    */
-    })[0])
-      .to.eql({
+    }))
+      .to.eql([{
         description: 'Description text\nanother line',
         source: 'Description text\nanother line\n@tag tagname Tag description',
         line: 1,
@@ -962,7 +1097,7 @@ describe('Comment string parsing', function () {
           line: 4,
           source: '@tag tagname Tag description'
         }]
-      })
+      }])
   })
 
   it('should parse doc block with soft bound respecting `opts.trim = false`', function () {
@@ -974,8 +1109,8 @@ describe('Comment string parsing', function () {
    */
     }, {
       trim: false
-    })[0])
-      .to.eql({
+    }))
+      .to.eql([{
         description: '\nDescription text\n  another line',
         source: '\nDescription text\n  another line\n@tag tagname Tag description\n',
         line: 1,
@@ -988,7 +1123,7 @@ describe('Comment string parsing', function () {
           line: 4,
           source: '@tag tagname Tag description\n'
         }]
-      })
+      }])
   })
 
   it('should parse multiline without star as same line respecting `opts.join = true`', function () {
@@ -1000,8 +1135,8 @@ describe('Comment string parsing', function () {
        */
     }, {
       join: true
-    })[0])
-      .to.eql({
+    }))
+      .to.eql([{
         line: 1,
         description: '',
         source: '@tag name\ndescription\nsame line',
@@ -1014,7 +1149,7 @@ describe('Comment string parsing', function () {
           source: '@tag name\ndescription same line',
           optional: false
         }]
-      })
+      }])
   })
 
   it('should parse multiline without star as same line respecting `opts.join = "\\t"`', function () {
@@ -1026,8 +1161,8 @@ describe('Comment string parsing', function () {
        */
     }, {
       join: '\t'
-    })[0])
-      .to.eql({
+    }))
+      .to.eql([{
         line: 1,
         description: '',
         source: '@tag name\ndescription\nsame line',
@@ -1040,7 +1175,7 @@ describe('Comment string parsing', function () {
           source: '@tag name\ndescription\tsame line',
           optional: false
         }]
-      })
+      }])
   })
 
   it('should parse multiline without star as same line with intent respecting `opts.join = 1` and `opts.trim = false`', function () {
@@ -1053,8 +1188,8 @@ describe('Comment string parsing', function () {
     }, {
       join: 1,
       trim: false
-    })[0])
-      .to.eql({
+    }))
+      .to.eql([{
         line: 1,
         description: '',
         source: '\n@tag name\ndescription\n  intent same line\n',
@@ -1067,7 +1202,7 @@ describe('Comment string parsing', function () {
           source: '@tag name\ndescription  intent same line\n',
           optional: false
         }]
-      })
+      }])
   })
 
   it('should parse doc block with star and initial whitespace respecting `opts.trim = false`', function () {
@@ -1078,8 +1213,8 @@ describe('Comment string parsing', function () {
        */
     }, {
       trim: false
-    })[0])
-      .to.eql({
+    }))
+      .to.eql([{
         description: '\nDescription text',
         source: '\nDescription text\n @tag tagname Tag description\n',
         line: 1,
@@ -1092,7 +1227,7 @@ describe('Comment string parsing', function () {
           line: 3,
           source: ' @tag tagname Tag description\n'
         }]
-      })
+      }])
   })
 
   it('should parse same line closing section (issue #22)', function () {
@@ -1101,13 +1236,13 @@ describe('Comment string parsing', function () {
        * Start here
        * Here is more stuff */
       var a
-    })[0])
-      .to.eql({
+    }))
+      .to.eql([{
         description: 'Start here\nHere is more stuff',
         line: 1,
         source: 'Start here\nHere is more stuff',
         tags: []
-      })
+      }])
   })
 
   it('should tolerate inconsistent formatting (issue #29)', function () {
@@ -1125,7 +1260,7 @@ describe('Comment string parsing', function () {
     }, {
       join: 1,
       trim: false
-    })[0]).to.eql({
+    })).to.eql([{
       description: '',
       line: 1,
       source: "\n@param {Object} options 配置\n@return {Any} obj 组件返回的对象\n@example name\nvar widget = XX.showWidget('searchlist', {\n   onComplete: function() {\n         todoSomething();\n    }\n});\n",
@@ -1154,7 +1289,7 @@ describe('Comment string parsing', function () {
         tag: 'example',
         type: ''
       }]
-    })
+    }])
   })
 
   it('should keep optional names spaces (issue #41)`', function () {
@@ -1162,8 +1297,8 @@ describe('Comment string parsing', function () {
       /**
        * @section [Brand Colors] Here you can find all the brand colors
        */
-    })[0])
-      .to.eql({
+    }))
+      .to.eql([{
         line: 1,
         source: '@section [Brand Colors] Here you can find all the brand colors',
         description: '',
@@ -1176,7 +1311,7 @@ describe('Comment string parsing', function () {
           optional: true,
           description: 'Here you can find all the brand colors'
         }]
-      })
+      }])
   })
 
   it('should keep quotes in description (issue #41)`', function () {
@@ -1184,8 +1319,8 @@ describe('Comment string parsing', function () {
       /**
        * @section "Brand Colors" Here you can find all the brand colors
        */
-    })[0])
-      .to.eql({
+    }))
+      .to.eql([{
         line: 1,
         source: '@section "Brand Colors" Here you can find all the brand colors',
         description: '',
@@ -1198,7 +1333,7 @@ describe('Comment string parsing', function () {
           optional: false,
           description: 'Here you can find all the brand colors'
         }]
-      })
+      }])
   })
 
   it('should use only quoted name (issue #41)`', function () {
@@ -1206,8 +1341,8 @@ describe('Comment string parsing', function () {
       /**
        * @section "Brand Colors" Here you can find "all" the brand colors
        */
-    })[0])
-      .to.eql({
+    }))
+      .to.eql([{
         line: 1,
         source: '@section "Brand Colors" Here you can find "all" the brand colors',
         description: '',
@@ -1220,16 +1355,16 @@ describe('Comment string parsing', function () {
           optional: false,
           description: 'Here you can find "all" the brand colors'
         }]
-      })
+      }])
   })
 
-  it('should ignore inconsitent quoted groups (issue #41)`', function () {
+  it('should ignore inconsistent quoted groups (issue #41)`', function () {
     expect(parse(function () {
       /**
        * @section "Brand Colors Here you can find all the brand colors
        */
-    })[0])
-      .to.eql({
+    }))
+      .to.eql([{
         line: 1,
         source: '@section "Brand Colors Here you can find all the brand colors',
         description: '',
@@ -1242,7 +1377,7 @@ describe('Comment string parsing', function () {
           optional: false,
           description: 'Colors Here you can find all the brand colors'
         }]
-      })
+      }])
   })
 
   it('should include non-space immediately after asterisk`', function () {
@@ -1253,8 +1388,8 @@ describe('Comment string parsing', function () {
        * ```
        */
       function A () {}
-    })[0])
-      .to.eql({
+    }))
+      .to.eql([{
         line: 1,
         source: '@example\n```typescript\n```',
         description: '',
@@ -1267,7 +1402,7 @@ describe('Comment string parsing', function () {
           line: 2,
           source: '@example\n```typescript\n```'
         }]
-      })
+      }])
   })
 
   it('should handle fenced description (issue #61)`', function () {
@@ -1279,8 +1414,8 @@ describe('Comment string parsing', function () {
       ```
        * @tag name description
        */
-    })[0])
-      .to.eql({
+    }))
+      .to.eql([{
         line: 1,
         source: '@example "" ```ts\n@transient()\nclass Foo { }\n```\n@tag name description',
         description: '',
@@ -1301,7 +1436,7 @@ describe('Comment string parsing', function () {
           line: 6,
           source: '@tag name description'
         }]
-      })
+      }])
   })
 
   it('should handle one line fenced description (issue #61)`', function () {
@@ -1310,8 +1445,8 @@ describe('Comment string parsing', function () {
        * @example "" ```fenced text```
        * @tag name description
        */
-    })[0])
-      .to.eql({
+    }))
+      .to.eql([{
         line: 1,
         source: '@example "" ```fenced text```\n@tag name description',
         description: '',
@@ -1332,7 +1467,7 @@ describe('Comment string parsing', function () {
           line: 3,
           source: '@tag name description'
         }]
-      })
+      }])
   })
 
   it('should handle description with multiple fences (issue #61)`', function () {
@@ -1344,8 +1479,8 @@ describe('Comment string parsing', function () {
       ```
        * @tag name description
        */
-    })[0])
-      .to.eql({
+    }))
+      .to.eql([{
         line: 1,
         source: '@example "" ```fenced text``` not fenced text ```ts\n@transient()\nclass Foo { }\n```\n@tag name description',
         description: '',
@@ -1366,7 +1501,7 @@ describe('Comment string parsing', function () {
           line: 6,
           source: '@tag name description'
         }]
-      })
+      }])
   })
 
   it('should allow custom fence detection logic (issue #61)`', function () {
@@ -1380,8 +1515,8 @@ describe('Comment string parsing', function () {
        */
     }, {
       fence: line => line.indexOf('###') !== -1
-    })[0])
-      .to.eql({
+    }))
+      .to.eql([{
         line: 1,
         source: '@example "" ###ts\n@transient()\nclass Foo { }\n###\n@tag name description',
         description: '',
@@ -1402,6 +1537,6 @@ describe('Comment string parsing', function () {
           line: 6,
           source: '@tag name description'
         }]
-      })
+      }])
   })
 })
