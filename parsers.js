@@ -13,12 +13,12 @@ function skipws (str) {
 const PARSERS = {}
 
 PARSERS.parse_tag = function parse_tag (str) {
-  const result = str.match(/^\s*@(\S+)/)
-  if (!result) { throw new Error('Invalid `@tag`, missing @ symbol') }
+  const match = str.match(/^\s*@(\S+)/)
+  if (!match) { throw new SyntaxError('Invalid `@tag`, missing @ symbol') }
 
   return {
-    source: result[0],
-    data: { tag: result[1] }
+    source: match[0],
+    data: { tag: match[1] }
   }
 }
 
@@ -38,7 +38,7 @@ PARSERS.parse_type = function parse_type (str, data) {
     if (curlies === 0) { break }
   }
 
-  if (curlies !== 0) { throw new Error('Invalid `{type}`, unpaired curlies') }
+  if (curlies !== 0) { throw new SyntaxError('Invalid `{type}`, unpaired curlies') }
 
   return {
     source: str.slice(0, pos),
@@ -68,20 +68,22 @@ PARSERS.parse_name = function parse_name (str, data) {
       if (brackets === 0 && /\s/.test(str[pos])) { break }
     }
 
-    if (brackets !== 0) { throw new Error('Invalid `name`, unpaired brackets') }
+    if (brackets !== 0) { throw new SyntaxError('Invalid `name`, unpaired brackets') }
 
     res = { name, optional: false }
 
     if (name[0] === '[' && name[name.length - 1] === ']') {
       res.optional = true
+      name = name.slice(1, -1)
 
-      const result = name.slice(1, -1).match(
+      const match = name.match(
         /^\s*([^=]+?)(?:\s*=\s*(.+?))?\s*(?=$)/
       )
 
-      name = result[1]
+      if (!match) throw new SyntaxError('Invalid `name`, bad syntax')
 
-      if (result[2]) res.default = result[2]
+      name = match[1]
+      if (match[2]) res.default = match[2]
     }
   }
 
@@ -96,12 +98,12 @@ PARSERS.parse_name = function parse_name (str, data) {
 PARSERS.parse_description = function parse_description (str, data) {
   if (data.errors && data.errors.length) { return null }
 
-  const result = str.match(/^\s+((.|\s)+)?/)
+  const match = str.match(/^\s+((.|\s)+)?/)
 
-  if (result) {
+  if (match) {
     return {
-      source: result[0],
-      data: { description: result[1] === undefined ? '' : result[1] }
+      source: match[0],
+      data: { description: match[1] === undefined ? '' : match[1] }
     }
   }
 
