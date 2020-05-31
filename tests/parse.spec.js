@@ -458,7 +458,7 @@ describe('Comment string parsing', function () {
           description: '',
           source: '@my-tag [name',
           optional: false,
-          errors: ['parse_name: Invalid `name`, unpaired brackets']
+          errors: ['parse_name: [code:closing-brackets] Invalid `name`, unpaired brackets']
         }]
       }])
   })
@@ -480,7 +480,7 @@ describe('Comment string parsing', function () {
         source: '@my-tag [name=]',
         description: '',
         optional: false,
-        errors: ['parse_name: Invalid `name`, bad syntax']
+        errors: ['parse_name: [code:cant-parse] Invalid `name`, bad syntax']
       }]
     }])
   })
@@ -502,7 +502,7 @@ describe('Comment string parsing', function () {
         source: '@my-tag [=value]',
         description: '',
         optional: false,
-        errors: ['parse_name: Invalid `name`, bad syntax']
+        errors: ['parse_name: [code:cant-parse] Invalid `name`, bad syntax']
       }]
     }])
   })
@@ -524,7 +524,7 @@ describe('Comment string parsing', function () {
         source: '@my-tag [=]',
         description: '',
         optional: false,
-        errors: ['parse_name: Invalid `name`, bad syntax']
+        errors: ['parse_name: [code:cant-parse] Invalid `name`, bad syntax']
       }]
     }])
   })
@@ -546,7 +546,7 @@ describe('Comment string parsing', function () {
         source: '@my-tag [==]',
         description: '',
         optional: false,
-        errors: ['parse_name: Invalid `name`, bad syntax']
+        errors: ['parse_name: [code:cant-parse] Invalid `name`, bad syntax']
       }]
     }])
   })
@@ -1003,7 +1003,7 @@ describe('Comment string parsing', function () {
           description: '',
           source: '@my-tag {{a: number} name',
           optional: false,
-          errors: ['parse_type: Invalid `{type}`, unpaired curlies']
+          errors: ['parse_type: [code:closing-curlies] Invalid `{type}`, unpaired curlies']
         }]
       }])
   })

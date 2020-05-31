@@ -14,7 +14,7 @@ const PARSERS = {}
 
 PARSERS.parse_tag = function parse_tag (str) {
   const match = str.match(/^\s*@(\S+)/)
-  if (!match) { throw new SyntaxError('Invalid `@tag`, missing @ symbol') }
+  if (!match) { throw new SyntaxError('[tag:no-prefix] Invalid `@tag`, missing @ symbol') }
 
   return {
     source: match[0],
@@ -38,7 +38,7 @@ PARSERS.parse_type = function parse_type (str, data) {
     if (curlies === 0) { break }
   }
 
-  if (curlies !== 0) { throw new SyntaxError('Invalid `{type}`, unpaired curlies') }
+  if (curlies !== 0) { throw new SyntaxError('[code:closing-curlies] Invalid `{type}`, unpaired curlies') }
 
   return {
     source: str.slice(0, pos),
@@ -68,7 +68,7 @@ PARSERS.parse_name = function parse_name (str, data) {
       if (brackets === 0 && /\s/.test(str[pos])) { break }
     }
 
-    if (brackets !== 0) { throw new SyntaxError('Invalid `name`, unpaired brackets') }
+    if (brackets !== 0) throw new SyntaxError('[code:closing-brackets] Invalid `name`, unpaired brackets')
 
     res = { name, optional: false }
 
@@ -76,11 +76,12 @@ PARSERS.parse_name = function parse_name (str, data) {
       res.optional = true
       name = name.slice(1, -1)
 
-      const match = name.match(
-        /^\s*([^=]+?)(?:\s*=\s*(.+?))?\s*(?=$)/
-      )
+      // const eq = name.indexOf('=')
+      // if (eq === -1) throw new SyntaxError('[code:cant-parse] Invalid `name`, bad syntax')
 
-      if (!match) throw new SyntaxError('Invalid `name`, bad syntax')
+      const match = name.match(/^\s*([^=]+?)(?:\s*=\s*(.*?))?\s*(?=$)/)
+      if (!match) throw new SyntaxError('[code:cant-parse] Invalid `name`, bad syntax')
+      if (match[2] === undefined) throw new SyntaxError('[code:equal-none] Invalid `name`, bad syntax')
 
       name = match[1]
       if (match[2]) res.default = match[2]
