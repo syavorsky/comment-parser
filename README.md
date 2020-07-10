@@ -138,7 +138,7 @@ from being interpreted as starting a new jsdoc tag until such time as the
 function returns `true` again to indicate that the state has toggled
 back.
 
-### `assoc_functions boolean`
+### `assoc_functions: boolean`
 
 Set this to `true` to parse the name of the function associated to the comment.
 You will find the information under the injected `function` property of the output value.
