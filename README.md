@@ -138,6 +138,11 @@ from being interpreted as starting a new jsdoc tag until such time as the
 function returns `true` again to indicate that the state has toggled
 back.
 
+### `assoc_functions boolean`
+
+Set this to `true` to parse the name of the function associated to the comment.
+You will find the information under the injected `function` property of the output value.
+
 ### `parsers: Parser[]` (Custom parsers)
 
 In case you need to parse tags in different way you can pass `opts.parsers = [parser1, ..., parserN]`, where each parser is `function name(str:String, data:Object):{source:String, data:Object}`.
@@ -160,7 +165,7 @@ parse(source, {parsers: [
 	function check_tag(str, data) {
 		if (allowed_tags.indexOf(data.tag) === -1) {
 			throw new Error('Unrecognized tag "' + data.tag + '"');
-		}			
+		}
 	},
 	// takes the rest of the string after ' @tag''
 	function parse_name1(str, data) {

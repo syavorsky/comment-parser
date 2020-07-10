@@ -1539,4 +1539,146 @@ describe('Comment string parsing', function () {
         }]
       }])
   })
+
+  it('should allow function association - ctor', function () {
+    expect(parse(function () {
+      /**
+       * Example class
+       */
+      class Example {
+        constructor () {
+          this.foo = 42
+        }
+      }
+    }, {
+      assoc_functions: true
+    }))
+      .to.eql([{
+        tags: [],
+        line: 1,
+        description: 'Example class',
+        source: 'Example class',
+        function: 'constructor'
+      }])
+  })
+
+  it('should allow function association - function', function () {
+    expect(parse(function () {
+      /**
+       * Example function
+       */
+      function foo () {
+
+      }
+    }, {
+      assoc_functions: true
+    }))
+      .to.eql([{
+        tags: [],
+        line: 1,
+        description: 'Example function',
+        source: 'Example function',
+        function: 'foo'
+      }])
+  })
+
+  it('should allow function association - function with spaces', function () {
+    expect(parse(function () {
+      /**
+       * Example function
+       */
+
+      function foo (
+        testArg
+      ) {
+
+      }
+    }, {
+      assoc_functions: true
+    }))
+      .to.eql([{
+        tags: [],
+        line: 1,
+        description: 'Example function',
+        source: 'Example function',
+        function: 'foo'
+      }])
+  })
+
+  it('should allow function association - function assigned', function () {
+    expect(parse(function () {
+      /**
+       * Example function
+       */
+      const foo = () => {}
+      function shouldNotMatter () {
+
+      }
+    }, {
+      assoc_functions: true
+    }))
+      .to.eql([{
+        tags: [],
+        line: 1,
+        description: 'Example function',
+        source: 'Example function',
+        function: 'foo'
+      }])
+  })
+
+  it('should allow function association - member function', function () {
+    expect(parse(function () {
+      class Foo {
+        /**
+         * Foo
+         * @tag name description
+         */
+        foo () {
+          return 42
+        }
+
+        /**
+         * Bar
+         * @tag name description
+         */
+        bar () {
+          return 43
+        }
+      }
+    }, {
+      assoc_functions: true
+    }))
+      .to.eql([
+        {
+          tags: [{
+            tag: 'tag',
+            name: 'name',
+            optional: false,
+            description: 'description',
+            type: '',
+            line: 4,
+            source: '@tag name description'
+          }],
+          line: 2,
+          description: 'Foo',
+          source: 'Foo\n@tag name description',
+          function: 'foo'
+        },
+        {
+          tags: [{
+            tag: 'tag',
+            name: 'name',
+            optional: false,
+            description: 'description',
+            type: '',
+            line: 12,
+            source: '@tag name description'
+          }],
+          line: 10,
+          description: 'Bar',
+          source: 'Bar\n@tag name description',
+          function: 'bar'
+        }
+      ])
+  })
 })

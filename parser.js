@@ -192,11 +192,13 @@ function mkextract (opts) {
   let chunk = null
   let indent = 0
   let number = 0
+  let findMethod = false
 
   opts = Object.assign({}, {
     trim: true,
     dotted_names: false,
     fence: '```',
+    assoc_functions: false,
     parsers: [
       PARSERS.parse_tag,
       PARSERS.parse_type,
@@ -218,10 +220,24 @@ function mkextract (opts) {
     if (startPos !== -1 && line.indexOf(MARKER_START_SKIP) !== startPos) {
       chunk = []
       indent = startPos + MARKER_START.length
+      if (findMethod) {
+        result = parse_block(chunk, opts)
+        findMethod = false
+      }
+    }
+
+    if (findMethod) {
+      const ret = line.match(/\s*function\s+(\w+)\s*\(/) ||
+        line.match(/\s*(\w+)\s*=?\s*\(/)
+      if (ret) {
+        result = parse_block(chunk, opts)
+        result.function = ret[1]
+        findMethod = false
+      }
     }
 
     // if we are on middle of comment block
-    if (chunk) {
+    if (chunk && !findMethod) {
       let lineStart = indent
       let startWithStar = false
 
@@ -251,9 +267,13 @@ function mkextract (opts) {
 
       // finalize block if end marker detected
       if (endPos !== -1) {
-        result = parse_block(chunk, opts)
-        chunk = null
-        indent = 0
+        if (opts.assoc_functions) {
+          findMethod = true
+        } else {
+          result = parse_block(chunk, opts)
+          chunk = null
+          indent = 0
+        }
       }
     }
 
