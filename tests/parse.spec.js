@@ -367,6 +367,28 @@ describe('Comment string parsing', function () {
       }])
   })
 
+  it('should parse tag with type, name and description `@tag {my.type} name description with `/**` characters`', function () {
+    expect(parse(function () {
+      /**
+       * @my-tag {my.type} name description `/**`
+       */
+    }))
+      .to.eql([{
+        line: 1,
+        source: '@my-tag {my.type} name description `/**`',
+        description: '',
+        tags: [{
+          tag: 'my-tag',
+          line: 2,
+          type: 'my.type',
+          name: 'name',
+          source: '@my-tag {my.type} name description `/**`',
+          description: 'description `/**`',
+          optional: false
+        }]
+      }])
+  })
+
   it('should parse tag with type, name and description separated by tab `@tag {my.type} name  description`', function () {
     expect(parse(
       /* eslint-disable no-tabs */

@@ -227,7 +227,7 @@ function mkextract (opts) {
     const endPos = line.indexOf(MARKER_END)
 
     // if open marker detected and it's not, skip one
-    if (startPos !== -1 && line.indexOf(MARKER_START_SKIP) !== startPos) {
+    if (!chunk && startPos !== -1 && line.indexOf(MARKER_START_SKIP) !== startPos) {
       chunk = []
       indent = startPos + MARKER_START.length
     }
