@@ -1,3 +1,6 @@
+# v0.7.6
+- distinct non-critical errors by providing `err.warning`
+
 # v0.7.5
 - name parsing fixes
 
