@@ -57,7 +57,7 @@ const stringifyTag = exports.stringifyTag = function stringifyTag (
     (type ? ` {${type}}` : '') +
     (name.trim() ? ` ${
       optional ? '[' : ''
-    }${name.trimRight()}${deflt ? `=${deflt}` : ''}${
+    }${name.trimRight()}${deflt !== undefined ? `=${deflt}` : ''}${
       optional ? ']' : ''
     }` : '') +
     (description ? ` ${description.replace(/\n/g, '\n' + indnt + '* ')}` : '') + '\n'
