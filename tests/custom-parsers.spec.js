@@ -47,6 +47,49 @@ describe('parse() with custom tag parsers', function () {
       })
   })
 
+  it('should use `opts.parsers` with positions', function () {
+    const parsers = [
+      function everything (str) {
+        return {
+          source: str,
+          data: {
+            tag: 'tag',
+            type: 'type',
+            name: 'name',
+            optional: false,
+            description: 'description',
+            positions: {
+              posStart: 10,
+              posEnd: 15,
+              partLength: 5
+            }
+          }
+        }
+      }
+    ]
+
+    expect(parse(sample, { parsers })[0])
+      .to.eql({
+        line: 1,
+        description: '',
+        source: '@tag {type} name description',
+        tags: [{
+          tag: 'tag',
+          type: 'type',
+          name: 'name',
+          description: 'description',
+          optional: false,
+          source: '@tag {type} name description',
+          line: 2,
+          positions: {
+            posStart: 10,
+            posEnd: 15,
+            partLength: 5
+          }
+        }]
+      })
+  })
+
   it('should merge parsers result', function () {
     const parsers = [
       function parser1 (str) {

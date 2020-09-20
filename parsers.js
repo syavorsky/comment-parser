@@ -16,16 +16,27 @@ PARSERS.parse_tag = function parse_tag (str) {
   const match = str.match(/^\s*@(\S+)/)
   if (!match) { throw new SyntaxError('Invalid `@tag`, missing @ symbol') }
 
+  const partLength = match[0].trim().length
+  const posStart = skipws(str)
+  const posEnd = posStart + partLength
+
   return {
     source: match[0],
-    data: { tag: match[1] }
+    data: { tag: match[1] },
+    positions: {
+      posStart,
+      posEnd,
+      partLength
+    }
   }
 }
 
 PARSERS.parse_type = function parse_type (str, data) {
   if (data.errors && data.errors.length) { return null }
 
-  let pos = skipws(str)
+  const posStart = skipws(str)
+
+  let pos = posStart
   let res = ''
   let curlies = 0
 
@@ -42,14 +53,21 @@ PARSERS.parse_type = function parse_type (str, data) {
 
   return {
     source: str.slice(0, pos),
-    data: { type: res.slice(1, -1) }
+    data: { type: res.slice(1, -1) },
+    positions: {
+      posStart,
+      posEnd: pos,
+      partLength: pos - posStart
+    }
   }
 }
 
 PARSERS.parse_name = function parse_name (str, data) {
   if (data.errors && data.errors.length) { return null }
 
-  let pos = skipws(str)
+  const posStart = skipws(str)
+
+  let pos = posStart
   let name = ''
   let brackets = 0
   let res = { optional: false }
@@ -97,7 +115,12 @@ PARSERS.parse_name = function parse_name (str, data) {
 
   return {
     source: str.slice(0, pos),
-    data: res
+    data: res,
+    positions: {
+      posStart,
+      posEnd: pos,
+      partLength: pos - posStart
+    }
   }
 }
 
@@ -106,14 +129,23 @@ PARSERS.parse_description = function parse_description (str, data) {
 
   const match = str.match(/^\s+((.|\s)+)?/)
 
-  if (match) {
-    return {
-      source: match[0],
-      data: { description: match[1] === undefined ? '' : match[1] }
-    }
+  if (!match) {
+    return null
   }
 
-  return null
+  const partLength = match[1] ? match[1].length : 0
+  const posStart = skipws(str)
+  const posEnd = posStart + partLength
+
+  return {
+    source: match[0],
+    data: { description: match[1] === undefined ? '' : match[1] },
+    positions: {
+      posStart,
+      posEnd,
+      partLength
+    }
+  }
 }
 
 module.exports = PARSERS

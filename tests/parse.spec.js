@@ -89,7 +89,24 @@ describe('Comment string parsing', function () {
           description: 'Tag description',
           type: '',
           line: 3,
-          source: '@tag tagname Tag description'
+          source: '@tag tagname Tag description',
+          positions: {
+            tag: {
+              posStart: 9,
+              posEnd: 13,
+              partLength: 4
+            },
+            name: {
+              posStart: 14,
+              posEnd: 21,
+              partLength: 7
+            },
+            description: {
+              posStart: 22,
+              posEnd: 37,
+              partLength: 15
+            }
+          }
         }]
       }])
   })
@@ -114,7 +131,24 @@ describe('Comment string parsing', function () {
           description: 'Tag description\n',
           type: '',
           line: 3,
-          source: '@tag tagname Tag description\n'
+          source: '@tag tagname Tag description\n',
+          positions: {
+            tag: {
+              posStart: 9,
+              posEnd: 13,
+              partLength: 4
+            },
+            name: {
+              posStart: 14,
+              posEnd: 21,
+              partLength: 7
+            },
+            description: {
+              posStart: 22,
+              posEnd: 38,
+              partLength: 16
+            }
+          }
         }]
       }])
   })
@@ -249,7 +283,19 @@ describe('Comment string parsing', function () {
           description: '',
           line: 1,
           optional: false,
-          source: '@tag'
+          source: '@tag',
+          positions: {
+            tag: {
+              posStart: 10,
+              posEnd: 14,
+              partLength: 4
+            },
+            name: {
+              posStart: 14,
+              posEnd: 14,
+              partLength: 0
+            }
+          }
         }]
       }])
   })
@@ -273,7 +319,19 @@ describe('Comment string parsing', function () {
           type: '',
           name: '',
           optional: false,
-          description: ''
+          description: '',
+          positions: {
+            tag: {
+              posStart: 9,
+              posEnd: 16,
+              partLength: 7
+            },
+            name: {
+              posStart: 16,
+              posEnd: 16,
+              partLength: 0
+            }
+          }
         }]
       }])
   })
@@ -296,7 +354,24 @@ describe('Comment string parsing', function () {
           name: '',
           source: '@my-tag {my.type}',
           optional: false,
-          description: ''
+          description: '',
+          positions: {
+            tag: {
+              posStart: 9,
+              posEnd: 16,
+              partLength: 7
+            },
+            type: {
+              posStart: 17,
+              posEnd: 26,
+              partLength: 9
+            },
+            name: {
+              posStart: 26,
+              posEnd: 26,
+              partLength: 0
+            }
+          }
         }]
       }])
   })
@@ -318,7 +393,19 @@ describe('Comment string parsing', function () {
           name: 'name',
           source: '@my-tag name',
           optional: false,
-          description: ''
+          description: '',
+          positions: {
+            tag: {
+              posStart: 9,
+              posEnd: 16,
+              partLength: 7
+            },
+            name: {
+              posStart: 17,
+              posEnd: 21,
+              partLength: 4
+            }
+          }
         }]
       }])
   })
@@ -340,7 +427,24 @@ describe('Comment string parsing', function () {
           name: 'name',
           source: '@my-tag {my.type} name',
           description: '',
-          optional: false
+          optional: false,
+          positions: {
+            tag: {
+              posStart: 9,
+              posEnd: 16,
+              partLength: 7
+            },
+            type: {
+              posStart: 17,
+              posEnd: 26,
+              partLength: 9
+            },
+            name: {
+              posStart: 27,
+              posEnd: 31,
+              partLength: 4
+            }
+          }
         }]
       }])
   })
@@ -362,7 +466,29 @@ describe('Comment string parsing', function () {
           name: 'name',
           source: '@my-tag {my.type} name description',
           description: 'description',
-          optional: false
+          optional: false,
+          positions: {
+            tag: {
+              posStart: 9,
+              posEnd: 16,
+              partLength: 7
+            },
+            type: {
+              posStart: 17,
+              posEnd: 26,
+              partLength: 9
+            },
+            name: {
+              posStart: 27,
+              posEnd: 31,
+              partLength: 4
+            },
+            description: {
+              posStart: 32,
+              posEnd: 43,
+              partLength: 11
+            }
+          }
         }]
       }])
   })
@@ -384,7 +510,29 @@ describe('Comment string parsing', function () {
           name: 'name',
           source: '@my-tag {my.type} name description `/**`',
           description: 'description `/**`',
-          optional: false
+          optional: false,
+          positions: {
+            tag: {
+              posStart: 9,
+              posEnd: 16,
+              partLength: 7
+            },
+            type: {
+              posStart: 17,
+              posEnd: 26,
+              partLength: 9
+            },
+            name: {
+              posStart: 27,
+              posEnd: 31,
+              partLength: 4
+            },
+            description: {
+              posStart: 32,
+              posEnd: 49,
+              partLength: 17
+            }
+          }
         }]
       }])
   })
@@ -410,7 +558,29 @@ describe('Comment string parsing', function () {
           name: 'name',
           source: '@my-tag\t{my.type}\tname\tdescription',
           description: 'description',
-          optional: false
+          optional: false,
+          positions: {
+            tag: {
+              posStart: 9,
+              posEnd: 16,
+              partLength: 7
+            },
+            type: {
+              posStart: 17,
+              posEnd: 26,
+              partLength: 9
+            },
+            name: {
+              posStart: 27,
+              posEnd: 31,
+              partLength: 4
+            },
+            description: {
+              posStart: 32,
+              posEnd: 43,
+              partLength: 11
+            }
+          }
         }]
       }])
   })
@@ -433,7 +603,29 @@ describe('Comment string parsing', function () {
           source: '@my-tag {my.type} name\t\n',
           // Default parser trims regardless of `trim` setting
           description: '',
-          optional: false
+          optional: false,
+          positions: {
+            tag: {
+              posStart: 9,
+              posEnd: 16,
+              partLength: 7
+            },
+            type: {
+              posStart: 17,
+              posEnd: 26,
+              partLength: 9
+            },
+            name: {
+              posStart: 27,
+              posEnd: 31,
+              partLength: 4
+            },
+            description: {
+              posStart: 32,
+              posEnd: 32,
+              partLength: 0
+            }
+          }
         }]
       }])
   })
@@ -442,8 +634,8 @@ describe('Comment string parsing', function () {
     expect(parse(function () {
       /**
        * @my-tag {my.type} name description line 1
-       * description line 2
-       * description line 3
+       *                   description line 2
+       *                   description line 3
        */
     }))
       .to.eql([{
@@ -457,7 +649,29 @@ describe('Comment string parsing', function () {
           name: 'name',
           source: '@my-tag {my.type} name description line 1\ndescription line 2\ndescription line 3',
           description: 'description line 1\ndescription line 2\ndescription line 3',
-          optional: false
+          optional: false,
+          positions: {
+            tag: {
+              posStart: 9,
+              posEnd: 16,
+              partLength: 7
+            },
+            type: {
+              posStart: 17,
+              posEnd: 26,
+              partLength: 9
+            },
+            name: {
+              posStart: 27,
+              posEnd: 31,
+              partLength: 4
+            },
+            description: {
+              posStart: 32,
+              posEnd: 88,
+              partLength: 56
+            }
+          }
         }]
       }])
   })
@@ -480,7 +694,14 @@ describe('Comment string parsing', function () {
           description: '',
           source: '@my-tag [name',
           optional: false,
-          errors: ['parse_name: Invalid `name`, unpaired brackets']
+          errors: ['parse_name: Invalid `name`, unpaired brackets'],
+          positions: {
+            tag: {
+              posStart: 9,
+              posEnd: 16,
+              partLength: 7
+            }
+          }
         }]
       }])
   })
@@ -503,7 +724,19 @@ describe('Comment string parsing', function () {
         default: '',
         description: '',
         optional: true,
-        errors: ['parse_name: Empty `name`, bad syntax']
+        errors: ['parse_name: Empty `name`, bad syntax'],
+        positions: {
+          tag: {
+            posStart: 9,
+            posEnd: 16,
+            partLength: 7
+          },
+          name: {
+            posStart: 17,
+            posEnd: 24,
+            partLength: 7
+          }
+        }
       }]
     }])
   })
@@ -525,7 +758,14 @@ describe('Comment string parsing', function () {
         source: '@my-tag [=value]',
         description: '',
         optional: false,
-        errors: ['parse_name: Invalid `name`, bad syntax']
+        errors: ['parse_name: Invalid `name`, bad syntax'],
+        positions: {
+          tag: {
+            posStart: 9,
+            posEnd: 16,
+            partLength: 7
+          }
+        }
       }]
     }])
   })
@@ -547,7 +787,14 @@ describe('Comment string parsing', function () {
         source: '@my-tag [=]',
         description: '',
         optional: false,
-        errors: ['parse_name: Invalid `name`, bad syntax']
+        errors: ['parse_name: Invalid `name`, bad syntax'],
+        positions: {
+          tag: {
+            posStart: 9,
+            posEnd: 16,
+            partLength: 7
+          }
+        }
       }]
     }])
   })
@@ -569,7 +816,14 @@ describe('Comment string parsing', function () {
         source: '@my-tag [==]',
         description: '',
         optional: false,
-        errors: ['parse_name: Invalid `name`, bad syntax']
+        errors: ['parse_name: Invalid `name`, bad syntax'],
+        positions: {
+          tag: {
+            posStart: 9,
+            posEnd: 16,
+            partLength: 7
+          }
+        }
       }]
     }])
   })
@@ -591,7 +845,24 @@ describe('Comment string parsing', function () {
           name: 'name',
           description: '',
           source: '@my-tag {my.type} [name]',
-          optional: true
+          optional: true,
+          positions: {
+            tag: {
+              posStart: 9,
+              posEnd: 16,
+              partLength: 7
+            },
+            type: {
+              posStart: 17,
+              posEnd: 26,
+              partLength: 9
+            },
+            name: {
+              posStart: 27,
+              posEnd: 33,
+              partLength: 6
+            }
+          }
         }]
       }])
   })
@@ -616,7 +887,24 @@ describe('Comment string parsing', function () {
           description: 'Tag 0 description',
           type: '',
           line: 3,
-          source: '@.tag0 tagname Tag 0 description'
+          source: '@.tag0 tagname Tag 0 description',
+          positions: {
+            tag: {
+              posStart: 9,
+              posEnd: 15,
+              partLength: 6
+            },
+            name: {
+              posStart: 16,
+              posEnd: 23,
+              partLength: 7
+            },
+            description: {
+              posStart: 24,
+              posEnd: 41,
+              partLength: 17
+            }
+          }
         }, {
           tag: '-tag1',
           name: 'tagname',
@@ -624,7 +912,24 @@ describe('Comment string parsing', function () {
           description: 'Tag 1 description',
           type: '',
           line: 4,
-          source: '@-tag1 tagname Tag 1 description'
+          source: '@-tag1 tagname Tag 1 description',
+          positions: {
+            tag: {
+              posStart: 9,
+              posEnd: 15,
+              partLength: 6
+            },
+            name: {
+              posStart: 16,
+              posEnd: 23,
+              partLength: 7
+            },
+            description: {
+              posStart: 24,
+              posEnd: 41,
+              partLength: 17
+            }
+          }
         }, {
           tag: '+tag2',
           name: 'tagname',
@@ -632,7 +937,24 @@ describe('Comment string parsing', function () {
           description: 'Tag 2 description',
           type: '',
           line: 5,
-          source: '@+tag2 tagname Tag 2 description'
+          source: '@+tag2 tagname Tag 2 description',
+          positions: {
+            tag: {
+              posStart: 9,
+              posEnd: 15,
+              partLength: 6
+            },
+            name: {
+              posStart: 16,
+              posEnd: 23,
+              partLength: 7
+            },
+            description: {
+              posStart: 24,
+              posEnd: 41,
+              partLength: 17
+            }
+          }
         }]
       }])
   })
@@ -654,7 +976,19 @@ describe('Comment string parsing', function () {
           name: 'spaced name',
           description: '',
           source: '@my-tag [spaced name]',
-          optional: true
+          optional: true,
+          positions: {
+            tag: {
+              posStart: 9,
+              posEnd: 16,
+              partLength: 7
+            },
+            name: {
+              posStart: 17,
+              posEnd: 30,
+              partLength: 13
+            }
+          }
         }]
       }])
   })
@@ -677,7 +1011,19 @@ describe('Comment string parsing', function () {
           default: 'value',
           source: '@my-tag [name=value]',
           description: '',
-          optional: true
+          optional: true,
+          positions: {
+            tag: {
+              posStart: 9,
+              posEnd: 16,
+              partLength: 7
+            },
+            name: {
+              posStart: 17,
+              posEnd: 29,
+              partLength: 12
+            }
+          }
         }]
       }])
   })
@@ -700,7 +1046,19 @@ describe('Comment string parsing', function () {
           default: 'spaced value',
           source: '@my-tag [ spaced name = spaced value ]',
           description: '',
-          optional: true
+          optional: true,
+          positions: {
+            tag: {
+              posStart: 9,
+              posEnd: 16,
+              partLength: 7
+            },
+            name: {
+              posStart: 17,
+              posEnd: 47,
+              partLength: 30
+            }
+          }
         }]
       }])
   })
@@ -723,7 +1081,19 @@ describe('Comment string parsing', function () {
           source: '@tag [name="value"]',
           default: '"value"',
           description: '',
-          optional: true
+          optional: true,
+          positions: {
+            tag: {
+              posStart: 9,
+              posEnd: 13,
+              partLength: 4
+            },
+            name: {
+              posStart: 14,
+              posEnd: 28,
+              partLength: 14
+            }
+          }
         }]
       }])
   })
@@ -746,7 +1116,24 @@ describe('Comment string parsing', function () {
           source: '@tag {t} [name="="]',
           default: '"="',
           optional: true,
-          description: ''
+          description: '',
+          positions: {
+            tag: {
+              posStart: 9,
+              posEnd: 13,
+              partLength: 4
+            },
+            type: {
+              posStart: 14,
+              posEnd: 17,
+              partLength: 3
+            },
+            name: {
+              posStart: 18,
+              posEnd: 28,
+              partLength: 10
+            }
+          }
         }]
       }])
   })
@@ -769,7 +1156,24 @@ describe('Comment string parsing', function () {
           source: '@tag [name="value\'] desc',
           default: '"value\'',
           description: 'desc',
-          optional: true
+          optional: true,
+          positions: {
+            tag: {
+              posStart: 9,
+              posEnd: 13,
+              partLength: 4
+            },
+            name: {
+              posStart: 14,
+              posEnd: 28,
+              partLength: 14
+            },
+            description: {
+              posStart: 29,
+              posEnd: 33,
+              partLength: 4
+            }
+          }
         }]
       }])
   })
@@ -791,7 +1195,29 @@ describe('Comment string parsing', function () {
           name: '...name',
           optional: false,
           source: '@tag {t} ...name desc',
-          description: 'desc'
+          description: 'desc',
+          positions: {
+            tag: {
+              posStart: 9,
+              posEnd: 13,
+              partLength: 4
+            },
+            type: {
+              posStart: 14,
+              posEnd: 17,
+              partLength: 3
+            },
+            name: {
+              posStart: 18,
+              posEnd: 25,
+              partLength: 7
+            },
+            description: {
+              posStart: 26,
+              posEnd: 30,
+              partLength: 4
+            }
+          }
         }]
       }])
   })
@@ -813,7 +1239,29 @@ describe('Comment string parsing', function () {
           name: '...name',
           optional: true,
           source: '@tag {t} [...name] desc',
-          description: 'desc'
+          description: 'desc',
+          positions: {
+            tag: {
+              posStart: 9,
+              posEnd: 13,
+              partLength: 4
+            },
+            type: {
+              posStart: 14,
+              posEnd: 17,
+              partLength: 3
+            },
+            name: {
+              posStart: 18,
+              posEnd: 27,
+              partLength: 9
+            },
+            description: {
+              posStart: 28,
+              posEnd: 32,
+              partLength: 4
+            }
+          }
         }]
       }])
   })
@@ -837,7 +1285,19 @@ describe('Comment string parsing', function () {
           name: '',
           optional: false,
           source: '@my-tag1',
-          description: ''
+          description: '',
+          positions: {
+            tag: {
+              posStart: 9,
+              posEnd: 17,
+              partLength: 8
+            },
+            name: {
+              posStart: 17,
+              posEnd: 17,
+              partLength: 0
+            }
+          }
         }, {
           tag: 'my-tag2',
           line: 4,
@@ -845,7 +1305,19 @@ describe('Comment string parsing', function () {
           name: '',
           optional: false,
           source: '@my-tag2',
-          description: ''
+          description: '',
+          positions: {
+            tag: {
+              posStart: 9,
+              posEnd: 17,
+              partLength: 8
+            },
+            name: {
+              posStart: 17,
+              posEnd: 17,
+              partLength: 0
+            }
+          }
         }]
       }])
   })
@@ -873,6 +1345,18 @@ describe('Comment string parsing', function () {
           source: '@my-tag name',
           optional: false,
           description: '',
+          positions: {
+            tag: {
+              posStart: 9,
+              posEnd: 16,
+              partLength: 7
+            },
+            name: {
+              posStart: 17,
+              posEnd: 21,
+              partLength: 4
+            }
+          },
           tags: [{
             tag: 'my-tag',
             line: 4,
@@ -881,6 +1365,18 @@ describe('Comment string parsing', function () {
             optional: false,
             source: '@my-tag name.sub-name',
             description: '',
+            positions: {
+              tag: {
+                posStart: 9,
+                posEnd: 16,
+                partLength: 7
+              },
+              name: {
+                posStart: 17,
+                posEnd: 30,
+                partLength: 13
+              }
+            },
             tags: [{
               tag: 'my-tag',
               line: 5,
@@ -888,7 +1384,19 @@ describe('Comment string parsing', function () {
               name: 'sub-sub-name',
               optional: false,
               source: '@my-tag name.sub-name.sub-sub-name',
-              description: ''
+              description: '',
+              positions: {
+                tag: {
+                  posStart: 9,
+                  posEnd: 16,
+                  partLength: 7
+                },
+                name: {
+                  posStart: 17,
+                  posEnd: 43,
+                  partLength: 26
+                }
+              }
             }]
           }]
         }]
@@ -923,6 +1431,18 @@ describe('Comment string parsing', function () {
             optional: false,
             source: '@my-tag name.sub-name',
             description: '',
+            positions: {
+              tag: {
+                posStart: 9,
+                posEnd: 16,
+                partLength: 7
+              },
+              name: {
+                posStart: 17,
+                posEnd: 30,
+                partLength: 13
+              }
+            },
             tags: [{
               tag: 'my-tag',
               line: 4,
@@ -930,7 +1450,19 @@ describe('Comment string parsing', function () {
               name: 'sub-sub-name',
               optional: false,
               source: '@my-tag name.sub-name.sub-sub-name',
-              description: ''
+              description: '',
+              positions: {
+                tag: {
+                  posStart: 9,
+                  posEnd: 16,
+                  partLength: 7
+                },
+                name: {
+                  posStart: 17,
+                  posEnd: 43,
+                  partLength: 26
+                }
+              }
             }]
           }]
         }]
@@ -957,7 +1489,19 @@ describe('Comment string parsing', function () {
           name: '',
           source: '@my-tag',
           optional: false,
-          description: ''
+          description: '',
+          positions: {
+            tag: {
+              posStart: 9,
+              posEnd: 16,
+              partLength: 7
+            },
+            name: {
+              posStart: 16,
+              posEnd: 16,
+              partLength: 0
+            }
+          }
         }, {
           tag: 'my-tag',
           line: 4,
@@ -972,6 +1516,18 @@ describe('Comment string parsing', function () {
             optional: false,
             source: '@my-tag name.sub-name',
             description: '',
+            positions: {
+              tag: {
+                posStart: 9,
+                posEnd: 16,
+                partLength: 7
+              },
+              name: {
+                posStart: 17,
+                posEnd: 30,
+                partLength: 13
+              }
+            },
             tags: [{
               tag: 'my-tag',
               line: 5,
@@ -979,7 +1535,19 @@ describe('Comment string parsing', function () {
               name: 'sub-sub-name',
               optional: false,
               source: '@my-tag name.sub-name.sub-sub-name',
-              description: ''
+              description: '',
+              positions: {
+                tag: {
+                  posStart: 9,
+                  posEnd: 16,
+                  partLength: 7
+                },
+                name: {
+                  posStart: 17,
+                  posEnd: 43,
+                  partLength: 26
+                }
+              }
             }]
           }]
         }]
@@ -1003,7 +1571,24 @@ describe('Comment string parsing', function () {
           name: 'name',
           source: '@my-tag {{a: number}} name',
           optional: false,
-          description: ''
+          description: '',
+          positions: {
+            tag: {
+              posStart: 9,
+              posEnd: 16,
+              partLength: 7
+            },
+            type: {
+              posStart: 17,
+              posEnd: 30,
+              partLength: 13
+            },
+            name: {
+              posStart: 31,
+              posEnd: 35,
+              partLength: 4
+            }
+          }
         }]
       }])
   })
@@ -1026,7 +1611,14 @@ describe('Comment string parsing', function () {
           description: '',
           source: '@my-tag {{a: number} name',
           optional: false,
-          errors: ['parse_type: Invalid `{type}`, unpaired curlies']
+          errors: ['parse_type: Invalid `{type}`, unpaired curlies'],
+          positions: {
+            tag: {
+              posStart: 9,
+              posEnd: 16,
+              partLength: 7
+            }
+          }
         }]
       }])
   })
@@ -1048,7 +1640,29 @@ describe('Comment string parsing', function () {
           name: 'name',
           source: '@my-tag {String} name description with $ char',
           optional: false,
-          description: 'description with $ char'
+          description: 'description with $ char',
+          positions: {
+            tag: {
+              posStart: 9,
+              posEnd: 16,
+              partLength: 7
+            },
+            type: {
+              posStart: 17,
+              posEnd: 25,
+              partLength: 8
+            },
+            name: {
+              posStart: 26,
+              posEnd: 30,
+              partLength: 4
+            },
+            description: {
+              posStart: 31,
+              posEnd: 54,
+              partLength: 23
+            }
+          }
         }]
       }])
   })
@@ -1071,7 +1685,24 @@ describe('Comment string parsing', function () {
           description: 'Tag description',
           type: '',
           line: 3,
-          source: '@tag tagname Tag description'
+          source: '@tag tagname Tag description',
+          positions: {
+            tag: {
+              posStart: 5,
+              posEnd: 9,
+              partLength: 4
+            },
+            name: {
+              posStart: 10,
+              posEnd: 17,
+              partLength: 7
+            },
+            description: {
+              posStart: 18,
+              posEnd: 33,
+              partLength: 15
+            }
+          }
         }]
       }])
   })
@@ -1094,7 +1725,24 @@ describe('Comment string parsing', function () {
           description: 'Tag description',
           type: '',
           line: 3,
-          source: '@tag tagname Tag description'
+          source: '@tag tagname Tag description',
+          positions: {
+            tag: {
+              posStart: 13,
+              posEnd: 17,
+              partLength: 4
+            },
+            name: {
+              posStart: 18,
+              posEnd: 25,
+              partLength: 7
+            },
+            description: {
+              posStart: 26,
+              posEnd: 41,
+              partLength: 15
+            }
+          }
         }]
       }])
   })
@@ -1118,7 +1766,24 @@ describe('Comment string parsing', function () {
           description: 'Tag description',
           type: '',
           line: 4,
-          source: '@tag tagname Tag description'
+          source: '@tag tagname Tag description',
+          positions: {
+            tag: {
+              posStart: 3,
+              posEnd: 7,
+              partLength: 4
+            },
+            name: {
+              posStart: 8,
+              posEnd: 15,
+              partLength: 7
+            },
+            description: {
+              posStart: 16,
+              posEnd: 31,
+              partLength: 15
+            }
+          }
         }]
       }])
   })
@@ -1144,7 +1809,24 @@ describe('Comment string parsing', function () {
           description: 'Tag description\n',
           type: '',
           line: 4,
-          source: '@tag tagname Tag description\n'
+          source: '@tag tagname Tag description\n',
+          positions: {
+            tag: {
+              posStart: 3,
+              posEnd: 7,
+              partLength: 4
+            },
+            name: {
+              posStart: 8,
+              posEnd: 15,
+              partLength: 7
+            },
+            description: {
+              posStart: 16,
+              posEnd: 32,
+              partLength: 16
+            }
+          }
         }]
       }])
   })
@@ -1170,7 +1852,24 @@ describe('Comment string parsing', function () {
           name: 'name',
           description: 'description same line',
           source: '@tag name\ndescription same line',
-          optional: false
+          optional: false,
+          positions: {
+            tag: {
+              posStart: 9,
+              posEnd: 13,
+              partLength: 4
+            },
+            name: {
+              posStart: 14,
+              posEnd: 18,
+              partLength: 4
+            },
+            description: {
+              posStart: 18,
+              posEnd: 39,
+              partLength: 21
+            }
+          }
         }]
       }])
   })
@@ -1196,7 +1895,24 @@ describe('Comment string parsing', function () {
           name: 'name',
           description: 'description\tsame line',
           source: '@tag name\ndescription\tsame line',
-          optional: false
+          optional: false,
+          positions: {
+            tag: {
+              posStart: 9,
+              posEnd: 13,
+              partLength: 4
+            },
+            name: {
+              posStart: 14,
+              posEnd: 18,
+              partLength: 4
+            },
+            description: {
+              posStart: 18,
+              posEnd: 39,
+              partLength: 21
+            }
+          }
         }]
       }])
   })
@@ -1223,7 +1939,24 @@ describe('Comment string parsing', function () {
           name: 'name',
           description: 'description  intent same line\n',
           source: '@tag name\ndescription  intent same line\n',
-          optional: false
+          optional: false,
+          positions: {
+            tag: {
+              posStart: 9,
+              posEnd: 13,
+              partLength: 4
+            },
+            name: {
+              posStart: 14,
+              posEnd: 18,
+              partLength: 4
+            },
+            description: {
+              posStart: 18,
+              posEnd: 48,
+              partLength: 30
+            }
+          }
         }]
       }])
   })
@@ -1248,7 +1981,24 @@ describe('Comment string parsing', function () {
           description: 'Tag description\n',
           type: '',
           line: 3,
-          source: ' @tag tagname Tag description\n'
+          source: ' @tag tagname Tag description\n',
+          positions: {
+            tag: {
+              posStart: 10,
+              posEnd: 14,
+              partLength: 4
+            },
+            name: {
+              posStart: 15,
+              posEnd: 22,
+              partLength: 7
+            },
+            description: {
+              posStart: 23,
+              posEnd: 39,
+              partLength: 16
+            }
+          }
         }]
       }])
   })
@@ -1294,7 +2044,29 @@ describe('Comment string parsing', function () {
         optional: false,
         source: '@param {Object} options 配置',
         tag: 'param',
-        type: 'Object'
+        type: 'Object',
+        positions: {
+          tag: {
+            posStart: 11,
+            posEnd: 17,
+            partLength: 6
+          },
+          type: {
+            posStart: 18,
+            posEnd: 26,
+            partLength: 8
+          },
+          name: {
+            posStart: 27,
+            posEnd: 34,
+            partLength: 7
+          },
+          description: {
+            posStart: 35,
+            posEnd: 37,
+            partLength: 2
+          }
+        }
       }, {
         description: '组件返回的对象',
         line: 3,
@@ -1302,7 +2074,29 @@ describe('Comment string parsing', function () {
         optional: false,
         source: '@return {Any} obj 组件返回的对象',
         tag: 'return',
-        type: 'Any'
+        type: 'Any',
+        positions: {
+          tag: {
+            posStart: 11,
+            posEnd: 18,
+            partLength: 7
+          },
+          type: {
+            posStart: 19,
+            posEnd: 24,
+            partLength: 5
+          },
+          name: {
+            posStart: 25,
+            posEnd: 28,
+            partLength: 3
+          },
+          description: {
+            posStart: 29,
+            posEnd: 36,
+            partLength: 7
+          }
+        }
       }, {
         description: "var widget = XX.showWidget('searchlist', {\n   onComplete: function() {\n         todoSomething();\n    }\n});\n",
         line: 4,
@@ -1310,7 +2104,24 @@ describe('Comment string parsing', function () {
         optional: false,
         source: "@example name\nvar widget = XX.showWidget('searchlist', {\n   onComplete: function() {\n         todoSomething();\n    }\n});\n",
         tag: 'example',
-        type: ''
+        type: '',
+        positions: {
+          tag: {
+            posStart: 11,
+            posEnd: 19,
+            partLength: 8
+          },
+          name: {
+            posStart: 20,
+            posEnd: 24,
+            partLength: 4
+          },
+          description: {
+            posStart: 24,
+            posEnd: 131,
+            partLength: 107
+          }
+        }
       }]
     }])
   })
@@ -1332,7 +2143,24 @@ describe('Comment string parsing', function () {
           name: 'Brand Colors',
           source: '@section [Brand Colors] Here you can find all the brand colors',
           optional: true,
-          description: 'Here you can find all the brand colors'
+          description: 'Here you can find all the brand colors',
+          positions: {
+            tag: {
+              posStart: 9,
+              posEnd: 17,
+              partLength: 8
+            },
+            name: {
+              posStart: 18,
+              posEnd: 32,
+              partLength: 14
+            },
+            description: {
+              posStart: 33,
+              posEnd: 71,
+              partLength: 38
+            }
+          }
         }]
       }])
   })
@@ -1354,7 +2182,24 @@ describe('Comment string parsing', function () {
           name: 'Brand Colors',
           source: '@section "Brand Colors" Here you can find all the brand colors',
           optional: false,
-          description: 'Here you can find all the brand colors'
+          description: 'Here you can find all the brand colors',
+          positions: {
+            tag: {
+              posStart: 9,
+              posEnd: 17,
+              partLength: 8
+            },
+            name: {
+              posStart: 18,
+              posEnd: 32,
+              partLength: 14
+            },
+            description: {
+              posStart: 33,
+              posEnd: 71,
+              partLength: 38
+            }
+          }
         }]
       }])
   })
@@ -1376,7 +2221,24 @@ describe('Comment string parsing', function () {
           name: 'Brand Colors',
           source: '@section "Brand Colors" Here you can find "all" the brand colors',
           optional: false,
-          description: 'Here you can find "all" the brand colors'
+          description: 'Here you can find "all" the brand colors',
+          positions: {
+            tag: {
+              posStart: 9,
+              posEnd: 17,
+              partLength: 8
+            },
+            name: {
+              posStart: 18,
+              posEnd: 32,
+              partLength: 14
+            },
+            description: {
+              posStart: 33,
+              posEnd: 73,
+              partLength: 40
+            }
+          }
         }]
       }])
   })
@@ -1398,7 +2260,24 @@ describe('Comment string parsing', function () {
           name: '"Brand',
           source: '@section "Brand Colors Here you can find all the brand colors',
           optional: false,
-          description: 'Colors Here you can find all the brand colors'
+          description: 'Colors Here you can find all the brand colors',
+          positions: {
+            tag: {
+              posStart: 9,
+              posEnd: 17,
+              partLength: 8
+            },
+            name: {
+              posStart: 18,
+              posEnd: 24,
+              partLength: 6
+            },
+            description: {
+              posStart: 25,
+              posEnd: 70,
+              partLength: 45
+            }
+          }
         }]
       }])
   })
@@ -1423,7 +2302,24 @@ describe('Comment string parsing', function () {
           description: '```',
           type: '',
           line: 2,
-          source: '@example\n```typescript\n```'
+          source: '@example\n```typescript\n```',
+          positions: {
+            tag: {
+              posStart: 9,
+              posEnd: 17,
+              partLength: 8
+            },
+            name: {
+              posStart: 17,
+              posEnd: 31,
+              partLength: 14
+            },
+            description: {
+              posStart: 31,
+              posEnd: 34,
+              partLength: 3
+            }
+          }
         }]
       }])
   })
@@ -1449,7 +2345,24 @@ describe('Comment string parsing', function () {
           description: '```ts\n@transient()\nclass Foo { }\n```',
           type: '',
           line: 2,
-          source: '@example "" ```ts\n@transient()\nclass Foo { }\n```'
+          source: '@example "" ```ts\n@transient()\nclass Foo { }\n```',
+          positions: {
+            tag: {
+              posStart: 9,
+              posEnd: 17,
+              partLength: 8
+            },
+            name: {
+              posStart: 18,
+              posEnd: 20,
+              partLength: 2
+            },
+            description: {
+              posStart: 21,
+              posEnd: 57,
+              partLength: 36
+            }
+          }
         }, {
           tag: 'tag',
           name: 'name',
@@ -1457,7 +2370,24 @@ describe('Comment string parsing', function () {
           description: 'description',
           type: '',
           line: 6,
-          source: '@tag name description'
+          source: '@tag name description',
+          positions: {
+            tag: {
+              posStart: 9,
+              posEnd: 13,
+              partLength: 4
+            },
+            name: {
+              posStart: 14,
+              posEnd: 18,
+              partLength: 4
+            },
+            description: {
+              posStart: 19,
+              posEnd: 30,
+              partLength: 11
+            }
+          }
         }]
       }])
   })
@@ -1480,7 +2410,24 @@ describe('Comment string parsing', function () {
           description: '```fenced text```',
           type: '',
           line: 2,
-          source: '@example "" ```fenced text```'
+          source: '@example "" ```fenced text```',
+          positions: {
+            tag: {
+              posStart: 9,
+              posEnd: 17,
+              partLength: 8
+            },
+            name: {
+              posStart: 18,
+              posEnd: 20,
+              partLength: 2
+            },
+            description: {
+              posStart: 21,
+              posEnd: 38,
+              partLength: 17
+            }
+          }
         }, {
           tag: 'tag',
           name: 'name',
@@ -1488,7 +2435,24 @@ describe('Comment string parsing', function () {
           description: 'description',
           type: '',
           line: 3,
-          source: '@tag name description'
+          source: '@tag name description',
+          positions: {
+            tag: {
+              posStart: 9,
+              posEnd: 13,
+              partLength: 4
+            },
+            name: {
+              posStart: 14,
+              posEnd: 18,
+              partLength: 4
+            },
+            description: {
+              posStart: 19,
+              posEnd: 30,
+              partLength: 11
+            }
+          }
         }]
       }])
   })
@@ -1514,7 +2478,24 @@ describe('Comment string parsing', function () {
           description: '```fenced text``` not fenced text ```ts\n@transient()\nclass Foo { }\n```',
           type: '',
           line: 2,
-          source: '@example "" ```fenced text``` not fenced text ```ts\n@transient()\nclass Foo { }\n```'
+          source: '@example "" ```fenced text``` not fenced text ```ts\n@transient()\nclass Foo { }\n```',
+          positions: {
+            tag: {
+              posStart: 9,
+              posEnd: 17,
+              partLength: 8
+            },
+            name: {
+              posStart: 18,
+              posEnd: 20,
+              partLength: 2
+            },
+            description: {
+              posStart: 21,
+              posEnd: 91,
+              partLength: 70
+            }
+          }
         }, {
           tag: 'tag',
           name: 'name',
@@ -1522,7 +2503,24 @@ describe('Comment string parsing', function () {
           description: 'description',
           type: '',
           line: 6,
-          source: '@tag name description'
+          source: '@tag name description',
+          positions: {
+            tag: {
+              posStart: 9,
+              posEnd: 13,
+              partLength: 4
+            },
+            name: {
+              posStart: 14,
+              posEnd: 18,
+              partLength: 4
+            },
+            description: {
+              posStart: 19,
+              posEnd: 30,
+              partLength: 11
+            }
+          }
         }]
       }])
   })
@@ -1550,7 +2548,24 @@ describe('Comment string parsing', function () {
           description: '###ts\n@transient()\nclass Foo { }\n###',
           type: '',
           line: 2,
-          source: '@example "" ###ts\n@transient()\nclass Foo { }\n###'
+          source: '@example "" ###ts\n@transient()\nclass Foo { }\n###',
+          positions: {
+            tag: {
+              posStart: 9,
+              posEnd: 17,
+              partLength: 8
+            },
+            name: {
+              posStart: 18,
+              posEnd: 20,
+              partLength: 2
+            },
+            description: {
+              posStart: 21,
+              posEnd: 57,
+              partLength: 36
+            }
+          }
         }, {
           tag: 'tag',
           name: 'name',
@@ -1558,7 +2573,24 @@ describe('Comment string parsing', function () {
           description: 'description',
           type: '',
           line: 6,
-          source: '@tag name description'
+          source: '@tag name description',
+          positions: {
+            tag: {
+              posStart: 9,
+              posEnd: 13,
+              partLength: 4
+            },
+            name: {
+              posStart: 14,
+              posEnd: 18,
+              partLength: 4
+            },
+            description: {
+              posStart: 19,
+              posEnd: 30,
+              partLength: 11
+            }
+          }
         }]
       }])
   })

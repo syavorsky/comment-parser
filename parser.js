@@ -24,15 +24,23 @@ function find (list, filter) {
   return null
 }
 
+function leftLengthToTrim (str) {
+  const match = str.match(/\S/)
+  return match ? match.index : 0
+}
+
 /* ------- parsing ------- */
 
 /**
  * Parses "@tag {type} name description"
  * @param {string} str Raw doc string
  * @param {Array<function>} parsers Array of parsers to be applied to the source
+ * @param {number} startPosition Content start position
  * @returns {object} parsed tag node
  */
-function parse_tag (str, parsers) {
+function parse_tag (str, parsers, startPosition) {
+  let currentPos = startPosition
+
   const { data } = parsers.reduce(function (state, parser) {
     let result
 
@@ -51,6 +59,22 @@ function parse_tag (str, parsers) {
     if (result) {
       state.source = state.source.slice(result.source.length)
       state.data = Object.assign(state.data, result.data)
+
+      if (result.positions) {
+        const key = parser.name.replace('parse_', '')
+        state.data.positions = Object.assign(
+          {
+            [key]: {
+              posStart: currentPos + result.positions.posStart,
+              posEnd: currentPos + result.positions.posEnd,
+              partLength: result.positions.partLength
+            }
+          },
+          state.data.positions || {}
+        )
+      }
+
+      currentPos += result.source.length
     }
 
     return state
@@ -91,13 +115,16 @@ function parse_block (source, opts) {
   // we assume tag starts with "@"
   source = source
     .reduce(function (state, line) {
+      const leftTrimmed = opts.trim ? leftLengthToTrim(line.source) : 0
       line.source = trim(line.source)
 
       // start of a new tag detected
       if (line.source.match(/^\s*@(\S+)/) && !state.isFenced) {
         state.tags.push({
           source: [line.source],
-          line: line.number
+          line: line.number,
+          lineStart: line.lineStart,
+          leftTrimmed
         })
       // keep appending source to the current tag
       } else {
@@ -141,7 +168,8 @@ function parse_block (source, opts) {
   }
 
   const tags = source.reduce(function (tags, tag) {
-    const tag_node = parse_tag(tag.source, opts.parsers)
+    const startPosition = tag.lineStart + tag.leftTrimmed
+    const tag_node = parse_tag(tag.source, opts.parsers, startPosition)
 
     tag_node.line = tag.line
     tag_node.source = tag.source
@@ -258,7 +286,8 @@ function mkextract (opts) {
       chunk.push({
         number,
         startWithStar,
-        source: line.slice(lineStart, endPos === -1 ? line.length : endPos)
+        source: line.slice(lineStart, endPos === -1 ? line.length : endPos),
+        lineStart
       })
 
       // finalize block if end marker detected
