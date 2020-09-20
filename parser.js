@@ -61,15 +61,25 @@ function parse_tag (str, parsers, startPosition) {
       state.data = Object.assign(state.data, result.data)
 
       if (result.positions) {
+        const positions = {
+          posStart: currentPos + result.positions.posStart
+        }
+
+        if (typeof result.positions.posEnd === 'number') {
+          positions.posEnd = currentPos + result.positions.posEnd
+        }
+
+        if (typeof result.positions.partLength === 'number') {
+          positions.partLength = result.positions.partLength
+        }
+
+        if (typeof result.positions.multiline === 'boolean') {
+          positions.multiline = result.positions.multiline
+        }
+
         const key = parser.name.replace('parse_', '')
         state.data.positions = Object.assign(
-          {
-            [key]: {
-              posStart: currentPos + result.positions.posStart,
-              posEnd: currentPos + result.positions.posEnd,
-              partLength: result.positions.partLength
-            }
-          },
+          { [key]: positions },
           state.data.positions || {}
         )
       }

@@ -104,7 +104,8 @@ describe('Comment string parsing', function () {
             description: {
               posStart: 22,
               posEnd: 37,
-              partLength: 15
+              partLength: 15,
+              multiline: false
             }
           }
         }]
@@ -145,8 +146,7 @@ describe('Comment string parsing', function () {
             },
             description: {
               posStart: 22,
-              posEnd: 38,
-              partLength: 16
+              multiline: true
             }
           }
         }]
@@ -289,11 +289,6 @@ describe('Comment string parsing', function () {
               posStart: 10,
               posEnd: 14,
               partLength: 4
-            },
-            name: {
-              posStart: 14,
-              posEnd: 14,
-              partLength: 0
             }
           }
         }]
@@ -325,11 +320,6 @@ describe('Comment string parsing', function () {
               posStart: 9,
               posEnd: 16,
               partLength: 7
-            },
-            name: {
-              posStart: 16,
-              posEnd: 16,
-              partLength: 0
             }
           }
         }]
@@ -365,11 +355,6 @@ describe('Comment string parsing', function () {
               posStart: 17,
               posEnd: 26,
               partLength: 9
-            },
-            name: {
-              posStart: 26,
-              posEnd: 26,
-              partLength: 0
             }
           }
         }]
@@ -486,7 +471,8 @@ describe('Comment string parsing', function () {
             description: {
               posStart: 32,
               posEnd: 43,
-              partLength: 11
+              partLength: 11,
+              multiline: false
             }
           }
         }]
@@ -530,7 +516,8 @@ describe('Comment string parsing', function () {
             description: {
               posStart: 32,
               posEnd: 49,
-              partLength: 17
+              partLength: 17,
+              multiline: false
             }
           }
         }]
@@ -578,7 +565,8 @@ describe('Comment string parsing', function () {
             description: {
               posStart: 32,
               posEnd: 43,
-              partLength: 11
+              partLength: 11,
+              multiline: false
             }
           }
         }]
@@ -619,11 +607,6 @@ describe('Comment string parsing', function () {
               posStart: 27,
               posEnd: 31,
               partLength: 4
-            },
-            description: {
-              posStart: 32,
-              posEnd: 32,
-              partLength: 0
             }
           }
         }]
@@ -668,8 +651,7 @@ describe('Comment string parsing', function () {
             },
             description: {
               posStart: 32,
-              posEnd: 88,
-              partLength: 56
+              multiline: true
             }
           }
         }]
@@ -902,7 +884,8 @@ describe('Comment string parsing', function () {
             description: {
               posStart: 24,
               posEnd: 41,
-              partLength: 17
+              partLength: 17,
+              multiline: false
             }
           }
         }, {
@@ -927,7 +910,8 @@ describe('Comment string parsing', function () {
             description: {
               posStart: 24,
               posEnd: 41,
-              partLength: 17
+              partLength: 17,
+              multiline: false
             }
           }
         }, {
@@ -952,7 +936,8 @@ describe('Comment string parsing', function () {
             description: {
               posStart: 24,
               posEnd: 41,
-              partLength: 17
+              partLength: 17,
+              multiline: false
             }
           }
         }]
@@ -1171,7 +1156,8 @@ describe('Comment string parsing', function () {
             description: {
               posStart: 29,
               posEnd: 33,
-              partLength: 4
+              partLength: 4,
+              multiline: false
             }
           }
         }]
@@ -1215,7 +1201,8 @@ describe('Comment string parsing', function () {
             description: {
               posStart: 26,
               posEnd: 30,
-              partLength: 4
+              partLength: 4,
+              multiline: false
             }
           }
         }]
@@ -1259,7 +1246,8 @@ describe('Comment string parsing', function () {
             description: {
               posStart: 28,
               posEnd: 32,
-              partLength: 4
+              partLength: 4,
+              multiline: false
             }
           }
         }]
@@ -1291,11 +1279,6 @@ describe('Comment string parsing', function () {
               posStart: 9,
               posEnd: 17,
               partLength: 8
-            },
-            name: {
-              posStart: 17,
-              posEnd: 17,
-              partLength: 0
             }
           }
         }, {
@@ -1311,11 +1294,6 @@ describe('Comment string parsing', function () {
               posStart: 9,
               posEnd: 17,
               partLength: 8
-            },
-            name: {
-              posStart: 17,
-              posEnd: 17,
-              partLength: 0
             }
           }
         }]
@@ -1495,11 +1473,6 @@ describe('Comment string parsing', function () {
               posStart: 9,
               posEnd: 16,
               partLength: 7
-            },
-            name: {
-              posStart: 16,
-              posEnd: 16,
-              partLength: 0
             }
           }
         }, {
@@ -1660,7 +1633,8 @@ describe('Comment string parsing', function () {
             description: {
               posStart: 31,
               posEnd: 54,
-              partLength: 23
+              partLength: 23,
+              multiline: false
             }
           }
         }]
@@ -1700,7 +1674,8 @@ describe('Comment string parsing', function () {
             description: {
               posStart: 18,
               posEnd: 33,
-              partLength: 15
+              partLength: 15,
+              multiline: false
             }
           }
         }]
@@ -1740,7 +1715,8 @@ describe('Comment string parsing', function () {
             description: {
               posStart: 26,
               posEnd: 41,
-              partLength: 15
+              partLength: 15,
+              multiline: false
             }
           }
         }]
@@ -1781,7 +1757,8 @@ describe('Comment string parsing', function () {
             description: {
               posStart: 16,
               posEnd: 31,
-              partLength: 15
+              partLength: 15,
+              multiline: false
             }
           }
         }]
@@ -1823,8 +1800,7 @@ describe('Comment string parsing', function () {
             },
             description: {
               posStart: 16,
-              posEnd: 32,
-              partLength: 16
+              multiline: true
             }
           }
         }]
@@ -1867,7 +1843,8 @@ describe('Comment string parsing', function () {
             description: {
               posStart: 18,
               posEnd: 39,
-              partLength: 21
+              partLength: 21,
+              multiline: false
             }
           }
         }]
@@ -1910,7 +1887,8 @@ describe('Comment string parsing', function () {
             description: {
               posStart: 18,
               posEnd: 39,
-              partLength: 21
+              partLength: 21,
+              multiline: false
             }
           }
         }]
@@ -1953,8 +1931,7 @@ describe('Comment string parsing', function () {
             },
             description: {
               posStart: 18,
-              posEnd: 48,
-              partLength: 30
+              multiline: true
             }
           }
         }]
@@ -1995,8 +1972,7 @@ describe('Comment string parsing', function () {
             },
             description: {
               posStart: 23,
-              posEnd: 39,
-              partLength: 16
+              multiline: true
             }
           }
         }]
@@ -2064,7 +2040,8 @@ describe('Comment string parsing', function () {
           description: {
             posStart: 35,
             posEnd: 37,
-            partLength: 2
+            partLength: 2,
+            multiline: false
           }
         }
       }, {
@@ -2094,7 +2071,8 @@ describe('Comment string parsing', function () {
           description: {
             posStart: 29,
             posEnd: 36,
-            partLength: 7
+            partLength: 7,
+            multiline: false
           }
         }
       }, {
@@ -2118,8 +2096,7 @@ describe('Comment string parsing', function () {
           },
           description: {
             posStart: 24,
-            posEnd: 131,
-            partLength: 107
+            multiline: true
           }
         }
       }]
@@ -2158,7 +2135,8 @@ describe('Comment string parsing', function () {
             description: {
               posStart: 33,
               posEnd: 71,
-              partLength: 38
+              partLength: 38,
+              multiline: false
             }
           }
         }]
@@ -2197,7 +2175,8 @@ describe('Comment string parsing', function () {
             description: {
               posStart: 33,
               posEnd: 71,
-              partLength: 38
+              partLength: 38,
+              multiline: false
             }
           }
         }]
@@ -2236,7 +2215,8 @@ describe('Comment string parsing', function () {
             description: {
               posStart: 33,
               posEnd: 73,
-              partLength: 40
+              partLength: 40,
+              multiline: false
             }
           }
         }]
@@ -2275,7 +2255,8 @@ describe('Comment string parsing', function () {
             description: {
               posStart: 25,
               posEnd: 70,
-              partLength: 45
+              partLength: 45,
+              multiline: false
             }
           }
         }]
@@ -2317,7 +2298,8 @@ describe('Comment string parsing', function () {
             description: {
               posStart: 31,
               posEnd: 34,
-              partLength: 3
+              partLength: 3,
+              multiline: false
             }
           }
         }]
@@ -2359,8 +2341,7 @@ describe('Comment string parsing', function () {
             },
             description: {
               posStart: 21,
-              posEnd: 57,
-              partLength: 36
+              multiline: true
             }
           }
         }, {
@@ -2385,7 +2366,8 @@ describe('Comment string parsing', function () {
             description: {
               posStart: 19,
               posEnd: 30,
-              partLength: 11
+              partLength: 11,
+              multiline: false
             }
           }
         }]
@@ -2425,7 +2407,8 @@ describe('Comment string parsing', function () {
             description: {
               posStart: 21,
               posEnd: 38,
-              partLength: 17
+              partLength: 17,
+              multiline: false
             }
           }
         }, {
@@ -2450,7 +2433,8 @@ describe('Comment string parsing', function () {
             description: {
               posStart: 19,
               posEnd: 30,
-              partLength: 11
+              partLength: 11,
+              multiline: false
             }
           }
         }]
@@ -2492,8 +2476,7 @@ describe('Comment string parsing', function () {
             },
             description: {
               posStart: 21,
-              posEnd: 91,
-              partLength: 70
+              multiline: true
             }
           }
         }, {
@@ -2518,7 +2501,8 @@ describe('Comment string parsing', function () {
             description: {
               posStart: 19,
               posEnd: 30,
-              partLength: 11
+              partLength: 11,
+              multiline: false
             }
           }
         }]
@@ -2562,8 +2546,7 @@ describe('Comment string parsing', function () {
             },
             description: {
               posStart: 21,
-              posEnd: 57,
-              partLength: 36
+              multiline: true
             }
           }
         }, {
@@ -2588,7 +2571,8 @@ describe('Comment string parsing', function () {
             description: {
               posStart: 19,
               posEnd: 30,
-              partLength: 11
+              partLength: 11,
+              multiline: false
             }
           }
         }]

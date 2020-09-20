@@ -8,6 +8,31 @@ function skipws (str) {
   return i
 }
 
+function getPositions (posStart, posEnd, partLength, multiline) {
+  if (partLength === undefined || partLength === 0) {
+    return undefined
+  }
+
+  if (multiline) {
+    return {
+      posStart,
+      multiline
+    }
+  }
+
+  const positions = {
+    posStart,
+    posEnd,
+    partLength
+  }
+
+  if (multiline === false) {
+    positions.multiline = multiline
+  }
+
+  return positions
+}
+
 /* ------- default parsers ------- */
 
 const PARSERS = {}
@@ -23,11 +48,7 @@ PARSERS.parse_tag = function parse_tag (str) {
   return {
     source: match[0],
     data: { tag: match[1] },
-    positions: {
-      posStart,
-      posEnd,
-      partLength
-    }
+    positions: getPositions(posStart, posEnd, partLength)
   }
 }
 
@@ -51,14 +72,13 @@ PARSERS.parse_type = function parse_type (str, data) {
 
   if (curlies !== 0) { throw new SyntaxError('Invalid `{type}`, unpaired curlies') }
 
+  const posEnd = pos
+  const partLength = posEnd - posStart
+
   return {
     source: str.slice(0, pos),
     data: { type: res.slice(1, -1) },
-    positions: {
-      posStart,
-      posEnd: pos,
-      partLength: pos - posStart
-    }
+    positions: getPositions(posStart, posEnd, partLength)
   }
 }
 
@@ -113,14 +133,13 @@ PARSERS.parse_name = function parse_name (str, data) {
 
   res.name = name
 
+  const posEnd = pos
+  const partLength = posEnd - posStart
+
   return {
     source: str.slice(0, pos),
     data: res,
-    positions: {
-      posStart,
-      posEnd: pos,
-      partLength: pos - posStart
-    }
+    positions: getPositions(posStart, posEnd, partLength)
   }
 }
 
@@ -136,15 +155,12 @@ PARSERS.parse_description = function parse_description (str, data) {
   const partLength = match[1] ? match[1].length : 0
   const posStart = skipws(str)
   const posEnd = posStart + partLength
+  const multiline = !!(match[1] !== undefined && match[1].match(/\n/))
 
   return {
     source: match[0],
     data: { description: match[1] === undefined ? '' : match[1] },
-    positions: {
-      posStart,
-      posEnd,
-      partLength
-    }
+    positions: getPositions(posStart, posEnd, partLength, multiline)
   }
 }
 
