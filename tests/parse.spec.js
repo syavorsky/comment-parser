@@ -2,15 +2,16 @@
 
 'use strict'
 const { expect } = require('chai')
-const parse = require('./parse')
 
-describe('Comment string parsing', function () {
-  it('should parse doc block with description', function () {
-    expect(parse(function () {
+describe('Comment string parsing', () => {
+  const parse = require('..')
+
+  it('should parse doc block with description', () => {
+    expect(parse(`
       /**
        * Description
        */
-    }))
+    `))
       .to.eql([{
         description: 'Description',
         source: 'Description',
@@ -19,12 +20,12 @@ describe('Comment string parsing', function () {
       }])
   })
 
-  it('should parse doc block with no mid stars', function () {
-    expect(parse(function () {
+  it('should parse doc block with no mid stars', () => {
+    expect(parse(`
       /**
          Description
        */
-    }))
+    `))
       .to.eql([{
         description: 'Description',
         source: 'Description',
@@ -33,8 +34,8 @@ describe('Comment string parsing', function () {
       }])
   })
 
-  it('should skip surrounding empty lines while preserving line numbers', function () {
-    expect(parse(function () {
+  it('should skip surrounding empty lines while preserving line numbers', () => {
+    expect(parse(`
       /**
        *
        *
@@ -44,7 +45,7 @@ describe('Comment string parsing', function () {
        *
        */
       var a
-    }))
+    `))
       .eql([{
         description: 'Description first line\n\nDescription second line',
         source: 'Description first line\n\nDescription second line',
@@ -53,14 +54,14 @@ describe('Comment string parsing', function () {
       }])
   })
 
-  it('should accept a description on the first line', function () {
-    expect(parse(function () {
+  it('should accept a description on the first line', () => {
+    expect(parse(`
       /** Description first line
        *
        * Description second line
        */
       var a
-    }))
+    `))
       .eql([{
         description: 'Description first line\n\nDescription second line',
         source: 'Description first line\n\nDescription second line',
@@ -69,15 +70,13 @@ describe('Comment string parsing', function () {
       }])
   })
 
-  it('should parse not starred middle lines with `opts.trim = true`', function () {
-    expect(parse(function () {
+  it('should parse not starred middle lines with `opts.trim = true`', () => {
+    expect(parse(`
       /**
          Description text
          @tag tagname Tag description
       */
-    }, {
-      trim: true
-    }))
+    `, { trim: true }))
       .eql([{
         description: 'Description text',
         source: 'Description text\n@tag tagname Tag description',
@@ -94,15 +93,13 @@ describe('Comment string parsing', function () {
       }])
   })
 
-  it('should parse not starred middle lines with `opts.trim = false`', function () {
-    expect(parse(function () {
+  it('should parse not starred middle lines with `opts.trim = false`', () => {
+    expect(parse(`
       /**
          Description text
          @tag tagname Tag description
       */
-    }, {
-      trim: false
-    }))
+    `, { trim: false }))
       .eql([{
         description: '\nDescription text',
         source: '\nDescription text\n@tag tagname Tag description\n',
@@ -119,14 +116,14 @@ describe('Comment string parsing', function () {
       }])
   })
 
-  it('should accept comment close on a non-empty', function () {
-    expect(parse(function () {
+  it('should accept comment close on a non-empty', () => {
+    expect(parse(`
       /**
        * Description first line
        *
        * Description second line */
       var a
-    }))
+    `))
       .eql([{
         description: 'Description first line\n\nDescription second line',
         source: 'Description first line\n\nDescription second line',
@@ -135,18 +132,17 @@ describe('Comment string parsing', function () {
       }])
   })
 
-  it('should skip empty blocks', function () {
-    expect(parse(function () {
+  it('should skip empty blocks', () => {
+    expect(parse(`
       /**
        *
        */
       var a
-    }).length)
-      .to.eq(0)
+    `).length).to.eq(0)
   })
 
-  it('should parse multiple doc blocks', function () {
-    const p = parse(function () {
+  it('should parse multiple doc blocks', () => {
+    const p = parse(`
       /**
        * Description first line
        */
@@ -156,7 +152,7 @@ describe('Comment string parsing', function () {
        * Description second line
        */
       var b
-    })
+    `)
 
     expect(p.length)
       .to.eq(2)
@@ -178,11 +174,11 @@ describe('Comment string parsing', function () {
       })
   })
 
-  it('should parse one line block', function () {
-    expect(parse(function () {
+  it('should parse one line block', () => {
+    expect(parse(`
       /** Description */
       var a
-    }))
+    `))
       .to.eql([{
         description: 'Description',
         source: 'Description',
@@ -191,28 +187,26 @@ describe('Comment string parsing', function () {
       }])
   })
 
-  it('should skip `/* */` comments', function () {
-    expect(parse(function () {
+  it('should skip `/* */` comments', () => {
+    expect(parse(`
       /*
        *
        */
       var a
-    }).length)
-      .to.eq(0)
+    `).length).to.eq(0)
   })
 
-  it('should skip `/*** */` comments', function () {
-    expect(parse(function () {
+  it('should skip `/*** */` comments', () => {
+    expect(parse(`
       /***
        *
        */
       var a
-    }).length)
-      .to.eq(0)
+    `).length).to.eq(0)
   })
 
-  it('should preserve empty lines and indentation with `opts.trim = false`', function () {
-    expect(parse(function () {
+  it('should preserve empty lines and indentation with `opts.trim = false`', () => {
+    expect(parse(`
       /**
        *
        *
@@ -222,9 +216,7 @@ describe('Comment string parsing', function () {
        *       third line
        */
       var a
-    }, {
-      trim: false
-    }))
+    `, { trim: false }))
       .eql([{
         description: '\n\n\n  Description first line\n    second line\n\n      third line\n',
         source: '\n\n\n  Description first line\n    second line\n\n      third line\n',
@@ -233,11 +225,11 @@ describe('Comment string parsing', function () {
       }])
   })
 
-  it('should parse one line block with tag', function () {
-    expect(parse(function () {
+  it('should parse one line block with tag', () => {
+    expect(parse(`
       /** @tag */
       var a
-    }))
+    `))
       .to.eql([{
         description: '',
         line: 1,
@@ -254,14 +246,14 @@ describe('Comment string parsing', function () {
       }])
   })
 
-  it('should parse `@tag`', function () {
-    expect(parse(function () {
+  it('should parse `@tag`', () => {
+    expect(parse(`
       /**
        *
        * @my-tag
        */
       var a
-    }))
+    `))
       .to.eql([{
         line: 1,
         source: '@my-tag',
@@ -278,13 +270,13 @@ describe('Comment string parsing', function () {
       }])
   })
 
-  it('should parse `@tag {my.type}`', function () {
-    expect(parse(function () {
+  it('should parse `@tag {my.type}`', () => {
+    expect(parse(`
       /**
        * @my-tag {my.type}
        */
       var a
-    }))
+    `))
       .to.eql([{
         line: 1,
         source: '@my-tag {my.type}',
@@ -301,12 +293,12 @@ describe('Comment string parsing', function () {
       }])
   })
 
-  it('should parse tag with name only `@tag name`', function () {
-    expect(parse(function () {
+  it('should parse tag with name only `@tag name`', () => {
+    expect(parse(`
       /**
        * @my-tag name
        */
-    }))
+    `))
       .to.eql([{
         line: 1,
         description: '',
@@ -323,12 +315,12 @@ describe('Comment string parsing', function () {
       }])
   })
 
-  it('should parse tag with type and name `@tag {my.type} name`', function () {
-    expect(parse(function () {
+  it('should parse tag with type and name `@tag {my.type} name`', () => {
+    expect(parse(`
       /**
        * @my-tag {my.type} name
        */
-    }))
+    `))
       .to.eql([{
         line: 1,
         source: '@my-tag {my.type} name',
@@ -345,12 +337,12 @@ describe('Comment string parsing', function () {
       }])
   })
 
-  it('should parse tag with type, name and description `@tag {my.type} name description`', function () {
-    expect(parse(function () {
+  it('should parse tag with type, name and description `@tag {my.type} name description`', () => {
+    expect(parse(`
       /**
        * @my-tag {my.type} name description
        */
-    }))
+    `))
       .to.eql([{
         line: 1,
         source: '@my-tag {my.type} name description',
@@ -367,12 +359,12 @@ describe('Comment string parsing', function () {
       }])
   })
 
-  it('should parse tag with type, name and description `@tag {my.type} name description with `/**` characters`', function () {
-    expect(parse(function () {
+  it('should parse tag with type, name and description `@tag {my.type} name description with `/**` characters`', () => {
+    expect(parse(`
       /**
-       * @my-tag {my.type} name description `/**`
+       * @my-tag {my.type} name description \`/**\`
        */
-    }))
+    `))
       .to.eql([{
         line: 1,
         source: '@my-tag {my.type} name description `/**`',
@@ -389,16 +381,12 @@ describe('Comment string parsing', function () {
       }])
   })
 
-  it('should parse tag with type, name and description separated by tab `@tag {my.type} name  description`', function () {
-    expect(parse(
-      /* eslint-disable no-tabs */
-      function () {
+  it('should parse tag with type, name and description separated by tab `@tag {my.type} name  description`', () => {
+    expect(parse(`
       /**
-       * @my-tag	{my.type}	name	description
+       * @my-tag\t{my.type}\tname\tdescription
        */
-      }
-      /* eslint-enable no-tabs */
-    ))
+    `))
       .to.eql([{
         line: 1,
         source: '@my-tag\t{my.type}\tname\tdescription',
@@ -415,7 +403,7 @@ describe('Comment string parsing', function () {
       }])
   })
 
-  it('should parse tag with whitespace description and `opts.trim = false`', function () {
+  it('should parse tag with whitespace description and `opts.trim = false`', () => {
     expect(parse(`
       /**
        * @my-tag {my.type} name\t
@@ -438,14 +426,14 @@ describe('Comment string parsing', function () {
       }])
   })
 
-  it('should parse tag with multiline description', function () {
-    expect(parse(function () {
+  it('should parse tag with multiline description', () => {
+    expect(parse(`
       /**
        * @my-tag {my.type} name description line 1
        * description line 2
        * description line 3
        */
-    }))
+    `))
       .to.eql([{
         line: 1,
         source: '@my-tag {my.type} name description line 1\ndescription line 2\ndescription line 3',
@@ -462,12 +450,12 @@ describe('Comment string parsing', function () {
       }])
   })
 
-  it('should gracefully fail on syntax errors `@tag [name`', function () {
-    expect(parse(function () {
+  it('should gracefully fail on syntax errors `@tag [name`', () => {
+    expect(parse(`
       /**
        * @my-tag [name
        */
-    }))
+    `))
       .to.eql([{
         line: 1,
         description: '',
@@ -485,12 +473,12 @@ describe('Comment string parsing', function () {
       }])
   })
 
-  it('should gracefully fail on syntax errors `@tag [name=]`', function () {
-    expect(parse(function () {
+  it('should gracefully fail on syntax errors `@tag [name=]`', () => {
+    expect(parse(`
       /**
        * @my-tag [name=]
        */
-    })).to.eql([{
+    `)).to.eql([{
       line: 1,
       description: '',
       source: '@my-tag [name=]',
@@ -508,12 +496,12 @@ describe('Comment string parsing', function () {
     }])
   })
 
-  it('should gracefully fail on syntax errors `@tag [=value]`', function () {
-    expect(parse(function () {
+  it('should gracefully fail on syntax errors `@tag [=value]`', () => {
+    expect(parse(`
       /**
        * @my-tag [=value]
        */
-    })).to.eql([{
+    `)).to.eql([{
       line: 1,
       description: '',
       source: '@my-tag [=value]',
@@ -530,12 +518,12 @@ describe('Comment string parsing', function () {
     }])
   })
 
-  it('should gracefully fail on syntax errors `@tag [=]`', function () {
-    expect(parse(function () {
+  it('should gracefully fail on syntax errors `@tag [=]`', () => {
+    expect(parse(`
       /**
        * @my-tag [=]
        */
-    })).to.eql([{
+    `)).to.eql([{
       line: 1,
       description: '',
       source: '@my-tag [=]',
@@ -552,12 +540,12 @@ describe('Comment string parsing', function () {
     }])
   })
 
-  it('should gracefully fail on syntax errors `@tag [==]`', function () {
-    expect(parse(function () {
+  it('should gracefully fail on syntax errors `@tag [==]`', () => {
+    expect(parse(`
       /**
        * @my-tag [==]
        */
-    })).to.eql([{
+    `)).to.eql([{
       line: 1,
       description: '',
       source: '@my-tag [==]',
@@ -574,12 +562,12 @@ describe('Comment string parsing', function () {
     }])
   })
 
-  it('should parse tag with type and optional name `@tag {my.type} [name]`', function () {
-    expect(parse(function () {
+  it('should parse tag with type and optional name `@tag {my.type} [name]`', () => {
+    expect(parse(`
       /**
        * @my-tag {my.type} [name]
        */
-    }))
+    `))
       .to.eql([{
         line: 1,
         description: '',
@@ -596,15 +584,15 @@ describe('Comment string parsing', function () {
       }])
   })
 
-  it('should tolerate loose tag names', function () {
-    expect(parse(function () {
+  it('should tolerate loose tag names', () => {
+    expect(parse(`
       /**
          Description text
          @.tag0 tagname Tag 0 description
          @-tag1 tagname Tag 1 description
          @+tag2 tagname Tag 2 description
       */
-    }))
+    `))
       .eql([{
         description: 'Description text',
         source: 'Description text\n@.tag0 tagname Tag 0 description\n@-tag1 tagname Tag 1 description\n@+tag2 tagname Tag 2 description',
@@ -637,12 +625,12 @@ describe('Comment string parsing', function () {
       }])
   })
 
-  it('should parse tag with optional name containing whitespace `@tag [spaced name]`', function () {
-    expect(parse(function () {
+  it('should parse tag with optional name containing whitespace `@tag [spaced name]`', () => {
+    expect(parse(`
       /**
        * @my-tag [spaced name]
        */
-    }))
+    `))
       .to.eql([{
         line: 1,
         description: '',
@@ -659,12 +647,12 @@ describe('Comment string parsing', function () {
       }])
   })
 
-  it('should parse tag with optional name, default value unquoted `@tag [name=value]`', function () {
-    expect(parse(function () {
+  it('should parse tag with optional name, default value unquoted `@tag [name=value]`', () => {
+    expect(parse(`
       /**
        * @my-tag [name=value]
        */
-    }))
+    `))
       .to.eql([{
         line: 1,
         description: '',
@@ -682,12 +670,12 @@ describe('Comment string parsing', function () {
       }])
   })
 
-  it('should parse tag with optional name containing whitespace, default value unquoted containing whitespace, spaced `@tag [ spaced name = spaced value ]`', function () {
-    expect(parse(function () {
+  it('should parse tag with optional name containing whitespace, default value unquoted containing whitespace, spaced `@tag [ spaced name = spaced value ]`', () => {
+    expect(parse(`
       /**
        * @my-tag [ spaced name = spaced value ]
        */
-    }))
+    `))
       .to.eql([{
         line: 1,
         description: '',
@@ -705,12 +693,12 @@ describe('Comment string parsing', function () {
       }])
   })
 
-  it('should parse tag with optional name, default value quoted `@tag [name="value"]`', function () {
-    expect(parse(function () {
+  it('should parse tag with optional name, default value quoted `@tag [name="value"]`', () => {
+    expect(parse(`
       /**
        * @tag [name="value"]
        */
-    }))
+    `))
       .to.eql([{
         line: 1,
         source: '@tag [name="value"]',
@@ -728,12 +716,12 @@ describe('Comment string parsing', function () {
       }])
   })
 
-  it('should parse tag with optional name, default value quoted containing `=` `@tag [name="="]`', function () {
-    expect(parse(function () {
+  it('should parse tag with optional name, default value quoted containing `=` `@tag [name="="]`', () => {
+    expect(parse(`
       /**
        * @tag {t} [name="="]
        */
-    }))
+    `))
       .to.eql([{
         line: 1,
         source: '@tag {t} [name="="]',
@@ -751,12 +739,12 @@ describe('Comment string parsing', function () {
       }])
   })
 
-  it('should keep value as is if quotes are mismatched `@tag [name="value\']`', function () {
-    expect(parse(function () {
+  it('should keep value as is if quotes are mismatched `@tag [name="value\']`', () => {
+    expect(parse(`
       /**
        * @tag [name="value'] desc
        */
-    }))
+    `))
       .to.eql([{
         line: 1,
         description: '',
@@ -774,12 +762,12 @@ describe('Comment string parsing', function () {
       }])
   })
 
-  it('should parse rest names `@tag ...name desc`', function () {
-    expect(parse(function () {
+  it('should parse rest names `@tag ...name desc`', () => {
+    expect(parse(`
       /**
        * @tag {t} ...name desc
        */
-    }))
+    `))
       .to.eql([{
         line: 1,
         description: '',
@@ -796,12 +784,12 @@ describe('Comment string parsing', function () {
       }])
   })
 
-  it('should parse optional rest names `@tag [...name] desc`', function () {
-    expect(parse(function () {
+  it('should parse optional rest names `@tag [...name] desc`', () => {
+    expect(parse(`
       /**
        * @tag {t} [...name] desc
        */
-    }))
+    `))
       .to.eql([{
         line: 1,
         description: '',
@@ -818,14 +806,14 @@ describe('Comment string parsing', function () {
       }])
   })
 
-  it('should parse multiple tags', function () {
-    expect(parse(function () {
+  it('should parse multiple tags', () => {
+    expect(parse(`
       /**
        * Description
        * @my-tag1
        * @my-tag2
        */
-    }))
+    `))
       .to.eql([{
         line: 1,
         description: 'Description',
@@ -850,17 +838,17 @@ describe('Comment string parsing', function () {
       }])
   })
 
-  it('should parse nested tags', function () {
+  it('should parse nested tags', () => {
     // eslint-disable-next-line no-extend-native
     Object.prototype.ensureFilteringPrototype = true
-    expect(parse(function () {
+    expect(parse(`
       /**
        * Description
        * @my-tag name
        * @my-tag name.sub-name
        * @my-tag name.sub-name.sub-sub-name
        */
-    }, { dotted_names: true }))
+    `, { dotted_names: true }))
       .to.eql([{
         line: 1,
         description: 'Description',
@@ -897,14 +885,14 @@ describe('Comment string parsing', function () {
     delete Object.prototype.ensureFilteringPrototype
   })
 
-  it('should parse nested tags with missing parent', function () {
-    expect(parse(function () {
+  it('should parse nested tags with missing parent', () => {
+    expect(parse(`
       /**
        * Description
        * @my-tag name.sub-name
        * @my-tag name.sub-name.sub-sub-name
        */
-    }, { dotted_names: true }))
+    `, { dotted_names: true }))
       .to.eql([{
         line: 1,
         description: 'Description',
@@ -937,15 +925,15 @@ describe('Comment string parsing', function () {
       }])
   })
 
-  it('should parse nested tags with missing parent but with matching tag name', function () {
-    expect(parse(function () {
+  it('should parse nested tags with missing parent but with matching tag name', () => {
+    expect(parse(`
       /**
        * Description
        * @my-tag
        * @my-tag name.sub-name
        * @my-tag name.sub-name.sub-sub-name
        */
-    }, { dotted_names: true }))
+    `, { dotted_names: true }))
       .to.eql([{
         line: 1,
         description: 'Description',
@@ -986,12 +974,12 @@ describe('Comment string parsing', function () {
       }])
   })
 
-  it('should parse complex types `@tag {{a: type}} name`', function () {
-    expect(parse(function () {
+  it('should parse complex types `@tag {{a: type}} name`', () => {
+    expect(parse(`
       /**
        * @my-tag {{a: number}} name
        */
-    }))
+    `))
       .to.eql([{
         line: 1,
         source: '@my-tag {{a: number}} name',
@@ -1008,12 +996,12 @@ describe('Comment string parsing', function () {
       }])
   })
 
-  it('should gracefully fail on syntax errors `@tag {{a: type} name`', function () {
-    expect(parse(function () {
+  it('should gracefully fail on syntax errors `@tag {{a: type} name`', () => {
+    expect(parse(`
       /**
        * @my-tag {{a: number} name
        */
-    }))
+    `))
       .to.eql([{
         line: 1,
         description: '',
@@ -1031,12 +1019,12 @@ describe('Comment string parsing', function () {
       }])
   })
 
-  it('should parse $ in description`', function () {
-    expect(parse(function () {
+  it('should parse $ in description`', () => {
+    expect(parse(`
       /**
        * @my-tag {String} name description with $ char
        */
-    }))
+    `))
       .to.eql([{
         line: 1,
         source: '@my-tag {String} name description with $ char',
@@ -1053,13 +1041,13 @@ describe('Comment string parsing', function () {
       }])
   })
 
-  it('should parse doc block with bound forced to the left', function () {
-    expect(parse(function () {
+  it('should parse doc block with bound forced to the left', () => {
+    expect(parse(`
       /**
    * Description text
    * @tag tagname Tag description
    */
-    }))
+    `))
       .to.eql([{
         description: 'Description text',
         source: 'Description text\n@tag tagname Tag description',
@@ -1076,13 +1064,13 @@ describe('Comment string parsing', function () {
       }])
   })
 
-  it('should parse doc block with bound forced to the right', function () {
-    expect(parse(function () {
+  it('should parse doc block with bound forced to the right', () => {
+    expect(parse(`
       /**
            * Description text
            * @tag tagname Tag description
            */
-    }))
+    `))
       .to.eql([{
         description: 'Description text',
         source: 'Description text\n@tag tagname Tag description',
@@ -1099,14 +1087,14 @@ describe('Comment string parsing', function () {
       }])
   })
 
-  it('should parse doc block with soft bound', function () {
-    expect(parse(function () {
+  it('should parse doc block with soft bound', () => {
+    expect(parse(`
       /**
    Description text
            another line
    @tag tagname Tag description
    */
-    }))
+    `))
       .to.eql([{
         description: 'Description text\nanother line',
         source: 'Description text\nanother line\n@tag tagname Tag description',
@@ -1123,14 +1111,14 @@ describe('Comment string parsing', function () {
       }])
   })
 
-  it('should parse doc block with soft bound respecting `opts.trim = false`', function () {
-    expect(parse(function () {
+  it('should parse doc block with soft bound respecting `opts.trim = false`', () => {
+    expect(parse(`
       /**
    Description text
            another line
    @tag tagname Tag description
    */
-    }, {
+    `, {
       trim: false
     }))
       .to.eql([{
@@ -1149,16 +1137,14 @@ describe('Comment string parsing', function () {
       }])
   })
 
-  it('should parse multiline without star as same line respecting `opts.join = true`', function () {
-    expect(parse(function () {
+  it('should parse multiline without star as same line respecting `opts.join = true`', () => {
+    expect(parse(`
       /**
        * @tag name
        * description
          same line
        */
-    }, {
-      join: true
-    }))
+    `, { join: true }))
       .to.eql([{
         line: 1,
         description: '',
@@ -1175,16 +1161,14 @@ describe('Comment string parsing', function () {
       }])
   })
 
-  it('should parse multiline without star as same line respecting `opts.join = "\\t"`', function () {
-    expect(parse(function () {
+  it('should parse multiline without star as same line respecting `opts.join = "\\t"`', () => {
+    expect(parse(`
       /**
        * @tag name
        * description
          same line
        */
-    }, {
-      join: '\t'
-    }))
+    `, { join: '\t' }))
       .to.eql([{
         line: 1,
         description: '',
@@ -1201,14 +1185,14 @@ describe('Comment string parsing', function () {
       }])
   })
 
-  it('should parse multiline without star as same line with intent respecting `opts.join = 1` and `opts.trim = false`', function () {
-    expect(parse(function () {
+  it('should parse multiline without star as same line with intent respecting `opts.join = 1` and `opts.trim = false`', () => {
+    expect(parse(`
       /**
        * @tag name
        * description
            intent same line
        */
-    }, {
+    `, {
       join: 1,
       trim: false
     }))
@@ -1228,15 +1212,13 @@ describe('Comment string parsing', function () {
       }])
   })
 
-  it('should parse doc block with star and initial whitespace respecting `opts.trim = false`', function () {
-    expect(parse(function () {
+  it('should parse doc block with star and initial whitespace respecting `opts.trim = false`', () => {
+    expect(parse(`
       /**
        * Description text
        *  @tag tagname Tag description
        */
-    }, {
-      trim: false
-    }))
+    `, { trim: false }))
       .to.eql([{
         description: '\nDescription text',
         source: '\nDescription text\n @tag tagname Tag description\n',
@@ -1253,13 +1235,13 @@ describe('Comment string parsing', function () {
       }])
   })
 
-  it('should parse same line closing section (issue #22)', function () {
-    expect(parse(function () {
+  it('should parse same line closing section (issue #22)', () => {
+    expect(parse(`
       /**
        * Start here
        * Here is more stuff */
       var a
-    }))
+    `))
       .to.eql([{
         description: 'Start here\nHere is more stuff',
         line: 1,
@@ -1268,8 +1250,8 @@ describe('Comment string parsing', function () {
       }])
   })
 
-  it('should tolerate inconsistent formatting (issue #29)', function () {
-    expect(parse(function () {
+  it('should tolerate inconsistent formatting (issue #29)', () => {
+    expect(parse(`
       /**
          * @param {Object} options 配置
          * @return {Any} obj 组件返回的对象
@@ -1280,7 +1262,7 @@ describe('Comment string parsing', function () {
          *     }
          * });
      */
-    }, {
+    `, {
       join: 1,
       trim: false
     })).to.eql([{
@@ -1315,12 +1297,12 @@ describe('Comment string parsing', function () {
     }])
   })
 
-  it('should keep optional names spaces (issue #41)`', function () {
-    expect(parse(function () {
+  it('should keep optional names spaces (issue #41)`', () => {
+    expect(parse(`
       /**
        * @section [Brand Colors] Here you can find all the brand colors
        */
-    }))
+    `))
       .to.eql([{
         line: 1,
         source: '@section [Brand Colors] Here you can find all the brand colors',
@@ -1337,12 +1319,12 @@ describe('Comment string parsing', function () {
       }])
   })
 
-  it('should keep quotes in description (issue #41)`', function () {
-    expect(parse(function () {
+  it('should keep quotes in description (issue #41)`', () => {
+    expect(parse(`
       /**
        * @section "Brand Colors" Here you can find all the brand colors
        */
-    }))
+    `))
       .to.eql([{
         line: 1,
         source: '@section "Brand Colors" Here you can find all the brand colors',
@@ -1359,12 +1341,12 @@ describe('Comment string parsing', function () {
       }])
   })
 
-  it('should use only quoted name (issue #41)`', function () {
-    expect(parse(function () {
+  it('should use only quoted name (issue #41)`', () => {
+    expect(parse(`
       /**
        * @section "Brand Colors" Here you can find "all" the brand colors
        */
-    }))
+    `))
       .to.eql([{
         line: 1,
         source: '@section "Brand Colors" Here you can find "all" the brand colors',
@@ -1381,12 +1363,12 @@ describe('Comment string parsing', function () {
       }])
   })
 
-  it('should ignore inconsistent quoted groups (issue #41)`', function () {
-    expect(parse(function () {
+  it('should ignore inconsistent quoted groups (issue #41)`', () => {
+    expect(parse(`
       /**
        * @section "Brand Colors Here you can find all the brand colors
        */
-    }))
+    `))
       .to.eql([{
         line: 1,
         source: '@section "Brand Colors Here you can find all the brand colors',
@@ -1403,15 +1385,15 @@ describe('Comment string parsing', function () {
       }])
   })
 
-  it('should include non-space immediately after asterisk`', function () {
-    expect(parse(function () {
+  it('should include non-space immediately after asterisk`', () => {
+    expect(parse(`
       /**
        * @example
-       *```typescript
-       * ```
+       *\`\`\`typescript
+       * \`\`\`
        */
       function A () {}
-    }))
+    `))
       .to.eql([{
         line: 1,
         source: '@example\n```typescript\n```',
@@ -1428,16 +1410,16 @@ describe('Comment string parsing', function () {
       }])
   })
 
-  it('should handle fenced description (issue #61)`', function () {
-    expect(parse(function () {
+  it('should handle fenced description (issue #61)`', () => {
+    expect(parse(`
       /**
-       * @example "" ```ts
+       * @example "" \`\`\`ts
       @transient()
       class Foo { }
-      ```
+      \`\`\`
        * @tag name description
        */
-    }))
+    `))
       .to.eql([{
         line: 1,
         source: '@example "" ```ts\n@transient()\nclass Foo { }\n```\n@tag name description',
@@ -1462,13 +1444,13 @@ describe('Comment string parsing', function () {
       }])
   })
 
-  it('should handle one line fenced description (issue #61)`', function () {
-    expect(parse(function () {
+  it('should handle one line fenced description (issue #61)`', () => {
+    expect(parse(`
       /**
-       * @example "" ```fenced text```
+       * @example "" \`\`\`fenced text\`\`\`
        * @tag name description
        */
-    }))
+    `))
       .to.eql([{
         line: 1,
         source: '@example "" ```fenced text```\n@tag name description',
@@ -1493,16 +1475,16 @@ describe('Comment string parsing', function () {
       }])
   })
 
-  it('should handle description with multiple fences (issue #61)`', function () {
-    expect(parse(function () {
+  it('should handle description with multiple fences (issue #61)`', () => {
+    expect(parse(`
       /**
-       * @example "" ```fenced text``` not fenced text ```ts
+       * @example "" \`\`\`fenced text\`\`\` not fenced text \`\`\`ts
       @transient()
       class Foo { }
-      ```
+      \`\`\`
        * @tag name description
        */
-    }))
+    `))
       .to.eql([{
         line: 1,
         source: '@example "" ```fenced text``` not fenced text ```ts\n@transient()\nclass Foo { }\n```\n@tag name description',
@@ -1527,8 +1509,8 @@ describe('Comment string parsing', function () {
       }])
   })
 
-  it('should allow custom fence detection logic (issue #61)`', function () {
-    expect(parse(function () {
+  it('should allow custom fence detection logic (issue #61)`', () => {
+    expect(parse(`
       /**
        * @example "" ###ts
       @transient()
@@ -1536,7 +1518,7 @@ describe('Comment string parsing', function () {
       ###
        * @tag name description
        */
-    }, {
+    `, {
       fence: line => line.indexOf('###') !== -1
     }))
       .to.eql([{
