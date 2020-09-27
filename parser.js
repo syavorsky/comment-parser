@@ -274,6 +274,67 @@ function mkextract (opts) {
   }
 }
 
+function blockParser (line = 0) {
+  let block = null
+
+  function split (str) {
+    let i = 0
+    do { if (str[i] !== ' ' && str[i] !== '\t') break } while (++i < str.length)
+    return { gap: str.slice(0, i), rest: str.slice(i) }
+  }
+
+  return function parseLine (source) {
+    let next
+    const tokens = {}
+
+    next = split(source)
+    tokens.start = next.gap
+    source = next.rest
+
+    if (block === null && source.startsWith(MARKER_START) && !source.startsWith(MARKER_START_SKIP)) {
+      block = []
+      tokens.delim = source.slice(0, MARKER_START.length)
+      source = source.slice(MARKER_START.length)
+
+      next = split(source)
+      tokens.postdelim = next.gap
+      source = next.rest
+    }
+
+    if (block === null) {
+      line++
+      return null
+    }
+
+    const endPos = source.indexOf(MARKER_END)
+
+    if (!tokens.delim && source.startsWith('*') && endPos === -1) {
+      tokens.delim = '*'
+      source = source.slice(1)
+
+      next = split(source)
+      tokens.postdelim = next.gap
+      source = next.rest
+    }
+
+    if (endPos !== -1) {
+      tokens.end = source.slice(source.slice(endPos))
+      source = source.slice(0, endPos)
+    }
+
+    block.push({ source, tokens, line })
+    line++
+
+    if (endPos !== -1) {
+      const result = block.slice()
+      block = null
+      return result
+    }
+
+    return null
+  }
+}
+
 /* ------- Public API ------- */
 
 module.exports = function parse (source, opts) {
@@ -293,3 +354,4 @@ module.exports = function parse (source, opts) {
 
 module.exports.PARSERS = PARSERS
 module.exports.mkextract = mkextract
+module.exports.blockParser = blockParser
