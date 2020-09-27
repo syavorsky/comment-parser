@@ -6,7 +6,7 @@ const { expect } = require('chai')
 describe('Comment string parsing', () => {
   const parse = require('..')
 
-  it('should parse doc block with description', () => {
+  it.only('should parse doc block with description', () => {
     expect(parse(`
       /**
        * Description
@@ -1543,5 +1543,119 @@ describe('Comment string parsing', () => {
           source: '@tag name description'
         }]
       }])
+  })
+})
+
+describe.only('parseBlockFn', () => {
+  const { blockParser } = require('../index')
+  const parse = (s, line = 0) => s.split('\n').map(blockParser(line))
+  const nulls = n => Array(n).fill(null)
+
+  it('one-line description', () => {
+    const parsed = parse(`
+    /**
+     * description
+     */
+    `)
+
+    const expected = [
+      {
+        line: 1,
+        source: '',
+        tokens: { start: '    ', delim: '/**', postdelim: '' }
+      },
+      {
+        line: 2,
+        source: 'description',
+        tokens: { start: '     ', delim: '*', postdelim: ' ' }
+      },
+      {
+        line: 3,
+        source: '',
+        tokens: { start: '     ', end: '*/' }
+      }
+    ]
+
+    expect(parsed).to.eql([...nulls(3), expected, null])
+  })
+
+  it('multi-line description', () => {
+    const parsed = parse(`
+    /**
+     * description 0
+     *
+     * description 1
+     *
+     */
+    `)
+
+    const expected = [
+      {
+        line: 1,
+        source: '',
+        tokens: { start: '    ', delim: '/**', postdelim: '' }
+      },
+      {
+        line: 2,
+        source: 'description 0',
+        tokens: { start: '     ', delim: '*', postdelim: ' ' }
+      },
+      {
+        line: 3,
+        source: '',
+        tokens: { start: '     ', delim: '*', postdelim: '' }
+      },
+      {
+        line: 4,
+        source: 'description 1',
+        tokens: { start: '     ', delim: '*', postdelim: ' ' }
+      },
+      {
+        line: 5,
+        source: '',
+        tokens: { start: '     ', delim: '*', postdelim: '' }
+      },
+      {
+        line: 6,
+        source: '',
+        tokens: { start: '     ', end: '*/' }
+      }
+    ]
+
+    expect(parsed).to.eql([...nulls(6), expected, null])
+  })
+
+  it('no delimiter', () => {
+    const parsed = parse(`
+    /**
+     * description 0
+     description 1
+     */
+    `)
+
+    const expected = [
+      {
+        line: 1,
+        source: '',
+        tokens: { start: '    ', delim: '/**', postdelim: '' }
+      },
+      {
+        line: 2,
+        source: 'description 0',
+        tokens: { start: '     ', delim: '*', postdelim: ' ' }
+      },
+      {
+        line: 3,
+        source: 'description 1',
+        tokens: { start: '     ' }
+      },
+      {
+        line: 4,
+        source: '',
+        tokens: { start: '     ', end: '*/' }
+      }
+    ]
+
+    expect(parsed).to.eql([...nulls(4), expected, null])
   })
 })
