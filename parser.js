@@ -279,7 +279,7 @@ function mkextract (opts) {
 module.exports = function parse (source, opts) {
   const blocks = []
   const extract = mkextract(opts)
-  const lines = source.split(/\n/)
+  const lines = source.split(/\n\r?/)
 
   lines.forEach((line) => {
     const block = extract(line)
