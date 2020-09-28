@@ -1,11 +1,6 @@
 {
-  "extends": "standard",
-  "env": {
-    "browser": true,
-    "node": true,
-    "mocha": true
-  },
-  "rules": {
-    "camelcase": "off"
+  "extends": "standard-with-typescript",
+  "parserOptions": {
+    "project": "./tsconfig.json"
   }
 }

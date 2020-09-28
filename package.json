@@ -7,12 +7,16 @@
   "directories": {
     "test": "tests"
   },
-  "dependencies": {},
   "devDependencies": {
+    "@types/chai": "^4.2.12",
+    "@types/mocha": "^8.0.3",
+    "@typescript-eslint/eslint-plugin": "^3.10.1",
+    "@typescript-eslint/parser": "^4.2.0",
     "chai": "^4.2.0",
-    "eslint": "^6.8.0",
+    "eslint": "^7.10.0",
     "eslint-config-standard": "^14.1.1",
-    "eslint-plugin-import": "^2.20.2",
+    "eslint-config-standard-with-typescript": "^19.0.1",
+    "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^4.0.1",
@@ -20,19 +24,16 @@
     "nodemon": "^2.0.3",
     "nyc": "^15.0.1",
     "readable-stream": "^3.6.0",
-    "typescript": "^3.8.3"
+    "ts-node": "^9.0.0",
+    "typescript": "^4.0.3"
   },
   "engines": {
     "node": ">= 6.0.0"
   },
   "scripts": {
-    "typescript": "tsc index.d.ts",
-    "lint:fix": "eslint --fix .",
-    "test:lint": "eslint .",
-    "test:typescript": "tsc index.d.ts",
-    "test:unit": "nyc mocha tests",
-    "test": "npm run test:typescript && npm run test:lint && npm run test:unit",
-    "watch": "nodemon -q -i node_modules -x npm test"
+    "test:unit": "mocha -r ts-node/register tests/*.spec.ts",
+    "test:unit:coverage": "nyc -r lcov -e .ts -x '*.spec.ts' npm run test:unit",
+    "test": "npm run test:unit:coverage"
   },
   "nyc": {
     "branches": 85,
@@ -52,7 +53,7 @@
     "comments",
     "parser"
   ],
-  "author": "Sergii Iavorskyi <yavorskiy.s@gmail.com> (https://github.com/yavorskiy)",
+  "author": "Sergiy Yavorsky <sergiy@yavorsky.me> (https://github.com/syavorsky)",
   "contributors": [
     "Alexej Yaroshevich (https://github.com/zxqfox)",
     "Andre Wachsmuth (https://github.com/blutorange)",

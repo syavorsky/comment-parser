@@ -1546,9 +1546,9 @@ describe('Comment string parsing', () => {
   })
 })
 
-describe.only('parseBlockFn', () => {
-  const { blockParser } = require('../index')
-  const parse = (s, line = 0) => s.split('\n').map(blockParser(line))
+describe.only('getBlock', () => {
+  const { getBlockFn } = require('../index')
+  const parse = (s, line = 0) => s.split('\n').map(getBlockFn(line))
   const nulls = n => Array(n).fill(null)
 
   it('one-line description', () => {
