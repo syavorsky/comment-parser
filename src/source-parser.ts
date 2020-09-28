@@ -7,15 +7,9 @@ enum Markers {
 
 export interface Tokens {
   start: string
-  delim: string
-  postDelim: string
-  tag: string
-  postTag: string
-  type: string
-  postType: string
-  name: string
-  postName: string
-  descr: string
+  delimiter: string
+  postDelimiter: string
+  text: string
   end: string
 }
 
@@ -33,20 +27,6 @@ export interface Options {
 
 export type Parser = (source: string) => Block | null
 
-const defaultTokens = {
-  start: '',
-  delim: '',
-  postDelim: '',
-  tag: '',
-  postTag: '',
-  type: '',
-  postType: '',
-  name: '',
-  postName: '',
-  descr: '',
-  end: ''
-}
-
 export default function getParser ({ startLine = 0 }: Options = {}): Parser {
   if (startLine < 0 || startLine % 1 > 0) throw new Error('Invalid startLine')
 
@@ -62,14 +42,22 @@ export default function getParser ({ startLine = 0 }: Options = {}): Parser {
   }
 
   return function parse (source: string): Block | null {
-    const tokens = { ...defaultTokens }
-    ;[tokens.start, source] = split(source)
+    let text = source
+    const tokens: Tokens = {
+      start: '',
+      delimiter: '',
+      postDelimiter: '',
+      text: '',
+      end: ''
+    }
 
-    if (block === null && source.startsWith(Markers.start) && !source.startsWith(Markers.nostart)) {
+    ;[tokens.start, text] = split(text)
+
+    if (block === null && text.startsWith(Markers.start) && !text.startsWith(Markers.nostart)) {
       block = []
-      tokens.delim = source.slice(0, Markers.start.length)
-      source = source.slice(Markers.start.length)
-      ;[tokens.postDelim, source] = split(source)
+      tokens.delimiter = text.slice(0, Markers.start.length)
+      text = text.slice(Markers.start.length)
+      ;[tokens.postDelimiter, text] = split(text)
     }
 
     if (block === null) {
@@ -77,20 +65,21 @@ export default function getParser ({ startLine = 0 }: Options = {}): Parser {
       return null
     }
 
-    const isClosed = (source.trimRight()).endsWith(Markers.end)
+    const isClosed = (text.trimRight()).endsWith(Markers.end)
 
-    if (tokens.delim === '' && source.startsWith(Markers.delim) && !source.startsWith(Markers.end)) {
-      tokens.delim = Markers.delim
-      source = source.slice(Markers.delim.length)
-      ;[tokens.postDelim, source] = split(source)
+    if (tokens.delimiter === '' && text.startsWith(Markers.delim) && !text.startsWith(Markers.end)) {
+      tokens.delimiter = Markers.delim
+      text = text.slice(Markers.delim.length)
+      ;[tokens.postDelimiter, text] = split(text)
     }
 
     if (isClosed) {
-      const trimmed = source.trimRight()
-      tokens.end = source.slice(trimmed.length - Markers.end.length)
-      source = trimmed.slice(0, -Markers.end.length)
+      const trimmed = text.trimRight()
+      tokens.end = text.slice(trimmed.length - Markers.end.length)
+      text = trimmed.slice(0, -Markers.end.length)
     }
 
+    tokens.text = text
     block.push({ line, source, tokens })
     line++
 
