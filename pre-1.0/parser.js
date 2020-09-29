@@ -85,7 +85,7 @@ function parse_block (source, opts) {
 
   source_str = trim(source_str)
 
-  const start = source[0].line
+  const start = source[0].number
 
   // merge source lines into tags
   // we assume tag starts with "@"
@@ -97,7 +97,7 @@ function parse_block (source, opts) {
       if (line.source.match(/^\s*@(\S+)/) && !state.isFenced) {
         state.tags.push({
           source: [line.source],
-          line: line.line
+          line: line.number
         })
       // keep appending source to the current tag
       } else {
@@ -115,136 +115,6 @@ function parse_block (source, opts) {
           tag.source[tag.source.length - 1] += source
         } else {
           tag.source.push(line.source)
-        }
-      }
-
-      if (toggleFence(line.source)) {
-        state.isFenced = !state.isFenced
-      }
-      return state
-    }, {
-      tags: [{ source: [] }],
-      isFenced: false
-    })
-    .tags
-    .map((tag) => {
-      tag.source = trim(tag.source.join('\n'))
-      return tag
-    })
-
-  // Block description
-  const description = source.shift()
-
-  // skip if no descriptions and no tags
-  if (description.source === '' && source.length === 0) {
-    return null
-  }
-
-  const tags = source.reduce(function (tags, tag) {
-    const tag_node = parse_tag(tag.source, opts.parsers)
-
-    tag_node.line = tag.line
-    tag_node.source = tag.source
-
-    if (opts.dotted_names && tag_node.name.includes('.')) {
-      let parent_name
-      let parent_tag
-      let parent_tags = tags
-      const parts = tag_node.name.split('.')
-
-      while (parts.length > 1) {
-        parent_name = parts.shift()
-        parent_tag = find(parent_tags, {
-          tag: tag_node.tag,
-          name: parent_name
-        })
-
-        if (!parent_tag) {
-          parent_tag = {
-            tag: tag_node.tag,
-            line: Number(tag_node.line),
-            name: parent_name,
-            type: '',
-            description: ''
-          }
-          parent_tags.push(parent_tag)
-        }
-
-        parent_tag.tags = parent_tag.tags || []
-        parent_tags = parent_tag.tags
-      }
-
-      tag_node.name = parts[0]
-      parent_tags.push(tag_node)
-      return tags
-    }
-
-    return tags.concat(tag_node)
-  }, [])
-
-  for (const tag of tags) {
-    if (!tag.errors && tag.warnings) {
-      tag.errors = [...tag.warnings]
-      delete tag.warnings
-    }
-  }
-
-  return {
-    tags,
-    line: start,
-    description: description.source,
-    source: source_str
-  }
-}
-
-function itemizeBlock (source, opts) {
-  const trim = opts.trim
-    ? s => s.trim()
-    : s => s
-
-  const toggleFence = (typeof opts.fence === 'function')
-    ? opts.fence
-    : line => line.split(opts.fence).length % 2 === 0
-
-  let source_str = source
-    .map((line) => { return trim(line.source) })
-    .join('\n')
-
-  source_str = trim(source_str)
-
-  const start = source[0].line
-
-  // merge source lines into tags, we assume tag starts with "@"
-  source = source
-    .reduce(function (state, line) {
-      line.source = trim(line.source)
-
-      // start of a new tag detected
-      if (line.source.match(/^\s*@(\S+)/) && !state.isFenced) {
-        state.tags.push({
-          source: [line.source],
-          line: line.line
-        })
-      // keep appending source to the current tag
-      } else {
-        const tag = state.tags[state.tags.length - 1]
-
-        // this is first line
-        if (tag.source.length === 0) {
-          tag.source.push(line.source)
-        // line has explict * delimiter
-        } else if (line.tokens.delim) {
-          tag.source.push((line.tokens.postdelim || '') + line.source)
-        } else if (opts.join) {
-          let source
-          if (typeof opts.join === 'string') {
-            source = opts.join + line.source.replace(/^\s+/, '')
-          } else if (typeof opts.join === 'number') {
-            source = line.source
-          } else {
-            source = ' ' + line.source.replace(/^\s+/, '')
-          }
-          tag.source[tag.source.length - 1] += source
         }
       }
 
@@ -404,67 +274,6 @@ function mkextract (opts) {
   }
 }
 
-function getBlockFn (line = 0) {
-  let block = null
-
-  function split (str) {
-    let i = 0
-    do { if (str[i] !== ' ' && str[i] !== '\t') break } while (++i < str.length)
-    return { gap: str.slice(0, i), rest: str.slice(i) }
-  }
-
-  return function getBlock (source) {
-    let next
-    const tokens = {}
-
-    next = split(source)
-    tokens.start = next.gap
-    source = next.rest
-
-    if (block === null && source.startsWith(MARKER_START) && !source.startsWith(MARKER_START_SKIP)) {
-      block = []
-      tokens.delim = source.slice(0, MARKER_START.length)
-      source = source.slice(MARKER_START.length)
-
-      next = split(source)
-      tokens.postdelim = next.gap
-      source = next.rest
-    }
-
-    if (block === null) {
-      line++
-      return null
-    }
-
-    const endPos = source.indexOf(MARKER_END)
-
-    if (!tokens.delim && source.startsWith('*') && endPos === -1) {
-      tokens.delim = '*'
-      source = source.slice(1)
-
-      next = split(source)
-      tokens.postdelim = next.gap
-      source = next.rest
-    }
-
-    if (endPos !== -1) {
-      tokens.end = source.slice(source.slice(endPos))
-      source = source.slice(0, endPos)
-    }
-
-    block.push({ source, tokens, line })
-    line++
-
-    if (endPos !== -1) {
-      const result = block.slice()
-      block = null
-      return result
-    }
-
-    return null
-  }
-}
-
 /* ------- Public API ------- */
 
 module.exports = function parse (source, opts) {
@@ -484,5 +293,3 @@ module.exports = function parse (source, opts) {
 
 module.exports.PARSERS = PARSERS
 module.exports.mkextract = mkextract
-module.exports.getBlockFn = getBlockFn
-module.exports.itemizeBlock = itemizeBlock

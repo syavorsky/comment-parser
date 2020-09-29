@@ -19,20 +19,18 @@ export interface Line {
   tokens: Tokens
 }
 
-export type Block = Line[]
-
 export interface Options {
-  startLine?: number
+  startLine: number
 }
 
-export type Parser = (source: string) => Block | null
+export type Parser = (source: string) => Line[] | null
 
-export default function getParser ({ startLine = 0 }: Options = {}): Parser {
+export default function getParser ({ startLine = 0 }: Partial<Options> = {}): Parser {
   if (startLine < 0 || startLine % 1 > 0) throw new Error('Invalid startLine')
 
   const spaceChars = new Set<string>([' ', '\t'])
 
-  let block: Block | null = null
+  let block: Line[] | null = null
   let line = startLine
 
   function split (s: string): [string, string] {
@@ -41,7 +39,7 @@ export default function getParser ({ startLine = 0 }: Options = {}): Parser {
     return [s.slice(0, i), s.slice(i)]
   }
 
-  return function parse (source: string): Block | null {
+  return function parse (source: string): Line[] | null {
     let text = source
     const tokens: Tokens = {
       start: '',
