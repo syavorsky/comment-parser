@@ -12,59 +12,64 @@ describe('source parser', () => {
   it('multi-line block', () => {
     const parsed = parse(`
     /**
-      * description 0
-      *
-      description 1
-      *
-      * @param {string} value value description 0
-      value description 1
-      */
-    `)
+     * description 0
+     *
+     * description 1
+     *
+     * @param {string} value value description 0
+    \`\`\`
+    @sample code
+    \`\`\`
+    * description 1
+    */`)
 
-    const block = [
-      {
-        line: 1,
-        source: '    /**',
-        tokens: { start: '    ', delimiter: '/**', postDelimiter: '', text: '', end: '' }
-      },
-      {
-        line: 2,
-        source: '      * description 0',
-        tokens: { start: '      ', delimiter: '*', postDelimiter: ' ', text: 'description 0', end: '' }
-      },
-      {
-        line: 3,
-        source: '      *',
-        tokens: { start: '      ', delimiter: '*', postDelimiter: '', text: '', end: '' }
-      },
-      {
-        line: 4,
-        source: '      description 1',
-        tokens: { start: '      ', delimiter: '', postDelimiter: '', text: 'description 1', end: '' }
-      },
-      {
-        line: 5,
-        source: '      *',
-        tokens: { start: '      ', delimiter: '*', postDelimiter: '', text: '', end: '' }
-      },
-      {
-        line: 6,
-        source: '      * @param {string} value value description 0',
-        tokens: { start: '      ', delimiter: '*', postDelimiter: ' ', text: '@param {string} value value description 0', end: '' }
-      },
-      {
-        line: 7,
-        source: '      value description 1',
-        tokens: { start: '      ', delimiter: '', postDelimiter: '', text: 'value description 1', end: '' }
-      },
-      {
-        line: 8,
-        source: '      */',
-        tokens: { start: '      ', delimiter: '', postDelimiter: '', text: '', end: '*/' }
-      }
-    ]
+    const block = [{
+      line: 1,
+      source: '    /**',
+      tokens: { start: '    ', delimiter: '/**', postDelimiter: '', text: '', end: '' }
+    }, {
+      line: 2,
+      source: '     * description 0',
+      tokens: { start: '     ', delimiter: '*', postDelimiter: ' ', text: 'description 0', end: '' }
+    }, {
+      line: 3,
+      source: '     *',
+      tokens: { start: '     ', delimiter: '*', postDelimiter: '', text: '', end: '' }
+    }, {
+      line: 4,
+      source: '     * description 1',
+      tokens: { start: '     ', delimiter: '*', postDelimiter: ' ', text: 'description 1', end: '' }
+    }, {
+      line: 5,
+      source: '     *',
+      tokens: { start: '     ', delimiter: '*', postDelimiter: '', text: '', end: '' }
+    }, {
+      line: 6,
+      source: '     * @param {string} value value description 0',
+      tokens: { start: '     ', delimiter: '*', postDelimiter: ' ', text: '@param {string} value value description 0', end: '' }
+    }, {
+      line: 7,
+      source: '    ```',
+      tokens: { start: '    ', delimiter: '', postDelimiter: '', text: '```', end: '' }
+    }, {
+      line: 8,
+      source: '    @sample code',
+      tokens: { start: '    ', delimiter: '', postDelimiter: '', text: '@sample code', end: '' }
+    }, {
+      line: 9,
+      source: '    ```',
+      tokens: { start: '    ', delimiter: '', postDelimiter: '', text: '```', end: '' }
+    }, {
+      line: 10,
+      source: '    * description 1',
+      tokens: { start: '    ', delimiter: '*', postDelimiter: ' ', text: 'description 1', end: '' }
+    }, {
+      line: 11,
+      source: '    */',
+      tokens: { start: '    ', delimiter: '', postDelimiter: '', text: '', end: '*/' }
+    }]
 
-    expect(parsed).to.eql([...nulls(8), block, null])
+    expect(parsed).to.eql([...nulls(11), block])
   })
 
   it('one-line block', () => {
