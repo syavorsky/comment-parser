@@ -26,47 +26,47 @@ describe('source parser', () => {
     const block = [{
       line: 1,
       source: '    /**',
-      tokens: { start: '    ', delimiter: '/**', postDelimiter: '', text: '', end: '' }
+      tokens: { start: '    ', delimiter: '/**', postDelimiter: '', description: '', end: '' }
     }, {
       line: 2,
       source: '     * description 0',
-      tokens: { start: '     ', delimiter: '*', postDelimiter: ' ', text: 'description 0', end: '' }
+      tokens: { start: '     ', delimiter: '*', postDelimiter: ' ', description: 'description 0', end: '' }
     }, {
       line: 3,
       source: '     *',
-      tokens: { start: '     ', delimiter: '*', postDelimiter: '', text: '', end: '' }
+      tokens: { start: '     ', delimiter: '*', postDelimiter: '', description: '', end: '' }
     }, {
       line: 4,
       source: '     * description 1',
-      tokens: { start: '     ', delimiter: '*', postDelimiter: ' ', text: 'description 1', end: '' }
+      tokens: { start: '     ', delimiter: '*', postDelimiter: ' ', description: 'description 1', end: '' }
     }, {
       line: 5,
       source: '     *',
-      tokens: { start: '     ', delimiter: '*', postDelimiter: '', text: '', end: '' }
+      tokens: { start: '     ', delimiter: '*', postDelimiter: '', description: '', end: '' }
     }, {
       line: 6,
       source: '     * @param {string} value value description 0',
-      tokens: { start: '     ', delimiter: '*', postDelimiter: ' ', text: '@param {string} value value description 0', end: '' }
+      tokens: { start: '     ', delimiter: '*', postDelimiter: ' ', description: '@param {string} value value description 0', end: '' }
     }, {
       line: 7,
       source: '    ```',
-      tokens: { start: '    ', delimiter: '', postDelimiter: '', text: '```', end: '' }
+      tokens: { start: '    ', delimiter: '', postDelimiter: '', description: '```', end: '' }
     }, {
       line: 8,
       source: '    @sample code',
-      tokens: { start: '    ', delimiter: '', postDelimiter: '', text: '@sample code', end: '' }
+      tokens: { start: '    ', delimiter: '', postDelimiter: '', description: '@sample code', end: '' }
     }, {
       line: 9,
       source: '    ```',
-      tokens: { start: '    ', delimiter: '', postDelimiter: '', text: '```', end: '' }
+      tokens: { start: '    ', delimiter: '', postDelimiter: '', description: '```', end: '' }
     }, {
       line: 10,
       source: '    * description 1',
-      tokens: { start: '    ', delimiter: '*', postDelimiter: ' ', text: 'description 1', end: '' }
+      tokens: { start: '    ', delimiter: '*', postDelimiter: ' ', description: 'description 1', end: '' }
     }, {
       line: 11,
       source: '    */',
-      tokens: { start: '    ', delimiter: '', postDelimiter: '', text: '', end: '*/' }
+      tokens: { start: '    ', delimiter: '', postDelimiter: '', description: '', end: '*/' }
     }]
 
     expect(parsed).to.eql([...nulls(11), block])
@@ -81,7 +81,7 @@ describe('source parser', () => {
       {
         line: 1,
         source: '    /** description */',
-        tokens: { start: '    ', delimiter: '/**', postDelimiter: ' ', text: 'description ', end: '*/' }
+        tokens: { start: '    ', delimiter: '/**', postDelimiter: ' ', description: 'description ', end: '*/' }
       }
     ]
 
@@ -99,7 +99,7 @@ describe('source parser', () => {
       {
         line: 1,
         source: '    /** description 0 */',
-        tokens: { start: '    ', delimiter: '/**', postDelimiter: ' ', text: 'description 0 ', end: '*/' }
+        tokens: { start: '    ', delimiter: '/**', postDelimiter: ' ', description: 'description 0 ', end: '*/' }
       }
     ]
 
@@ -107,7 +107,7 @@ describe('source parser', () => {
       {
         line: 3,
         source: '    /** description 1 */',
-        tokens: { start: '    ', delimiter: '/**', postDelimiter: ' ', text: 'description 1 ', end: '*/' }
+        tokens: { start: '    ', delimiter: '/**', postDelimiter: ' ', description: 'description 1 ', end: '*/' }
       }
     ]
 

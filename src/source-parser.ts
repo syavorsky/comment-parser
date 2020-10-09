@@ -1,3 +1,5 @@
+import { splitSpace } from './util'
+
 export enum Markers {
   start = '/**',
   nostart = '/***',
@@ -34,40 +36,20 @@ export type Parser = (source: string) => Line[] | null
 export default function getParser ({ startLine = 0 }: Partial<Options> = {}): Parser {
   if (startLine < 0 || startLine % 1 > 0) throw new Error('Invalid startLine')
 
-  const spaceChars = new Set<string>([' ', '\t'])
-
   let block: Line[] | null = null
   let num = startLine
 
-  function split (s: string): [string, string] {
-    let i = 0
-    do { if (!spaceChars.has(s[i])) break } while (++i < s.length)
-    return [s.slice(0, i), s.slice(i)]
-  }
-
   return function parseSource (source: string): Line[] | null {
     let rest = source
-    const tokens: Tokens = {
-      start: '',
-      delimiter: '',
-      postDelimiter: '',
-      tag: '',
-      postTag: '',
-      name: '',
-      postName: '',
-      type: '',
-      postType: '',
-      description: '',
-      end: ''
-    }
+    const tokens: Tokens = seedTokens()
 
-    ;[tokens.start, rest] = split(rest)
+    ;[tokens.start, rest] = splitSpace(rest)
 
     if (block === null && rest.startsWith(Markers.start) && !rest.startsWith(Markers.nostart)) {
       block = []
       tokens.delimiter = rest.slice(0, Markers.start.length)
       rest = rest.slice(Markers.start.length)
-      ;[tokens.postDelimiter, rest] = split(rest)
+      ;[tokens.postDelimiter, rest] = splitSpace(rest)
     }
 
     if (block === null) {
@@ -80,7 +62,7 @@ export default function getParser ({ startLine = 0 }: Partial<Options> = {}): Pa
     if (tokens.delimiter === '' && rest.startsWith(Markers.delim) && !rest.startsWith(Markers.end)) {
       tokens.delimiter = Markers.delim
       rest = rest.slice(Markers.delim.length)
-      ;[tokens.postDelimiter, rest] = split(rest)
+      ;[tokens.postDelimiter, rest] = splitSpace(rest)
     }
 
     if (isClosed) {
@@ -100,5 +82,22 @@ export default function getParser ({ startLine = 0 }: Partial<Options> = {}): Pa
     }
 
     return null
+  }
+}
+
+export function seedTokens (tokens: Partial<Tokens> = {}): Tokens {
+  return {
+    start: '',
+    delimiter: '',
+    postDelimiter: '',
+    tag: '',
+    postTag: '',
+    name: '',
+    postName: '',
+    type: '',
+    postType: '',
+    description: '',
+    end: '',
+    ...tokens
   }
 }
