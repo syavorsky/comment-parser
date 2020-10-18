@@ -14,7 +14,7 @@ describe('spec tokenizers', () => {
           tokens: seedTokens({ description: '@param {string} value value description 0' })
         }]
       }))).to.eql(seedSpec({
-        tag: 'param',
+        tag: 'param', 
         source: [{
           number: 1,
           source: '...',
@@ -46,24 +46,79 @@ describe('spec tokenizers', () => {
     })
   })
 
-  // describe('typeTokenizer', () => {
-  //   const tokenize = tagTokenizer()
+  describe('typeTokenizer', () => {
+    const tokenize = typeTokenizer()
 
-  //   it('ok', () => {
-  //     expect(tokenize(seedSpec({
-  //       source: [{
-  //         number: 1,
-  //         source: '@param {string} value value description 0',
-  //         tokens: seedTokens({ description: '@param {string} value value description 0' })
-  //       }]
-  //     }))).to.eql(seedSpec({
-  //       tag: 'param',
-  //       source: [{
-  //         number: 1,
-  //         source: '@param {string} value value description 0',
-  //         tokens: seedTokens({ tag: '@param', postTag: ' ', description: '{string} value value description 0' })
-  //       }]
-  //     }))
-  //   })
-  // })
+    it('ok', () => {
+      expect(tokenize(seedSpec({
+        source: [{
+          number: 1,
+          source: '...',
+          tokens: seedTokens({ description: '{string} value value description 0' })
+        }]
+      }))).to.eql(seedSpec({
+        type: 'string',
+        source: [{
+          number: 1,
+          source: '...',
+          tokens: seedTokens({ type: '{string}', postType: ' ', description: 'value value description 0' })
+        }]
+      }))
+    })
+  })
+
+  describe('nameTokenizer', () => {
+    const tokenize = nameTokenizer()
+
+    it('ok', () => {
+      expect(tokenize(seedSpec({
+        source: [{
+          number: 1,
+          source: '...',
+          tokens: seedTokens({ description: 'value value description 0' })
+        }]
+      }))).to.eql(seedSpec({
+        name: 'value',
+        source: [{
+          number: 1,
+          source: '...',
+          tokens: seedTokens({ name: 'value', postName: ' ', description: 'value description 0' })
+        }]
+      }))
+    })
+
+    it('quoted', () => {
+      expect(tokenize(seedSpec({
+        source: [{
+          number: 1,
+          source: '...',
+          tokens: seedTokens({ description: '"value value" description 0' })
+        }]
+      }))).to.eql(seedSpec({
+        name: 'value value',
+        source: [{
+          number: 1,
+          source: '...',
+          tokens: seedTokens({ name: '"value value"', postName: ' ', description: 'description 0' })
+        }]
+      }))
+    })
+
+    it('inconsistent quotes', () => {
+      expect(tokenize(seedSpec({
+        source: [{
+          number: 1,
+          source: '...',
+          tokens: seedTokens({ description: '"value value description 0' })
+        }]
+      }))).to.eql(seedSpec({
+        name: '"value',
+        source: [{
+          number: 1,
+          source: '...',
+          tokens: seedTokens({ name: '"value', postName: ' ', description: 'value description 0' })
+        }]
+      }))
+    })
+  })
 })

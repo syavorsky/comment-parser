@@ -101,6 +101,40 @@ export function tagTokenizer (): Tokenizer {
   }
 }
 
+export function typeTokenizer (): Tokenizer {
+  return (spec: Spec): Spec => {
+    let res = ''
+    let curlies = 0
+    const { tokens } = spec.source[0]
+    const source = tokens.description.trimLeft()
+
+    if (source[0] !== '{') return spec
+
+    for (const ch of source) {
+      if (ch === '{') curlies++
+      if (ch === '}') curlies--
+      res += ch
+      if (curlies === 0) { break }
+    }
+
+    if (curlies !== 0) {
+      spec.problems.push({
+        code: 'type:unpaired-curlies',
+        message: 'unpaired curlies',
+        line: spec.source[0].number,
+        critical: true
+      })
+      return spec
+    }
+
+    spec.type = res.slice(1, -1)
+    tokens.type = res
+    ;[tokens.postType, tokens.description] = splitSpace(source.slice(tokens.type.length))
+
+    return spec
+  }
+}
+
 export function nameTokenizer (): Tokenizer {
   return (spec: Spec): Spec => {
     const { tokens } = spec.source[0]
@@ -111,7 +145,7 @@ export function nameTokenizer (): Tokenizer {
     // if it starts with quoted group assume it is a literal
     if (quotedGroups.length > 1 && quotedGroups[0] === '' && quotedGroups.length % 2 === 1) {
       spec.name = quotedGroups[1]
-      tokens.name = '"{quotedGroups[1]}"'
+      tokens.name = `"${quotedGroups[1]}"`
       ;[tokens.postName, tokens.description] = splitSpace(source.slice(tokens.name.length))
       return spec
     }
@@ -179,42 +213,9 @@ export function nameTokenizer (): Tokenizer {
 
     spec.optional = optional
     spec.name = name
-    spec.default = defaultValue
+    if (defaultValue !== undefined) spec.default = defaultValue
 
-    ;[tokens.postName, tokens.description] = splitSpace(source.slice(0, tokens.name.length))
-    return spec
-  }
-}
-
-export function typeTokenizer (): Tokenizer {
-  return (spec: Spec): Spec => {
-    let res = ''
-    let curlies = 0
-    const { tokens } = spec.source[0]
-    const source = tokens.description.trimLeft()
-
-    if (source[0] !== '{') return spec
-
-    for (const ch of source) {
-      if (ch === '{') curlies++
-      if (ch === '}') curlies--
-      res += ch
-      if (curlies === 0) { break }
-    }
-
-    if (curlies !== 0) {
-      spec.problems.push({
-        code: 'type:unpaired-curlies',
-        message: 'unpaired curlies',
-        line: spec.source[0].number,
-        critical: true
-      })
-      return spec
-    }
-
-    tokens.type = res.slice(1, -1)
-    ;[tokens.postType, tokens.description] = splitSpace(source.slice(0, tokens.name.length))
-
+    ;[tokens.postName, tokens.description] = splitSpace(source.slice(tokens.name.length))
     return spec
   }
 }
