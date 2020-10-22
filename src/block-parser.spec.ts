@@ -1,4 +1,3 @@
-import { expect } from 'chai'
 import getParser from '../src/block-parser'
 
 describe('block parser', () => {
@@ -60,11 +59,11 @@ describe('block parser', () => {
     tokens: { start: '    ', delimiter: '', postDelimiter: '', text: '', end: '*/' }
   }]
 
-  it('default options', () => {
+  test('default options', () => {
     const parser = getParser()
     const items = parser(block)
 
-    expect(items).to.eql([{
+    expect(items).toBe([{
       text: 'description 0 description 1',
       source: block.slice(0, 5)
     }, {
@@ -73,11 +72,11 @@ describe('block parser', () => {
     }])
   })
 
-  it('join: "compact"', () => {
+  test('join: "compact"', () => {
     const parser = getParser({ join: 'compact' })
     const items = parser(block)
 
-    expect(items).to.eql([{
+    expect(items).toBe([{
       text: 'description 0 description 1',
       source: block.slice(0, 5)
     }, {
@@ -86,11 +85,11 @@ describe('block parser', () => {
     }])
   })
 
-  it('join: "multiline"', () => {
+  test('join: "multiline"', () => {
     const parser = getParser({ join: 'multiline' })
     const items = parser(block)
 
-    expect(items).to.eql([{
+    expect(items).toBe([{
       text: 'description 0\n\ndescription 1\n',
       source: block.slice(0, 5)
     }, {
