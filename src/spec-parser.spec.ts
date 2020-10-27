@@ -1,19 +1,18 @@
-import { expect } from 'chai'
-import { seedTokens } from '../src/source-parser'
-import { Spec, seedSpec, tagTokenizer, nameTokenizer, typeTokenizer, descriptionTokenizer } from '../src/spec-parser'
+import { tagTokenizer, nameTokenizer, typeTokenizer, descriptionTokenizer } from './spec-parser'
+import { seedTokens, seedSpec } from './util'
 
 describe('spec tokenizers', () => {
   describe('tagTokenizer', () => {
     const tokenize = tagTokenizer()
 
-    it('ok', () => {
+    test('ok', () => {
       expect(tokenize(seedSpec({
         source: [{
           number: 1,
           source: '...',
           tokens: seedTokens({ description: '@param {string} value value description 0' })
         }]
-      }))).to.eql(seedSpec({
+      }))).toEqual(seedSpec({
         tag: 'param', 
         source: [{
           number: 1,
@@ -23,14 +22,14 @@ describe('spec tokenizers', () => {
       }))
     })
 
-    it('require @', () => {
+    test('require @', () => {
       expect(tokenize(seedSpec({
         source: [{
           number: 42,
           source: '...',
           tokens: seedTokens({ description: 'param {string} value value description 0' })
         }]
-      }))).to.eql(seedSpec({
+      }))).toEqual(seedSpec({
         problems: [{
           code: 'tag:prefix',
           message: 'tag should start with "@" symbol',
@@ -49,14 +48,14 @@ describe('spec tokenizers', () => {
   describe('typeTokenizer', () => {
     const tokenize = typeTokenizer()
 
-    it('ok', () => {
+    test('ok', () => {
       expect(tokenize(seedSpec({
         source: [{
           number: 1,
           source: '...',
           tokens: seedTokens({ description: '{string} value value description 0' })
         }]
-      }))).to.eql(seedSpec({
+      }))).toEqual(seedSpec({
         type: 'string',
         source: [{
           number: 1,
@@ -70,14 +69,14 @@ describe('spec tokenizers', () => {
   describe('nameTokenizer', () => {
     const tokenize = nameTokenizer()
 
-    it('ok', () => {
+    test('ok', () => {
       expect(tokenize(seedSpec({
         source: [{
           number: 1,
           source: '...',
           tokens: seedTokens({ description: 'value value description 0' })
         }]
-      }))).to.eql(seedSpec({
+      }))).toEqual(seedSpec({
         name: 'value',
         source: [{
           number: 1,
@@ -87,14 +86,14 @@ describe('spec tokenizers', () => {
       }))
     })
 
-    it('quoted', () => {
+    test('quoted', () => {
       expect(tokenize(seedSpec({
         source: [{
           number: 1,
           source: '...',
           tokens: seedTokens({ description: '"value value" description 0' })
         }]
-      }))).to.eql(seedSpec({
+      }))).toEqual(seedSpec({
         name: 'value value',
         source: [{
           number: 1,
@@ -104,14 +103,14 @@ describe('spec tokenizers', () => {
       }))
     })
 
-    it('inconsistent quotes', () => {
+    test('inconsistent quotes', () => {
       expect(tokenize(seedSpec({
         source: [{
           number: 1,
           source: '...',
           tokens: seedTokens({ description: '"value value description 0' })
         }]
-      }))).to.eql(seedSpec({
+      }))).toEqual(seedSpec({
         name: '"value',
         source: [{
           number: 1,

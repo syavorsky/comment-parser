@@ -1,11 +1,6 @@
-import { Line } from './source-parser'
+import { Line } from './types'
 
 const reTag = /^@\S+/
-
-export interface Section {
-  text: string
-  source: Line[]
-}
 
 export type Parser = (block: Line[]) => Line[][]
 

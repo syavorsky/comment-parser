@@ -1,31 +1,6 @@
 import { splitSpace } from './util'
-
-export enum Markers {
-  start = '/**',
-  nostart = '/***',
-  delim = '*',
-  end = '*/'
-}
-
-export interface Tokens {
-  start: string
-  delimiter: string
-  postDelimiter: string
-  tag: string
-  postTag: string
-  name: string
-  postName: string
-  type: string
-  postType: string
-  description: string
-  end: string
-}
-
-export interface Line {
-  number: number
-  source: string
-  tokens: Tokens
-}
+import { Line, Tokens, Markers } from './types'
+import { seedTokens } from './util'
 
 export interface Options {
   startLine: number
@@ -85,19 +60,4 @@ export default function getParser ({ startLine = 0 }: Partial<Options> = {}): Pa
   }
 }
 
-export function seedTokens (tokens: Partial<Tokens> = {}): Tokens {
-  return {
-    start: '',
-    delimiter: '',
-    postDelimiter: '',
-    tag: '',
-    postTag: '',
-    name: '',
-    postName: '',
-    type: '',
-    postType: '',
-    description: '',
-    end: '',
-    ...tokens
-  }
-}
+
