@@ -1,19 +1,27 @@
-import getParser from './block-parser'
-import { Line } from './types'
-import { seedTokens } from './util'
+import getParser, { Parser } from '../src/source-parser'
+import { Line } from '../src/types'
+import { seedTokens } from '../src/util'
 
-describe('block parser', () => {
-  /**
-    * description 0
-    *
+let _parse: Parser
+
+const nulls = (n: number): null[] => Array(n).fill(null)
+const parse = (source: string): Array<Line[] | null> => source.split('\n').map(_parse)
+
+beforeEach(() => { _parse = getParser() })
+
+test('multi-line block', () => {
+    const parsed = parse(`
+    /**
+     * description 0
+     *
+     * description 1
+     *
+     * @param {string} value value description 0
+    \`\`\`
+    @sample code
+    \`\`\`
     * description 1
-    *
-    * @param {string} value value description 0
-   ```
-   @sample code
-   ```
-   * value description 1
-   */
+    */`)
 
   const block: Line[] = [{
     number: 1,
@@ -53,48 +61,51 @@ describe('block parser', () => {
     tokens: seedTokens({ start: '    ', delimiter: '', postDelimiter: '', description: '```', end: '' })
   }, {
     number: 10,
-    source: '    * value description 1',
-    tokens: seedTokens({ start: '    ', delimiter: '*', postDelimiter: ' ', description: 'value description 1', end: '' })
+    source: '    * description 1',
+    tokens: seedTokens({ start: '    ', delimiter: '*', postDelimiter: ' ', description: 'description 1', end: '' })
   }, {
     number: 11,
     source: '    */',
     tokens: seedTokens({ start: '    ', delimiter: '', postDelimiter: '', description: '', end: '*/' })
   }]
 
-  test('groups lines', () => {
-    const parser = getParser()
-    const groups:Line[][] = parser(block)
+  expect(parsed).toEqual([...nulls(11), block])
+})
 
-    expect(groups.length).toBe(2)
-    expect(groups).toEqual([
-      block.slice(0, 5),
-      block.slice(5)
-    ])    
-  })
+test('one-line block', () => {
+  const parsed = parse(`
+  /** description */
+  `)
 
-  // test('join: "compact"', () => {
-  //   const parser = getParser({ join: 'compact' })
-  //   const items = parser(block)
+  const block = [
+    {
+      number: 1,
+      source: '  /** description */',
+      tokens: seedTokens({ start: '  ', delimiter: '/**', postDelimiter: ' ', description: 'description ', end: '*/' })
+    }
+  ]
 
-  //   expect(items).toBe([{
-  //     text: 'description 0 description 1',
-  //     source: block.slice(0, 5)
-  //   }, {
-  //     text: '@param {string} value value description 0 ``` @sample code ``` value description 1',
-  //     source: block.slice(5)
-  //   }])
-  // })
+  expect(parsed).toEqual([null, block, null])
+})
 
-  // test('join: "multiline"', () => {
-  //   const parser = getParser({ join: 'multiline' })
-  //   const items = parser(block)
+test('multiple blocks', () => {
+  const parsed = parse(`
+    /** description 0 */
 
-  //   expect(items).toBe([{
-  //     text: 'description 0\n\ndescription 1\n',
-  //     source: block.slice(0, 5)
-  //   }, {
-  //     text: '@param {string} value value description 0\n    ```\n    @sample code\n    ```\nvalue description 1',
-  //     source: block.slice(5)
-  //   }])
-  // })
+    /** description 1 */
+    `)
+
+  const block0: Line[] = [{
+    number: 1,
+    source: '    /** description 0 */',
+    tokens: seedTokens({ start: '    ', delimiter: '/**', postDelimiter: ' ', description: 'description 0 ', end: '*/' })
+  }]
+
+  const block1: Line[] = [{
+    number: 3,
+    source: '    /** description 1 */',
+    tokens: seedTokens({ start: '    ', delimiter: '/**', postDelimiter: ' ', description: 'description 1 ', end: '*/' })
+  }]
+
+  expect(parsed).toEqual([null, block0, null, block1, null])
 })
