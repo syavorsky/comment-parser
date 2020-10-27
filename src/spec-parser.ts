@@ -1,17 +1,15 @@
 import { splitSpace, isSpace, seedSpec } from './util'
-import { Line, Tokens, Spec } from './types'
+import { Markers, Line, Tokens, Spec } from './types'
 
 export type Parser = (source: Line[]) => Spec
 
 export type Tokenizer = (spec: Spec) => Spec
 
-export type Joiner = (lines: Tokens[]) => string
-
 interface Options {
   tag: Tokenizer
   name: Tokenizer
   type: Tokenizer
-  description: Tokenizer
+  description: 'compact' | 'multiline' | Tokenizer
   tokenizers: Tokenizer[]
 }
 
@@ -19,8 +17,8 @@ export default function getParser ({
   tag = tagTokenizer(),
   name = nameTokenizer(),
   type = typeTokenizer(),
-  description = descriptionTokenizer(),
-  tokenizers = [tag, type, name, description]
+  description = 'compact',
+  tokenizers = [tag, type, name, descriptionTokenizer(description)]
 }: Partial<Options> = {}): Parser {
   return function parseSpec (source: Line[]): Spec {
     let spec = seedSpec()
@@ -179,27 +177,29 @@ export function nameTokenizer (): Tokenizer {
   }
 }
 
-export function descriptionTokenizer (): Tokenizer {
-  return (spec: Spec) => spec
+export function descriptionTokenizer (tokenizer: 'compact' | 'multiline' | Tokenizer): Tokenizer {
+  if (tokenizer === 'compact') return descriptionCompactTokenizer
+  if (tokenizer === 'multiline') return descriptionMultilineTokenizer
+  return tokenizer
 }
 
-// function getJoiner (join: 'compact' | 'multiline' | Joiner): Joiner {
-//   if (join === 'compact') return compactJoiner
-//   if (join === 'multiline') return multilineJoiner
-//   return join
-// }
+function descriptionCompactTokenizer (spec: Spec): Spec {
+  spec.description = spec.source
+    .map(({tokens:{ description }}) => description.trim())
+    .filter(description => description !== '')
+    .join(' ')
 
-// function compactJoiner (lines: Tokens[]): string {
-//   return lines
-//     .map(({ description: text }: Tokens) => text.trim())
-//     .filter(text => text !== '')
-//     .join(' ')
-// }
+  return spec
+}
 
-// function multilineJoiner (lines: Tokens[]): string {
-//   if (lines[0]?.delimiter === Markers.start) lines = lines.slice(1)
-//   if (lines[lines.length - 1]?.end.startsWith(Markers.end)) lines = lines.slice(0, -1)
-//   return lines
-//     .map(tokens => (tokens.delimiter === '' ? tokens.start : tokens.postDelimiter.slice(1)) + tokens.description)
-//     .join('\n')
-// }
+function descriptionMultilineTokenizer (spec: Spec): Spec {
+  let { source } = spec
+  if (source[0]?.tokens.delimiter === Markers.start) source = source.slice(1)
+  if (source[source.length - 1]?.tokens.end.startsWith(Markers.end)) source = source.slice(0, -1)
+
+  spec.description = source
+    .map(({tokens}) => (tokens.delimiter === '' ? tokens.start : tokens.postDelimiter.slice(1)) + tokens.description)
+    .join('\n')
+
+  return spec
+}
