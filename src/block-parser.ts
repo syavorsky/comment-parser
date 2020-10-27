@@ -1,38 +1,42 @@
-import { Line } from './types'
+import { Line } from "./types";
 
-const reTag = /^@\S+/
+const reTag = /^@\S+/;
 
-export type Parser = (block: Line[]) => Line[][]
+export type Parser = (block: Line[]) => Line[][];
 
-type Fencer = (source: string) => boolean
+type Fencer = (source: string) => boolean;
 
 export interface Options {
-  fence: string | Fencer
+  fence: string | Fencer;
 }
 
-export default function getParser ({ fence = '```' }: Partial<Options> = {}): Parser {
-  const fencer = getFencer(fence)
-  const toggleFence = (source: string, isFenced: boolean): boolean => fencer(source) ? !isFenced : isFenced
+export default function getParser({
+  fence = "```",
+}: Partial<Options> = {}): Parser {
+  const fencer = getFencer(fence);
+  const toggleFence = (source: string, isFenced: boolean): boolean =>
+    fencer(source) ? !isFenced : isFenced;
 
-  return function parseBlock (block: Line[]): Line[][] {
+  return function parseBlock(block: Line[]): Line[][] {
     // start with description section
-    const sections: Line[][] = [[]]
+    const sections: Line[][] = [[]];
 
-    let isFenced = false
+    let isFenced = false;
     for (const line of block) {
       if (reTag.test(line.tokens.description) && !isFenced) {
-        sections.push([line])
+        sections.push([line]);
       } else {
-        sections[sections.length - 1].push(line)
+        sections[sections.length - 1].push(line);
       }
-      isFenced = toggleFence(line.tokens.description, isFenced)
+      isFenced = toggleFence(line.tokens.description, isFenced);
     }
 
-    return sections
-  }
+    return sections;
+  };
 }
 
-function getFencer (fence: string | Fencer): Fencer {
-  if (typeof fence === 'string') return (source: string) => source.split(fence).length % 2 === 0
-  return fence
+function getFencer(fence: string | Fencer): Fencer {
+  if (typeof fence === "string")
+    return (source: string) => source.split(fence).length % 2 === 0;
+  return fence;
 }
