@@ -1,4 +1,6 @@
-import getParser from '../src/block-parser'
+import getParser from './block-parser'
+import { Line } from './types'
+import { seedTokens } from './util'
 
 describe('block parser', () => {
   /**
@@ -13,88 +15,86 @@ describe('block parser', () => {
    * value description 1
    */
 
-  const block = [{
-    line: 1,
+  const block: Line[] = [{
+    number: 1,
     source: '    /**',
-    tokens: { start: '    ', delimiter: '/**', postDelimiter: '', text: '', end: '' }
+    tokens: seedTokens({ start: '    ', delimiter: '/**', postDelimiter: '', description: '', end: '' })
   }, {
-    line: 2,
+    number: 2,
     source: '     * description 0',
-    tokens: { start: '     ', delimiter: '*', postDelimiter: ' ', text: 'description 0', end: '' }
+    tokens: seedTokens({ start: '     ', delimiter: '*', postDelimiter: ' ', description: 'description 0', end: '' })
   }, {
-    line: 3,
+    number: 3,
     source: '     *',
-    tokens: { start: '     ', delimiter: '*', postDelimiter: '', text: '', end: '' }
+    tokens: seedTokens({ start: '     ', delimiter: '*', postDelimiter: '', description: '', end: '' })
   }, {
-    line: 4,
+    number: 4,
     source: '     * description 1',
-    tokens: { start: '     ', delimiter: '*', postDelimiter: ' ', text: 'description 1', end: '' }
+    tokens: seedTokens({ start: '     ', delimiter: '*', postDelimiter: ' ', description: 'description 1', end: '' })
   }, {
-    line: 5,
+    number: 5,
     source: '     *',
-    tokens: { start: '     ', delimiter: '*', postDelimiter: '', text: '', end: '' }
+    tokens: seedTokens({ start: '     ', delimiter: '*', postDelimiter: '', description: '', end: '' })
   }, {
-    line: 6,
+    number: 6,
     source: '     * @param {string} value value description 0',
-    tokens: { start: '     ', delimiter: '*', postDelimiter: ' ', text: '@param {string} value value description 0', end: '' }
+    tokens: seedTokens({ start: '     ', delimiter: '*', postDelimiter: ' ', description: '@param {string} value value description 0', end: '' })
   }, {
-    line: 7,
+    number: 7,
     source: '    ```',
-    tokens: { start: '    ', delimiter: '', postDelimiter: '', text: '```', end: '' }
+    tokens: seedTokens({ start: '    ', delimiter: '', postDelimiter: '', description: '```', end: '' })
   }, {
-    line: 8,
+    number: 8,
     source: '    @sample code',
-    tokens: { start: '    ', delimiter: '', postDelimiter: '', text: '@sample code', end: '' }
+    tokens: seedTokens({ start: '    ', delimiter: '', postDelimiter: '', description: '@sample code', end: '' })
   }, {
-    line: 9,
+    number: 9,
     source: '    ```',
-    tokens: { start: '    ', delimiter: '', postDelimiter: '', text: '```', end: '' }
+    tokens: seedTokens({ start: '    ', delimiter: '', postDelimiter: '', description: '```', end: '' })
   }, {
-    line: 10,
+    number: 10,
     source: '    * value description 1',
-    tokens: { start: '    ', delimiter: '*', postDelimiter: ' ', text: 'value description 1', end: '' }
+    tokens: seedTokens({ start: '    ', delimiter: '*', postDelimiter: ' ', description: 'value description 1', end: '' })
   }, {
-    line: 11,
+    number: 11,
     source: '    */',
-    tokens: { start: '    ', delimiter: '', postDelimiter: '', text: '', end: '*/' }
+    tokens: seedTokens({ start: '    ', delimiter: '', postDelimiter: '', description: '', end: '*/' })
   }]
 
-  test('default options', () => {
+  test('groups lines', () => {
     const parser = getParser()
-    const items = parser(block)
+    const groups:Line[][] = parser(block)
 
-    expect(items).toBe([{
-      text: 'description 0 description 1',
-      source: block.slice(0, 5)
-    }, {
-      text: '@param {string} value value description 0 ``` @sample code ``` value description 1',
-      source: block.slice(5)
-    }])
+    expect(groups.length).toBe(2)
+    expect(groups).toEqual([
+      block.slice(0, 5),
+      block.slice(5)
+    ])    
   })
 
-  test('join: "compact"', () => {
-    const parser = getParser({ join: 'compact' })
-    const items = parser(block)
+  // test('join: "compact"', () => {
+  //   const parser = getParser({ join: 'compact' })
+  //   const items = parser(block)
 
-    expect(items).toBe([{
-      text: 'description 0 description 1',
-      source: block.slice(0, 5)
-    }, {
-      text: '@param {string} value value description 0 ``` @sample code ``` value description 1',
-      source: block.slice(5)
-    }])
-  })
+  //   expect(items).toBe([{
+  //     text: 'description 0 description 1',
+  //     source: block.slice(0, 5)
+  //   }, {
+  //     text: '@param {string} value value description 0 ``` @sample code ``` value description 1',
+  //     source: block.slice(5)
+  //   }])
+  // })
 
-  test('join: "multiline"', () => {
-    const parser = getParser({ join: 'multiline' })
-    const items = parser(block)
+  // test('join: "multiline"', () => {
+  //   const parser = getParser({ join: 'multiline' })
+  //   const items = parser(block)
 
-    expect(items).toBe([{
-      text: 'description 0\n\ndescription 1\n',
-      source: block.slice(0, 5)
-    }, {
-      text: '@param {string} value value description 0\n    ```\n    @sample code\n    ```\nvalue description 1',
-      source: block.slice(5)
-    }])
-  })
+  //   expect(items).toBe([{
+  //     text: 'description 0\n\ndescription 1\n',
+  //     source: block.slice(0, 5)
+  //   }, {
+  //     text: '@param {string} value value description 0\n    ```\n    @sample code\n    ```\nvalue description 1',
+  //     source: block.slice(5)
+  //   }])
+  // })
 })

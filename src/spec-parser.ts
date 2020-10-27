@@ -1,33 +1,5 @@
-import { splitSpace, isSpace } from './util'
-import { Line, Tokens } from './source-parser'
-
-type ErrorCode =
-  'unhandled' |
-  'custom' |
-  'tag:prefix' |
-  'type:unpaired-curlies' |
-  'name:unpaired-brackets' |
-  'name:empty-name' |
-  'name:invalid-default' |
-  'name:empty-default'
-
-interface Problem {
-  code: ErrorCode
-  message: string
-  line: number
-  critical: boolean
-}
-
-export interface Spec {
-  tag: string
-  name: string
-  default?: string
-  type: string
-  optional: boolean
-  description: string
-  problems: Problem[]
-  source: Line[]
-}
+import { splitSpace, isSpace, seedSpec } from './util'
+import { Line, Tokens, Spec } from './types'
 
 export type Parser = (source: Line[]) => Spec
 
@@ -57,19 +29,6 @@ export default function getParser ({
       if (spec.problems[spec.problems.length - 1]?.critical) break
     }
     return spec
-  }
-}
-
-export function seedSpec (spec: Partial<Spec> = {}): Spec {
-  return {
-    tag: '',
-    name: '',
-    type: '',
-    optional: false,
-    description: '',
-    problems: [],
-    source: [],
-    ...spec
   }
 }
 
