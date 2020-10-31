@@ -1,25 +1,16 @@
-import { splitSpace, isSpace, seedSpec } from "./util";
-import { Markers, Line, Tokens, Spec } from "./types";
+import { splitSpace, isSpace, seedSpec } from './util';
+import { Markers, Line, Tokens, Spec } from './types';
+import { Joiner } from './joiner';
 
 export type Parser = (source: Line[]) => Spec;
 
 export type Tokenizer = (spec: Spec) => Spec;
 
-interface Options {
-  tag: Tokenizer;
-  name: Tokenizer;
-  type: Tokenizer;
-  description: "compact" | "multiline" | Tokenizer;
+export interface Options {
   tokenizers: Tokenizer[];
 }
 
-export default function getParser({
-  tag = tagTokenizer(),
-  name = nameTokenizer(),
-  type = typeTokenizer(),
-  description = "compact",
-  tokenizers = [tag, type, name, descriptionTokenizer(description)],
-}: Partial<Options> = {}): Parser {
+export default function getParser({ tokenizers }: Options): Parser {
   return function parseSpec(source: Line[]): Spec {
     let spec = seedSpec();
     for (const tokenize of tokenizers) {
@@ -41,7 +32,7 @@ export function tagTokenizer(): Tokenizer {
 
     if (match === null) {
       spec.problems.push({
-        code: "tag:prefix",
+        code: 'spec:tag:prefix',
         message: 'tag should start with "@" symbol',
         line: spec.source[0].number,
         critical: true,
@@ -60,16 +51,16 @@ export function tagTokenizer(): Tokenizer {
 
 export function typeTokenizer(): Tokenizer {
   return (spec: Spec): Spec => {
-    let res = "";
+    let res = '';
     let curlies = 0;
     const { tokens } = spec.source[0];
     const source = tokens.description.trimLeft();
 
-    if (source[0] !== "{") return spec;
+    if (source[0] !== '{') return spec;
 
     for (const ch of source) {
-      if (ch === "{") curlies++;
-      if (ch === "}") curlies--;
+      if (ch === '{') curlies++;
+      if (ch === '}') curlies--;
       res += ch;
       if (curlies === 0) {
         break;
@@ -78,8 +69,8 @@ export function typeTokenizer(): Tokenizer {
 
     if (curlies !== 0) {
       spec.problems.push({
-        code: "type:unpaired-curlies",
-        message: "unpaired curlies",
+        code: 'spec:type:unpaired-curlies',
+        message: 'unpaired curlies',
         line: spec.source[0].number,
         critical: true,
       });
@@ -106,7 +97,7 @@ export function nameTokenizer(): Tokenizer {
     // if it starts with quoted group assume it is a literal
     if (
       quotedGroups.length > 1 &&
-      quotedGroups[0] === "" &&
+      quotedGroups[0] === '' &&
       quotedGroups.length % 2 === 1
     ) {
       spec.name = quotedGroups[1];
@@ -118,22 +109,22 @@ export function nameTokenizer(): Tokenizer {
     }
 
     let brackets = 0;
-    let name = "";
+    let name = '';
     let optional = false;
     let defaultValue;
 
     // assume name is non-space string or anything wrapped into brackets
     for (const ch of source) {
       if (brackets === 0 && isSpace(ch)) break;
-      if (ch === "[") brackets++;
-      if (ch === "]") brackets++;
+      if (ch === '[') brackets++;
+      if (ch === ']') brackets++;
       name += ch;
     }
 
     if (brackets !== 0) {
       spec.problems.push({
-        code: "name:unpaired-brackets",
-        message: "unpaired brackets",
+        code: 'spec:name:unpaired-brackets',
+        message: 'unpaired brackets',
         line: spec.source[0].number,
         critical: true,
       });
@@ -142,18 +133,18 @@ export function nameTokenizer(): Tokenizer {
 
     tokens.name = name;
 
-    if (name[0] === "[" && name[name.length - 1] === "]") {
+    if (name[0] === '[' && name[name.length - 1] === ']') {
       optional = true;
       name = name.slice(1, -1);
 
-      const parts = name.split("=");
+      const parts = name.split('=');
       name = parts[0].trim();
       defaultValue = parts[1].trim();
 
-      if (name === "") {
+      if (name === '') {
         spec.problems.push({
-          code: "name:empty-name",
-          message: "empty name value",
+          code: 'spec:name:empty-name',
+          message: 'empty name value',
           line: spec.source[0].number,
           critical: true,
         });
@@ -161,17 +152,17 @@ export function nameTokenizer(): Tokenizer {
 
       if (parts.length > 2) {
         spec.problems.push({
-          code: "name:invalid-default",
-          message: "invalid default value syntax",
+          code: 'spec:name:invalid-default',
+          message: 'invalid default value syntax',
           line: spec.source[0].number,
           critical: true,
         });
       }
 
-      if (defaultValue === "") {
+      if (defaultValue === '') {
         spec.problems.push({
-          code: "name:empty-default",
-          message: "empty default value",
+          code: 'spec:name:empty-default',
+          message: 'empty default value',
           line: spec.source[0].number,
           critical: true,
         });
@@ -188,37 +179,9 @@ export function nameTokenizer(): Tokenizer {
   };
 }
 
-export function descriptionTokenizer(
-  tokenizer: "compact" | "multiline" | Tokenizer
-): Tokenizer {
-  if (tokenizer === "compact") return descriptionCompactTokenizer;
-  if (tokenizer === "multiline") return descriptionMultilineTokenizer;
-  return tokenizer;
-}
-
-function descriptionCompactTokenizer(spec: Spec): Spec {
-  spec.description = spec.source
-    .map(({ tokens: { description } }) => description.trim())
-    .filter((description) => description !== "")
-    .join(" ");
-
-  return spec;
-}
-
-function descriptionMultilineTokenizer(spec: Spec): Spec {
-  let { source } = spec;
-  if (source[0]?.tokens.delimiter === Markers.start) source = source.slice(1);
-  if (source[source.length - 1]?.tokens.end.startsWith(Markers.end))
-    source = source.slice(0, -1);
-
-  spec.description = source
-    .map(
-      ({ tokens }) =>
-        (tokens.delimiter === ""
-          ? tokens.start
-          : tokens.postDelimiter.slice(1)) + tokens.description
-    )
-    .join("\n");
-
-  return spec;
+export function descriptionTokenizer(join: Joiner): Tokenizer {
+  return (spec: Spec): Spec => {
+    spec.description = join(spec.source);
+    return spec;
+  };
 }

@@ -1,8 +1,32 @@
 export enum Markers {
-  start = "/**",
-  nostart = "/***",
-  delim = "*",
-  end = "*/",
+  start = '/**',
+  nostart = '/***',
+  delim = '*',
+  end = '*/',
+}
+
+export interface Block {
+  description: string;
+  tags: Spec[];
+  source: Line[];
+  problems: Problem[];
+}
+
+export interface Spec {
+  tag: string;
+  name: string;
+  default?: string;
+  type: string;
+  optional: boolean;
+  description: string;
+  problems: Problem[];
+  source: Line[];
+}
+
+export interface Line {
+  number: number;
+  source: string;
+  tokens: Tokens;
 }
 
 export interface Tokens {
@@ -19,33 +43,17 @@ export interface Tokens {
   end: string;
 }
 
-export interface Line {
-  number: number;
-  source: string;
-  tokens: Tokens;
-}
-
-export interface Spec {
-  tag: string;
-  name: string;
-  default?: string;
-  type: string;
-  optional: boolean;
-  description: string;
-  problems: Problem[];
-  source: Line[];
-}
-
 export interface Problem {
   code:
-    | "unhandled"
-    | "custom"
-    | "tag:prefix"
-    | "type:unpaired-curlies"
-    | "name:unpaired-brackets"
-    | "name:empty-name"
-    | "name:invalid-default"
-    | "name:empty-default";
+    | 'unhandled'
+    | 'custom'
+    | 'source:startline'
+    | 'spec:tag:prefix'
+    | 'spec:type:unpaired-curlies'
+    | 'spec:name:unpaired-brackets'
+    | 'spec:name:empty-name'
+    | 'spec:name:invalid-default'
+    | 'spec:name:empty-default';
   message: string;
   line: number;
   critical: boolean;

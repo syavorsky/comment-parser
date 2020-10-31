@@ -1,18 +1,18 @@
-import { tagTokenizer } from "../src/spec-parser";
-import { seedTokens, seedSpec } from "../src/util";
+import { tagTokenizer } from '../src/spec-parser';
+import { seedTokens, seedSpec } from '../src/util';
 
 const tokenize = tagTokenizer();
 
-test("ok", () => {
+test('ok', () => {
   expect(
     tokenize(
       seedSpec({
         source: [
           {
             number: 1,
-            source: "...",
+            source: '...',
             tokens: seedTokens({
-              description: "@param {string} value value description 0",
+              description: '@param {string} value value description 0',
             }),
           },
         ],
@@ -20,15 +20,15 @@ test("ok", () => {
     )
   ).toEqual(
     seedSpec({
-      tag: "param",
+      tag: 'param',
       source: [
         {
           number: 1,
-          source: "...",
+          source: '...',
           tokens: seedTokens({
-            tag: "@param",
-            postTag: " ",
-            description: "{string} value value description 0",
+            tag: '@param',
+            postTag: ' ',
+            description: '{string} value value description 0',
           }),
         },
       ],
@@ -36,16 +36,16 @@ test("ok", () => {
   );
 });
 
-test("require @", () => {
+test('require @', () => {
   expect(
     tokenize(
       seedSpec({
         source: [
           {
             number: 42,
-            source: "...",
+            source: '...',
             tokens: seedTokens({
-              description: "param {string} value value description 0",
+              description: 'param {string} value value description 0',
             }),
           },
         ],
@@ -55,7 +55,7 @@ test("require @", () => {
     seedSpec({
       problems: [
         {
-          code: "tag:prefix",
+          code: 'spec:tag:prefix',
           message: 'tag should start with "@" symbol',
           critical: true,
           line: 42,
@@ -64,9 +64,9 @@ test("require @", () => {
       source: [
         {
           number: 42,
-          source: "...",
+          source: '...',
           tokens: seedTokens({
-            description: "param {string} value value description 0",
+            description: 'param {string} value value description 0',
           }),
         },
       ],
