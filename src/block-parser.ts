@@ -1,4 +1,4 @@
-import { Line } from "./types";
+import { Line } from './types';
 
 const reTag = /^@\S+/;
 
@@ -11,7 +11,7 @@ export interface Options {
 }
 
 export default function getParser({
-  fence = "```",
+  fence = '```',
 }: Partial<Options> = {}): Parser {
   const fencer = getFencer(fence);
   const toggleFence = (source: string, isFenced: boolean): boolean =>
@@ -36,7 +36,7 @@ export default function getParser({
 }
 
 function getFencer(fence: string | Fencer): Fencer {
-  if (typeof fence === "string")
+  if (typeof fence === 'string')
     return (source: string) => source.split(fence).length % 2 === 0;
   return fence;
 }

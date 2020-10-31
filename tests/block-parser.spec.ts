@@ -1,6 +1,6 @@
-import getParser from "../src/block-parser";
-import { Line } from "../src/types";
-import { seedTokens } from "../src/util";
+import getParser from '../src/block-parser';
+import { Line } from '../src/types';
+import { seedTokens } from '../src/util';
 
 let source: Line[];
 
@@ -8,129 +8,129 @@ beforeEach(() => {
   source = [
     {
       number: 1,
-      source: "    /**",
+      source: '    /**',
       tokens: seedTokens({
-        start: "    ",
-        delimiter: "/**",
-        postDelimiter: "",
-        description: "",
-        end: "",
+        start: '    ',
+        delimiter: '/**',
+        postDelimiter: '',
+        description: '',
+        end: '',
       }),
     },
     {
       number: 2,
-      source: "     * description 0",
+      source: '     * description 0',
       tokens: seedTokens({
-        start: "     ",
-        delimiter: "*",
-        postDelimiter: " ",
-        description: "description 0",
-        end: "",
+        start: '     ',
+        delimiter: '*',
+        postDelimiter: ' ',
+        description: 'description 0',
+        end: '',
       }),
     },
     {
       number: 3,
-      source: "     *",
+      source: '     *',
       tokens: seedTokens({
-        start: "     ",
-        delimiter: "*",
-        postDelimiter: "",
-        description: "",
-        end: "",
+        start: '     ',
+        delimiter: '*',
+        postDelimiter: '',
+        description: '',
+        end: '',
       }),
     },
     {
       number: 4,
-      source: "     * description 1",
+      source: '     * description 1',
       tokens: seedTokens({
-        start: "     ",
-        delimiter: "*",
-        postDelimiter: " ",
-        description: "description 1",
-        end: "",
+        start: '     ',
+        delimiter: '*',
+        postDelimiter: ' ',
+        description: 'description 1',
+        end: '',
       }),
     },
     {
       number: 5,
-      source: "     *",
+      source: '     *',
       tokens: seedTokens({
-        start: "     ",
-        delimiter: "*",
-        postDelimiter: "",
-        description: "",
-        end: "",
+        start: '     ',
+        delimiter: '*',
+        postDelimiter: '',
+        description: '',
+        end: '',
       }),
     },
     {
       number: 6,
-      source: "     * @param {string} value value description 0",
+      source: '     * @param {string} value value description 0',
       tokens: seedTokens({
-        start: "     ",
-        delimiter: "*",
-        postDelimiter: " ",
-        description: "@param {string} value value description 0",
-        end: "",
+        start: '     ',
+        delimiter: '*',
+        postDelimiter: ' ',
+        description: '@param {string} value value description 0',
+        end: '',
       }),
     },
     {
       number: 7,
-      source: "    ```",
+      source: '    ```',
       tokens: seedTokens({
-        start: "    ",
-        delimiter: "",
-        postDelimiter: "",
-        description: "```",
-        end: "",
+        start: '    ',
+        delimiter: '',
+        postDelimiter: '',
+        description: '```',
+        end: '',
       }),
     },
     {
       number: 8,
-      source: "    @sample code",
+      source: '    @sample code',
       tokens: seedTokens({
-        start: "    ",
-        delimiter: "",
-        postDelimiter: "",
-        description: "@sample code",
-        end: "",
+        start: '    ',
+        delimiter: '',
+        postDelimiter: '',
+        description: '@sample code',
+        end: '',
       }),
     },
     {
       number: 9,
-      source: "    ```",
+      source: '    ```',
       tokens: seedTokens({
-        start: "    ",
-        delimiter: "",
-        postDelimiter: "",
-        description: "```",
-        end: "",
+        start: '    ',
+        delimiter: '',
+        postDelimiter: '',
+        description: '```',
+        end: '',
       }),
     },
     {
       number: 10,
-      source: "    * value description 1",
+      source: '    * value description 1',
       tokens: seedTokens({
-        start: "    ",
-        delimiter: "*",
-        postDelimiter: " ",
-        description: "value description 1",
-        end: "",
+        start: '    ',
+        delimiter: '*',
+        postDelimiter: ' ',
+        description: 'value description 1',
+        end: '',
       }),
     },
     {
       number: 11,
-      source: "    */",
+      source: '    */',
       tokens: seedTokens({
-        start: "    ",
-        delimiter: "",
-        postDelimiter: "",
-        description: "",
-        end: "*/",
+        start: '    ',
+        delimiter: '',
+        postDelimiter: '',
+        description: '',
+        end: '*/',
       }),
     },
   ];
 });
 
-test("standard fences", () => {
+test('standard fences', () => {
   const parser = getParser();
   const groups: Line[][] = parser(source);
 
@@ -138,27 +138,27 @@ test("standard fences", () => {
   expect(groups).toEqual([source.slice(0, 5), source.slice(5)]);
 });
 
-test("custom fence", () => {
+test('custom fence', () => {
   source = source.map((line) => {
-    line.tokens.description = line.tokens.description.replace("```", "###");
+    line.tokens.description = line.tokens.description.replace('```', '###');
     return line;
   });
 
-  const parser = getParser({ fence: "###" });
+  const parser = getParser({ fence: '###' });
   const groups: Line[][] = parser(source);
 
   expect(groups.length).toBe(2);
   expect(groups).toEqual([source.slice(0, 5), source.slice(5)]);
 });
 
-test("fence function", () => {
+test('fence function', () => {
   source = source.map((line) => {
-    line.tokens.description = line.tokens.description.replace("```", "###");
+    line.tokens.description = line.tokens.description.replace('```', '###');
     return line;
   });
 
   function isFenced(source: string) {
-    return source.split("###").length % 2 === 0;
+    return source.split('###').length % 2 === 0;
   }
 
   const parser = getParser({ fence: isFenced });

@@ -1,18 +1,18 @@
-import getParser, { Parser } from "../src/source-parser";
-import { Line } from "../src/types";
-import { seedTokens } from "../src/util";
+import getParser, { Parser } from '../src/source-parser';
+import { Block, Line } from '../src/types';
+import { seedBlock, seedTokens } from '../src/util';
 
 let _parse: Parser;
 
 const nulls = (n: number): null[] => Array(n).fill(null);
 const parse = (source: string): Array<Line[] | null> =>
-  source.split("\n").map(_parse);
+  source.split('\n').map(_parse);
 
 beforeEach(() => {
   _parse = getParser();
 });
 
-test("multi-line block", () => {
+test('multi-line block', () => {
   const parsed = parse(`
     /**
      * description 0
@@ -26,126 +26,126 @@ test("multi-line block", () => {
     * description 1
     */`);
 
-  const block: Line[] = [
+  const block = [
     {
       number: 1,
-      source: "    /**",
+      source: '    /**',
       tokens: seedTokens({
-        start: "    ",
-        delimiter: "/**",
-        postDelimiter: "",
-        description: "",
-        end: "",
+        start: '    ',
+        delimiter: '/**',
+        postDelimiter: '',
+        description: '',
+        end: '',
       }),
     },
     {
       number: 2,
-      source: "     * description 0",
+      source: '     * description 0',
       tokens: seedTokens({
-        start: "     ",
-        delimiter: "*",
-        postDelimiter: " ",
-        description: "description 0",
-        end: "",
+        start: '     ',
+        delimiter: '*',
+        postDelimiter: ' ',
+        description: 'description 0',
+        end: '',
       }),
     },
     {
       number: 3,
-      source: "     *",
+      source: '     *',
       tokens: seedTokens({
-        start: "     ",
-        delimiter: "*",
-        postDelimiter: "",
-        description: "",
-        end: "",
+        start: '     ',
+        delimiter: '*',
+        postDelimiter: '',
+        description: '',
+        end: '',
       }),
     },
     {
       number: 4,
-      source: "     * description 1",
+      source: '     * description 1',
       tokens: seedTokens({
-        start: "     ",
-        delimiter: "*",
-        postDelimiter: " ",
-        description: "description 1",
-        end: "",
+        start: '     ',
+        delimiter: '*',
+        postDelimiter: ' ',
+        description: 'description 1',
+        end: '',
       }),
     },
     {
       number: 5,
-      source: "     *",
+      source: '     *',
       tokens: seedTokens({
-        start: "     ",
-        delimiter: "*",
-        postDelimiter: "",
-        description: "",
-        end: "",
+        start: '     ',
+        delimiter: '*',
+        postDelimiter: '',
+        description: '',
+        end: '',
       }),
     },
     {
       number: 6,
-      source: "     * @param {string} value value description 0",
+      source: '     * @param {string} value value description 0',
       tokens: seedTokens({
-        start: "     ",
-        delimiter: "*",
-        postDelimiter: " ",
-        description: "@param {string} value value description 0",
-        end: "",
+        start: '     ',
+        delimiter: '*',
+        postDelimiter: ' ',
+        description: '@param {string} value value description 0',
+        end: '',
       }),
     },
     {
       number: 7,
-      source: "    ```",
+      source: '    ```',
       tokens: seedTokens({
-        start: "    ",
-        delimiter: "",
-        postDelimiter: "",
-        description: "```",
-        end: "",
+        start: '    ',
+        delimiter: '',
+        postDelimiter: '',
+        description: '```',
+        end: '',
       }),
     },
     {
       number: 8,
-      source: "    @sample code",
+      source: '    @sample code',
       tokens: seedTokens({
-        start: "    ",
-        delimiter: "",
-        postDelimiter: "",
-        description: "@sample code",
-        end: "",
+        start: '    ',
+        delimiter: '',
+        postDelimiter: '',
+        description: '@sample code',
+        end: '',
       }),
     },
     {
       number: 9,
-      source: "    ```",
+      source: '    ```',
       tokens: seedTokens({
-        start: "    ",
-        delimiter: "",
-        postDelimiter: "",
-        description: "```",
-        end: "",
+        start: '    ',
+        delimiter: '',
+        postDelimiter: '',
+        description: '```',
+        end: '',
       }),
     },
     {
       number: 10,
-      source: "    * description 1",
+      source: '    * description 1',
       tokens: seedTokens({
-        start: "    ",
-        delimiter: "*",
-        postDelimiter: " ",
-        description: "description 1",
-        end: "",
+        start: '    ',
+        delimiter: '*',
+        postDelimiter: ' ',
+        description: 'description 1',
+        end: '',
       }),
     },
     {
       number: 11,
-      source: "    */",
+      source: '    */',
       tokens: seedTokens({
-        start: "    ",
-        delimiter: "",
-        postDelimiter: "",
-        description: "",
-        end: "*/",
+        start: '    ',
+        delimiter: '',
+        postDelimiter: '',
+        description: '',
+        end: '*/',
       }),
     },
   ];
@@ -153,7 +153,7 @@ test("multi-line block", () => {
   expect(parsed).toEqual([...nulls(11), block]);
 });
 
-test("one-line block", () => {
+test('one-line block', () => {
   const parsed = parse(`
   /** description */
   `);
@@ -161,13 +161,13 @@ test("one-line block", () => {
   const block = [
     {
       number: 1,
-      source: "  /** description */",
+      source: '  /** description */',
       tokens: seedTokens({
-        start: "  ",
-        delimiter: "/**",
-        postDelimiter: " ",
-        description: "description ",
-        end: "*/",
+        start: '  ',
+        delimiter: '/**',
+        postDelimiter: ' ',
+        description: 'description ',
+        end: '*/',
       }),
     },
   ];
@@ -175,37 +175,37 @@ test("one-line block", () => {
   expect(parsed).toEqual([null, block, null]);
 });
 
-test("multiple blocks", () => {
+test('multiple blocks', () => {
   const parsed = parse(`
     /** description 0 */
 
     /** description 1 */
     `);
 
-  const block0: Line[] = [
+  const block0 = [
     {
       number: 1,
-      source: "    /** description 0 */",
+      source: '    /** description 0 */',
       tokens: seedTokens({
-        start: "    ",
-        delimiter: "/**",
-        postDelimiter: " ",
-        description: "description 0 ",
-        end: "*/",
+        start: '    ',
+        delimiter: '/**',
+        postDelimiter: ' ',
+        description: 'description 0 ',
+        end: '*/',
       }),
     },
   ];
 
-  const block1: Line[] = [
+  const block1 = [
     {
       number: 3,
-      source: "    /** description 1 */",
+      source: '    /** description 1 */',
       tokens: seedTokens({
-        start: "    ",
-        delimiter: "/**",
-        postDelimiter: " ",
-        description: "description 1 ",
-        end: "*/",
+        start: '    ',
+        delimiter: '/**',
+        postDelimiter: ' ',
+        description: 'description 1 ',
+        end: '*/',
       }),
     },
   ];

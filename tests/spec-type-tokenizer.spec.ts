@@ -1,18 +1,18 @@
-import { typeTokenizer } from "../src/spec-parser";
-import { seedTokens, seedSpec } from "../src/util";
+import { typeTokenizer } from '../src/spec-parser';
+import { seedTokens, seedSpec } from '../src/util';
 
 const tokenize = typeTokenizer();
 
-test("ok", () => {
+test('ok', () => {
   expect(
     tokenize(
       seedSpec({
         source: [
           {
             number: 1,
-            source: "...",
+            source: '...',
             tokens: seedTokens({
-              description: "{string} value value description 0",
+              description: '{string} value value description 0',
             }),
           },
         ],
@@ -20,15 +20,15 @@ test("ok", () => {
     )
   ).toEqual(
     seedSpec({
-      type: "string",
+      type: 'string',
       source: [
         {
           number: 1,
-          source: "...",
+          source: '...',
           tokens: seedTokens({
-            type: "{string}",
-            postType: " ",
-            description: "value value description 0",
+            type: '{string}',
+            postType: ' ',
+            description: 'value value description 0',
           }),
         },
       ],

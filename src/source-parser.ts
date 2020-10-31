@@ -1,6 +1,6 @@
-import { splitSpace } from "./util";
-import { Line, Tokens, Markers } from "./types";
-import { seedTokens } from "./util";
+import { splitSpace } from './util';
+import { Line, Tokens, Markers } from './types';
+import { seedTokens } from './util';
 
 export interface Options {
   startLine: number;
@@ -11,7 +11,7 @@ export type Parser = (source: string) => Line[] | null;
 export default function getParser({
   startLine = 0,
 }: Partial<Options> = {}): Parser {
-  if (startLine < 0 || startLine % 1 > 0) throw new Error("Invalid startLine");
+  if (startLine < 0 || startLine % 1 > 0) throw new Error('Invalid startLine');
 
   let block: Line[] | null = null;
   let num = startLine;
@@ -41,7 +41,7 @@ export default function getParser({
     const isClosed = rest.trimRight().endsWith(Markers.end);
 
     if (
-      tokens.delimiter === "" &&
+      tokens.delimiter === '' &&
       rest.startsWith(Markers.delim) &&
       !rest.startsWith(Markers.end)
     ) {
