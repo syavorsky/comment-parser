@@ -1,9 +1,9 @@
 {
   "name": "comment-parser",
-  "version": "0.7.6",
-  "description": "Generic JSDoc-like comment parser. ",
-  "main": "index.js",
-  "types": "index.d.ts",
+  "version": "1.0.0",
+  "description": "Generic JSDoc-like comment parser",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
   "directories": {
     "test": "tests"
   },
@@ -22,7 +22,8 @@
     "node": ">= 6.0.0"
   },
   "scripts": {
-    "pretty": "prettier --write src/ tests/",
+    "build": "tsc",
+    "format": "prettier --write src/ tests/",
     "test": "prettier --check src/ tests/ && jest"
   },
   "repository": {
