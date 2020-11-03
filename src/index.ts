@@ -1,3 +1,4 @@
+import {Problem} from './types'
 import sourceParser, { Options as SourceOptions } from './source-parser';
 import blockParser, { Options as BlockOptions } from './block-parser';
 import specParser, {
@@ -48,7 +49,7 @@ export default function getParser({
         description: join(sections[0]),
         tags: specs,
         source: lines,
-        problems: specs.reduce((acc, spec) => acc.concat(spec.problems), []),
+        problems: specs.reduce((acc: Problem[], spec) => acc.concat(spec.problems), []),
       });
     }
     return blocks;

@@ -12,7 +12,7 @@ export interface Options {
 
 export default function getParser({ tokenizers }: Options): Parser {
   return function parseSpec(source: Line[]): Spec {
-    let spec = seedSpec();
+    let spec = seedSpec({source});
     for (const tokenize of tokenizers) {
       spec = tokenize(spec);
       if (spec.problems[spec.problems.length - 1]?.critical) break;
