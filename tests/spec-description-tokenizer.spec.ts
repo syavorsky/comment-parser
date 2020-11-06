@@ -1,6 +1,6 @@
 import { descriptionTokenizer } from '../src/spec-parser';
 import { seedTokens, seedSpec } from '../src/util';
-import getJoiner from '../src/joiner';
+import getSpacer from '../src/spacer';
 
 const sourceSingle = [
   {
@@ -34,14 +34,14 @@ const sourceMultiple = [
 ];
 
 test('compact single line', () => {
-  const tokenize = descriptionTokenizer(getJoiner('compact'));
+  const tokenize = descriptionTokenizer(getSpacer('compact'));
   const input = seedSpec({ source: sourceSingle });
   const output = seedSpec({ source: sourceSingle, description: 'one  two' });
   expect(tokenize(input)).toEqual(output);
 });
 
 test('compact multiple lines', () => {
-  const tokenize = descriptionTokenizer(getJoiner('compact'));
+  const tokenize = descriptionTokenizer(getSpacer('compact'));
   const input = seedSpec({ source: sourceMultiple });
   const output = seedSpec({
     source: sourceMultiple,
@@ -50,8 +50,8 @@ test('compact multiple lines', () => {
   expect(tokenize(input)).toEqual(output);
 });
 
-test('multiline', () => {
-  const tokenize = descriptionTokenizer(getJoiner('multiline'));
+test('preserve', () => {
+  const tokenize = descriptionTokenizer(getSpacer('preserve'));
   const input = seedSpec({ source: sourceMultiple });
   const output = seedSpec({
     source: sourceMultiple,

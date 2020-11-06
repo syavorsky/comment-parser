@@ -1,6 +1,6 @@
 import { splitSpace, isSpace, seedSpec } from './util';
 import { Markers, Line, Tokens, Spec } from './types';
-import { Joiner } from './joiner';
+import { Spacer } from './spacer';
 
 export type Parser = (source: Line[]) => Spec;
 
@@ -12,7 +12,7 @@ export interface Options {
 
 export default function getParser({ tokenizers }: Options): Parser {
   return function parseSpec(source: Line[]): Spec {
-    let spec = seedSpec({source});
+    let spec = seedSpec({ source });
     for (const tokenize of tokenizers) {
       spec = tokenize(spec);
       if (spec.problems[spec.problems.length - 1]?.critical) break;
@@ -179,7 +179,7 @@ export function nameTokenizer(): Tokenizer {
   };
 }
 
-export function descriptionTokenizer(join: Joiner): Tokenizer {
+export function descriptionTokenizer(join: Spacer): Tokenizer {
   return (spec: Spec): Spec => {
     spec.description = join(spec.source);
     return spec;

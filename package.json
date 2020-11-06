@@ -24,7 +24,7 @@
   "scripts": {
     "build": "tsc",
     "format": "prettier --write src/ tests/",
-    "test": "prettier --check src/ tests/ && jest"
+    "test": "prettier --check src/ tests/ && jest --verbose"
   },
   "repository": {
     "type": "git",
