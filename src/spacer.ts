@@ -1,23 +1,23 @@
 import { Markers, Line } from './types';
 
-export type Joiner = (lines: Line[]) => string;
+export type Spacer = (lines: Line[]) => string;
 
-export default function getJoiner(
-  join: 'compact' | 'multiline' | Joiner
-): Joiner {
-  if (join === 'compact') return compactJoiner;
-  if (join === 'multiline') return multilineJoiner;
-  return join;
+export default function getSpacer(
+  spacing: 'compact' | 'preserve' | Spacer
+): Spacer {
+  if (spacing === 'compact') return compactSpacer;
+  if (spacing === 'preserve') return preserveSpacer;
+  return spacing;
 }
 
-function compactJoiner(lines: Line[]): string {
+function compactSpacer(lines: Line[]): string {
   return lines
     .map(({ tokens: { description } }: Line) => description.trim())
     .filter((description) => description !== '')
     .join(' ');
 }
 
-function multilineJoiner(lines: Line[]): string {
+function preserveSpacer(lines: Line[]): string {
   if (lines[0]?.tokens.delimiter === Markers.start) lines = lines.slice(1);
   if (lines[lines.length - 1]?.tokens.end.startsWith(Markers.end))
     lines = lines.slice(0, -1);

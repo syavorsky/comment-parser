@@ -1,4 +1,4 @@
-import {Problem} from './types'
+import { Problem } from './types';
 import sourceParser, { Options as SourceOptions } from './source-parser';
 import blockParser, { Options as BlockOptions } from './block-parser';
 import specParser, {
@@ -9,24 +9,24 @@ import specParser, {
   descriptionTokenizer,
 } from './spec-parser';
 import { Block, Line, Spec } from './types';
-import getJoiner, { Joiner } from './joiner';
+import getSpacer, { Spacer } from './spacer';
 
 export interface Options {
   startLine: number;
   fence: string;
-  joiner: 'compact' | 'multiline' | Joiner;
+  spacing: 'compact' | 'preserve' | Spacer;
   tokenizers: Tokenizer[];
 }
 
 export default function getParser({
   startLine = 0,
   fence = '```',
-  joiner = 'compact',
+  spacing = 'compact',
   tokenizers = [
     tagTokenizer(),
     nameTokenizer(),
     typeTokenizer(),
-    descriptionTokenizer(getJoiner(joiner)),
+    descriptionTokenizer(getSpacer(spacing)),
   ],
 }: Partial<Options> = {}) {
   if (startLine < 0 || startLine % 1 > 0) throw new Error('Invalid startLine');
@@ -34,13 +34,18 @@ export default function getParser({
   const parseSource = sourceParser({ startLine });
   const parseBlock = blockParser({ fence });
   const parseSpec = specParser({ tokenizers });
-  const join = getJoiner(joiner);
+  const join = getSpacer(spacing);
+
+  const notEmpty = (line: Line): boolean =>
+    line.tokens.description.trim() != '';
 
   return function (source: string): Block[] {
     const blocks: Block[] = [];
     for (const line of source.split(/\r?\n/)) {
       const lines = parseSource(line);
+
       if (lines === null) continue;
+      if (lines.find(notEmpty) === undefined) continue;
 
       const sections = parseBlock(lines);
       const specs = sections.slice(1).map(parseSpec);
@@ -49,7 +54,10 @@ export default function getParser({
         description: join(sections[0]),
         tags: specs,
         source: lines,
-        problems: specs.reduce((acc: Problem[], spec) => acc.concat(spec.problems), []),
+        problems: specs.reduce(
+          (acc: Problem[], spec) => acc.concat(spec.problems),
+          []
+        ),
       });
     }
     return blocks;

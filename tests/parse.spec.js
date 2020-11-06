@@ -1,7 +1,6 @@
-import getParser from '../src';
-import { seedBlock, seedTokens } from '../src/util';
+const { default: getParser } = require('../lib');
 
-test('block with description and tags', () => {
+test('description and tags', () => {
   const parsed = getParser()(`
   /**
    * Description may go 
@@ -194,7 +193,7 @@ test('block with description and tags', () => {
   ]);
 });
 
-test('block with description', () => {
+test('description only', () => {
   const parsed = getParser()(`
   /**
    * Description
@@ -261,7 +260,88 @@ test('block with description', () => {
   ]);
 });
 
-test('block with no mid stars', () => {
+test('one line block', () => {
+  const parsed = getParser()(`
+  /** Description */
+  var a`);
+  expect(parsed).toEqual([
+    {
+      description: 'Description',
+      tags: [],
+      source: [
+        {
+          number: 1,
+          source: '  /** Description */',
+          tokens: {
+            start: '  ',
+            delimiter: '/**',
+            postDelimiter: ' ',
+            tag: '',
+            postTag: '',
+            name: '',
+            postName: '',
+            type: '',
+            postType: '',
+            description: 'Description ',
+            end: '*/',
+          },
+        },
+      ],
+      problems: [],
+    },
+  ]);
+});
+
+test('block closed on same line', () => {
+  const parsed = getParser()(`
+  /**
+   * Description */`);
+  expect(parsed).toEqual([
+    {
+      description: 'Description',
+      tags: [],
+      source: [
+        {
+          number: 1,
+          source: '  /**',
+          tokens: {
+            start: '  ',
+            delimiter: '/**',
+            postDelimiter: '',
+            tag: '',
+            postTag: '',
+            name: '',
+            postName: '',
+            type: '',
+            postType: '',
+            description: '',
+            end: '',
+          },
+        },
+        {
+          number: 2,
+          source: '   * Description */',
+          tokens: {
+            start: '   ',
+            delimiter: '*',
+            postDelimiter: ' ',
+            tag: '',
+            postTag: '',
+            name: '',
+            postName: '',
+            type: '',
+            postType: '',
+            description: 'Description ',
+            end: '*/',
+          },
+        },
+      ],
+      problems: [],
+    },
+  ]);
+});
+
+test('no mid stars', () => {
   const parsed = getParser()(`
   /**
      Description
@@ -486,176 +566,393 @@ test('skip surrounding empty lines while preserving line numbers', () => {
   ]);
 });
 
-// test.skip('should accept a description on the first line', () => {
-//   expect(parse(`
-//     /** Description first line
-//      *
-//      * Description second line
-//      */
-//     var a
-//   `))
-//     .toEqual([{
-//       description: 'Description first line\n\nDescription second line',
-//       source: 'Description first line\n\nDescription second line',
-//       line: 1,
-//       tags: []
-//     }])
-// })
+test('description on the first line', () => {
+  const parsed = getParser()(`
+  /** Description first line
+   *
+   * Description second line
+   */
+  var a`);
+  expect(parsed).toEqual([
+    {
+      description: 'Description first line Description second line',
+      tags: [],
+      source: [
+        {
+          number: 1,
+          source: '  /** Description first line',
+          tokens: {
+            start: '  ',
+            delimiter: '/**',
+            postDelimiter: ' ',
+            tag: '',
+            postTag: '',
+            name: '',
+            postName: '',
+            type: '',
+            postType: '',
+            description: 'Description first line',
+            end: '',
+          },
+        },
+        {
+          number: 2,
+          source: '   *',
+          tokens: {
+            start: '   ',
+            delimiter: '*',
+            postDelimiter: '',
+            tag: '',
+            postTag: '',
+            name: '',
+            postName: '',
+            type: '',
+            postType: '',
+            description: '',
+            end: '',
+          },
+        },
+        {
+          number: 3,
+          source: '   * Description second line',
+          tokens: {
+            start: '   ',
+            delimiter: '*',
+            postDelimiter: ' ',
+            tag: '',
+            postTag: '',
+            name: '',
+            postName: '',
+            type: '',
+            postType: '',
+            description: 'Description second line',
+            end: '',
+          },
+        },
+        {
+          number: 4,
+          source: '   */',
+          tokens: {
+            start: '   ',
+            delimiter: '',
+            postDelimiter: '',
+            tag: '',
+            postTag: '',
+            name: '',
+            postName: '',
+            type: '',
+            postType: '',
+            description: '',
+            end: '*/',
+          },
+        },
+      ],
+      problems: [],
+    },
+  ]);
+});
 
-// test.skip('should parse not starred middle lines with `opts.trim = true`', () => {
-//   expect(parse(`
-//     /**
-//        Description text
-//        @tag tagname Tag description
-//     */
-//   `, { trim: true }))
-//     .toEqual([{
-//       description: 'Description text',
-//       source: 'Description text\n@tag tagname Tag description',
-//       line: 1,
-//       tags: [{
-//         tag: 'tag',
-//         name: 'tagname',
-//         optional: false,
-//         description: 'Tag description',
-//         type: '',
-//         line: 3,
-//         source: '@tag tagname Tag description'
-//       }]
-//     }])
-// })
+test('skip empty blocks', () => {
+  const parsed = getParser()(`
+  /**
+   *
+   */
+  var a`);
+  expect(parsed).toHaveLength(0);
+});
 
-// test.skip('should parse not starred middle lines with `opts.trim = false`', () => {
-//   expect(parse(`
-//     /**
-//        Description text
-//        @tag tagname Tag description
-//     */
-//   `, { trim: false }))
-//     .toEqual([{
-//       description: '\nDescription text',
-//       source: '\nDescription text\n@tag tagname Tag description\n',
-//       line: 1,
-//       tags: [{
-//         tag: 'tag',
-//         name: 'tagname',
-//         optional: false,
-//         description: 'Tag description\n',
-//         type: '',
-//         line: 3,
-//         source: '@tag tagname Tag description\n'
-//       }]
-//     }])
-// })
+test('multiple blocks', () => {
+  const parsed = getParser()(`
+  /**
+   * Description first line
+   */
+  var a
 
-// test.skip('should accept comment close on a non-empty', () => {
-//   expect(parse(`
-//     /**
-//      * Description first line
-//      *
-//      * Description second line */
-//     var a
-//   `))
-//     .toEqual([{
-//       description: 'Description first line\n\nDescription second line',
-//       source: 'Description first line\n\nDescription second line',
-//       line: 1,
-//       tags: []
-//     }])
-// })
+  /**
+   * Description second line
+   */
+  var b`);
 
-// test.skip('should skip empty blocks', () => {
-//   expect(parse(`
-//     /**
-//      *
-//      */
-//     var a
-//   `).length).to.eq(0)
-// })
+  expect(parsed).toHaveLength(2);
 
-// test.skip('should parse multiple doc blocks', () => {
-//   const p = parse(`
-//     /**
-//      * Description first line
-//      */
-//     var a
+  expect(parsed).toEqual([
+    {
+      description: 'Description first line',
+      tags: [],
+      source: [
+        {
+          number: 1,
+          source: '  /**',
+          tokens: {
+            start: '  ',
+            delimiter: '/**',
+            postDelimiter: '',
+            tag: '',
+            postTag: '',
+            name: '',
+            postName: '',
+            type: '',
+            postType: '',
+            description: '',
+            end: '',
+          },
+        },
+        {
+          number: 2,
+          source: '   * Description first line',
+          tokens: {
+            start: '   ',
+            delimiter: '*',
+            postDelimiter: ' ',
+            tag: '',
+            postTag: '',
+            name: '',
+            postName: '',
+            type: '',
+            postType: '',
+            description: 'Description first line',
+            end: '',
+          },
+        },
+        {
+          number: 3,
+          source: '   */',
+          tokens: {
+            start: '   ',
+            delimiter: '',
+            postDelimiter: '',
+            tag: '',
+            postTag: '',
+            name: '',
+            postName: '',
+            type: '',
+            postType: '',
+            description: '',
+            end: '*/',
+          },
+        },
+      ],
+      problems: [],
+    },
+    {
+      description: 'Description second line',
+      tags: [],
+      source: [
+        {
+          number: 6,
+          source: '  /**',
+          tokens: {
+            start: '  ',
+            delimiter: '/**',
+            postDelimiter: '',
+            tag: '',
+            postTag: '',
+            name: '',
+            postName: '',
+            type: '',
+            postType: '',
+            description: '',
+            end: '',
+          },
+        },
+        {
+          number: 7,
+          source: '   * Description second line',
+          tokens: {
+            start: '   ',
+            delimiter: '*',
+            postDelimiter: ' ',
+            tag: '',
+            postTag: '',
+            name: '',
+            postName: '',
+            type: '',
+            postType: '',
+            description: 'Description second line',
+            end: '',
+          },
+        },
+        {
+          number: 8,
+          source: '   */',
+          tokens: {
+            start: '   ',
+            delimiter: '',
+            postDelimiter: '',
+            tag: '',
+            postTag: '',
+            name: '',
+            postName: '',
+            type: '',
+            postType: '',
+            description: '',
+            end: '*/',
+          },
+        },
+      ],
+      problems: [],
+    },
+  ]);
+});
 
-//     /**
-//      * Description second line
-//      */
-//     var b
-//   `)
+test('skip `/* */` blocks', () => {
+  const parsed = getParser()(`
+  /*
+   *
+   */
+  var a`);
+  expect(parsed).toHaveLength(0);
+});
 
-//   expect(p.length)
-//     .to.eq(2)
+test('skip `/*** */` blocks', () => {
+  const parsed = getParser()(`
+  /***
+   *
+   */
+  var a`);
+  expect(parsed).toHaveLength(0);
+});
 
-//   expect(p[0])
-//     .to.toEqual({
-//       description: 'Description first line',
-//       source: 'Description first line',
-//       line: 1,
-//       tags: []
-//     })
-
-//   expect(p[1])
-//     .to.toEqual({
-//       description: 'Description second line',
-//       source: 'Description second line',
-//       line: 6,
-//       tags: []
-//     })
-// })
-
-// test.skip('should parse one line block', () => {
-//   expect(parse(`
-//     /** Description */
-//     var a
-//   `))
-//     .to.toEqual([{
-//       description: 'Description',
-//       source: 'Description',
-//       line: 1,
-//       tags: []
-//     }])
-// })
-
-// test.skip('should skip `/* */` comments', () => {
-//   expect(parse(`
-//     /*
-//      *
-//      */
-//     var a
-//   `).length).to.eq(0)
-// })
-
-// test.skip('should skip `/*** */` comments', () => {
-//   expect(parse(`
-//     /***
-//      *
-//      */
-//     var a
-//   `).length).to.eq(0)
-// })
-
-// test.skip('should preserve empty lines and indentation with `opts.trim = false`', () => {
-//   expect(parse(`
-//     /**
-//      *
-//      *
-//      *   Description first line
-//      *     second line
-//      *
-//      *       third line
-//      */
-//     var a
-//   `, { trim: false }))
-//     .toEqual([{
-//       description: '\n\n\n  Description first line\n    second line\n\n      third line\n',
-//       source: '\n\n\n  Description first line\n    second line\n\n      third line\n',
-//       line: 1,
-//       tags: []
-//     }])
-// })
+test('preserve formatting', () => {
+  const parsed = getParser({ spacing: 'preserve' })(`
+  /**
+   *   
+   *   Description first line   
+   *     second line   
+   *   
+   *       third line   
+   */
+  var a`);
+  expect(parsed).toEqual([
+    {
+      description:
+        '  \n  Description first line   \n    second line   \n  \n      third line   ',
+      tags: [],
+      source: [
+        {
+          number: 1,
+          source: '  /**',
+          tokens: {
+            start: '  ',
+            delimiter: '/**',
+            postDelimiter: '',
+            tag: '',
+            postTag: '',
+            name: '',
+            postName: '',
+            type: '',
+            postType: '',
+            description: '',
+            end: '',
+          },
+        },
+        {
+          number: 2,
+          source: '   *   ',
+          tokens: {
+            start: '   ',
+            delimiter: '*',
+            postDelimiter: '   ',
+            tag: '',
+            postTag: '',
+            name: '',
+            postName: '',
+            type: '',
+            postType: '',
+            description: '',
+            end: '',
+          },
+        },
+        {
+          number: 3,
+          source: '   *   Description first line   ',
+          tokens: {
+            start: '   ',
+            delimiter: '*',
+            postDelimiter: '   ',
+            tag: '',
+            postTag: '',
+            name: '',
+            postName: '',
+            type: '',
+            postType: '',
+            description: 'Description first line   ',
+            end: '',
+          },
+        },
+        {
+          number: 4,
+          source: '   *     second line   ',
+          tokens: {
+            start: '   ',
+            delimiter: '*',
+            postDelimiter: '     ',
+            tag: '',
+            postTag: '',
+            name: '',
+            postName: '',
+            type: '',
+            postType: '',
+            description: 'second line   ',
+            end: '',
+          },
+        },
+        {
+          number: 5,
+          source: '   *   ',
+          tokens: {
+            start: '   ',
+            delimiter: '*',
+            postDelimiter: '   ',
+            tag: '',
+            postTag: '',
+            name: '',
+            postName: '',
+            type: '',
+            postType: '',
+            description: '',
+            end: '',
+          },
+        },
+        {
+          number: 6,
+          source: '   *       third line   ',
+          tokens: {
+            start: '   ',
+            delimiter: '*',
+            postDelimiter: '       ',
+            tag: '',
+            postTag: '',
+            name: '',
+            postName: '',
+            type: '',
+            postType: '',
+            description: 'third line   ',
+            end: '',
+          },
+        },
+        {
+          number: 7,
+          source: '   */',
+          tokens: {
+            start: '   ',
+            delimiter: '',
+            postDelimiter: '',
+            tag: '',
+            postTag: '',
+            name: '',
+            postName: '',
+            type: '',
+            postType: '',
+            description: '',
+            end: '*/',
+          },
+        },
+      ],
+      problems: [],
+    },
+  ]);
+});
 
 // test.skip('should parse one line block with tag', () => {
 //   expect(parse(`
