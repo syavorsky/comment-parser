@@ -3,7 +3,7 @@ import { Block, Line } from '../../src/types';
 import { seedTokens } from '../../src/util';
 
 test('block with tags', () => {
-  const parsed: Block[] = getParser()(`
+  const parsed = getParser()(`
   /**
    * Description may go 
    * over few lines followed by @tags
@@ -166,4 +166,22 @@ test('block with tags', () => {
       problems: [],
     },
   ]);
+});
+
+test.each([
+  ['empty', '/**\n*\n*/'],
+  ['one-star', '/*\n*\n*/'],
+  ['three-star', '/***\n*\n*/'],
+  ['empty one-liner', '/** */'],
+  ['one-star oneliner', '/* */'],
+  ['three-star oneliner', '/*** */'],
+])('skip block - %s', (name, source) => {
+  expect(getParser()(source)).toEqual([]);
+});
+
+test.each([
+  ['negative', -1],
+  ['float', 1.5],
+])('invalid strat line - %s', (name, startLine) => {
+  expect(() => getParser({ startLine })).toThrow('Invalid startLine');
 });
