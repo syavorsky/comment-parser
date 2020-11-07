@@ -1,12 +1,12 @@
 import getParser, { Parser } from '../../src/source-parser';
 import { Block, Line } from '../../src/types';
-import { seedBlock, seedTokens } from '../../src/util';
+import { splitLines, seedBlock, seedTokens } from '../../src/util';
 
 let _parse: Parser;
 
 const nulls = (n: number): null[] => Array(n).fill(null);
 const parse = (source: string): Array<Line[] | null> =>
-  source.split('\n').map(_parse);
+  splitLines(source).map(_parse);
 
 beforeEach(() => {
   _parse = getParser();
@@ -211,4 +211,27 @@ test('multiple blocks', () => {
   ];
 
   expect(parsed).toEqual([null, block0, null, block1, null]);
+});
+
+test('start line number', () => {
+  const source = splitLines(`
+  /** description */`);
+
+  const parsed = source.map(getParser({ startLine: 5 }));
+
+  const block = [
+    {
+      number: 6,
+      source: '  /** description */',
+      tokens: seedTokens({
+        start: '  ',
+        delimiter: '/**',
+        postDelimiter: ' ',
+        description: 'description ',
+        end: '*/',
+      }),
+    },
+  ];
+
+  expect(parsed).toEqual([null, block]);
 });

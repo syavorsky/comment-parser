@@ -11,8 +11,6 @@ export type Parser = (source: string) => Line[] | null;
 export default function getParser({
   startLine = 0,
 }: Partial<Options> = {}): Parser {
-  if (startLine < 0 || startLine % 1 > 0) throw new Error('Invalid startLine');
-
   let block: Line[] | null = null;
   let num = startLine;
 
