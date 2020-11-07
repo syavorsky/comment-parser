@@ -1,5 +1,4 @@
 import getParser from '../../src/index';
-import { Block, Line } from '../../src/types';
 import { seedTokens } from '../../src/util';
 
 test('block with tags', () => {
@@ -7,9 +6,9 @@ test('block with tags', () => {
   /**
    * Description may go 
    * over few lines followed by @tags
-   * @param name {string} name parameter
+   * @param {string} name name parameter
    *
-   * @param value {any} value of any type
+   * @param {any} value value of any type
    */`);
   expect(parsed).toEqual([
     {
@@ -25,7 +24,7 @@ test('block with tags', () => {
           source: [
             {
               number: 4,
-              source: '   * @param name {string} name parameter',
+              source: '   * @param {string} name name parameter',
               tokens: seedTokens({
                 start: '   ',
                 delimiter: '*',
@@ -59,7 +58,7 @@ test('block with tags', () => {
           source: [
             {
               number: 6,
-              source: '   * @param value {any} value of any type',
+              source: '   * @param {any} value value of any type',
               tokens: seedTokens({
                 start: '   ',
                 delimiter: '*',
@@ -115,7 +114,7 @@ test('block with tags', () => {
         },
         {
           number: 4,
-          source: '   * @param name {string} name parameter',
+          source: '   * @param {string} name name parameter',
           tokens: seedTokens({
             start: '   ',
             delimiter: '*',
@@ -140,7 +139,7 @@ test('block with tags', () => {
         },
         {
           number: 6,
-          source: '   * @param value {any} value of any type',
+          source: '   * @param {any} value value of any type',
           tokens: seedTokens({
             start: '   ',
             delimiter: '*',

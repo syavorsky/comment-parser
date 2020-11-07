@@ -25,8 +25,8 @@ export default function getParser({
   spacing = 'compact',
   tokenizers = [
     tagTokenizer(),
-    nameTokenizer(),
     typeTokenizer(),
+    nameTokenizer(),
     descriptionTokenizer(getSpacer(spacing)),
   ],
 }: Partial<Options> = {}) {
