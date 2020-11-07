@@ -1,6 +1,6 @@
-import getParser from '../src/index';
-import { Block, Line } from '../src/types';
-import { seedTokens } from '../src/util';
+import getParser from '../../src/index';
+import { Block, Line } from '../../src/types';
+import { seedTokens } from '../../src/util';
 
 test('block with tags', () => {
   const parsed: Block[] = getParser()(`

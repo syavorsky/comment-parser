@@ -1,5 +1,5 @@
-import { typeTokenizer } from '../src/spec-parser';
-import { seedTokens, seedSpec } from '../src/util';
+import { typeTokenizer } from '../../src/spec-parser';
+import { seedTokens, seedSpec } from '../../src/util';
 
 const tokenize = typeTokenizer();
 

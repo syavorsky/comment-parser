@@ -1,4 +1,4 @@
-const { default: getParser } = require('../lib');
+const { default: getParser } = require('../../lib');
 
 test('description only', () => {
   const parsed = getParser()(`
