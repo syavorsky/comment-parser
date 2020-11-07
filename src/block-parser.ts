@@ -17,12 +17,12 @@ export default function getParser({
   const toggleFence = (source: string, isFenced: boolean): boolean =>
     fencer(source) ? !isFenced : isFenced;
 
-  return function parseBlock(block: Line[]): Line[][] {
+  return function parseBlock(source: Line[]): Line[][] {
     // start with description section
     const sections: Line[][] = [[]];
 
     let isFenced = false;
-    for (const line of block) {
+    for (const line of source) {
       if (reTag.test(line.tokens.description) && !isFenced) {
         sections.push([line]);
       } else {

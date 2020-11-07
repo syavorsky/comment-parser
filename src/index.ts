@@ -10,6 +10,7 @@ import specParser, {
 } from './spec-parser';
 import { Block, Line, Spec } from './types';
 import getSpacer, { Spacer } from './spacer';
+import { splitLines } from './util';
 
 export interface Options {
   startLine: number;
@@ -41,7 +42,7 @@ export default function getParser({
 
   return function (source: string): Block[] {
     const blocks: Block[] = [];
-    for (const line of source.split(/\r?\n/)) {
+    for (const line of splitLines(source)) {
       const lines = parseSource(line);
 
       if (lines === null) continue;
