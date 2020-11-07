@@ -20,7 +20,7 @@
   "scripts": {
     "build": "tsc",
     "format": "prettier --write src/ tests/",
-    "pretest": "rm -rf coverage",
+    "pretest": "rm -rf coverage; npm run build",
     "test": "prettier -v && prettier --check src/ tests/ && jest --verbose"
   },
   "repository": {
