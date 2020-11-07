@@ -1,5 +1,5 @@
 import { splitSpace, isSpace, seedSpec } from './util';
-import { Markers, Line, Tokens, Spec } from './types';
+import { Line, Spec } from './types';
 import { Spacer } from './spacer';
 
 export type Parser = (source: Line[]) => Spec;
@@ -94,7 +94,7 @@ export function nameTokenizer(): Tokenizer {
 
     const quotedGroups = source.split('"');
 
-    // if it starts with quoted group assume it is a literal
+    // if it starts with quoted group, assume it is a literal
     if (
       quotedGroups.length > 1 &&
       quotedGroups[0] === '' &&

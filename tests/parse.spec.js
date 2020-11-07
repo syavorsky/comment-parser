@@ -1,198 +1,5 @@
 const { default: getParser } = require('../lib');
 
-test('description and tags', () => {
-  const parsed = getParser()(`
-  /**
-   * Description may go 
-   * over few lines followed by @tags
-   * @param name {string} name parameter
-   * @param value {any} value of any type
-   */`);
-  expect(parsed).toEqual([
-    {
-      description: 'Description may go over few lines followed by @tags',
-      tags: [
-        {
-          tag: 'param',
-          name: 'name',
-          type: 'string',
-          optional: false,
-          description: 'name parameter',
-          problems: [],
-          source: [
-            {
-              number: 4,
-              source: '   * @param name {string} name parameter',
-              tokens: {
-                start: '   ',
-                delimiter: '*',
-                postDelimiter: ' ',
-                tag: '@param',
-                postTag: ' ',
-                name: 'name',
-                postName: ' ',
-                type: '{string}',
-                postType: ' ',
-                description: 'name parameter',
-                end: '',
-              },
-            },
-          ],
-        },
-        {
-          tag: 'param',
-          name: 'value',
-          type: 'any',
-          optional: false,
-          description: 'value of any type',
-          problems: [],
-          source: [
-            {
-              number: 5,
-              source: '   * @param value {any} value of any type',
-              tokens: {
-                start: '   ',
-                delimiter: '*',
-                postDelimiter: ' ',
-                tag: '@param',
-                postTag: ' ',
-                name: 'value',
-                postName: ' ',
-                type: '{any}',
-                postType: ' ',
-                description: 'value of any type',
-                end: '',
-              },
-            },
-            {
-              number: 6,
-              source: '   */',
-              tokens: {
-                start: '   ',
-                delimiter: '',
-                postDelimiter: '',
-                tag: '',
-                postTag: '',
-                name: '',
-                postName: '',
-                type: '',
-                postType: '',
-                description: '',
-                end: '*/',
-              },
-            },
-          ],
-        },
-      ],
-      source: [
-        {
-          number: 1,
-          source: '  /**',
-          tokens: {
-            start: '  ',
-            delimiter: '/**',
-            postDelimiter: '',
-            tag: '',
-            postTag: '',
-            name: '',
-            postName: '',
-            type: '',
-            postType: '',
-            description: '',
-            end: '',
-          },
-        },
-        {
-          number: 2,
-          source: '   * Description may go ',
-          tokens: {
-            start: '   ',
-            delimiter: '*',
-            postDelimiter: ' ',
-            tag: '',
-            postTag: '',
-            name: '',
-            postName: '',
-            type: '',
-            postType: '',
-            description: 'Description may go ',
-            end: '',
-          },
-        },
-        {
-          number: 3,
-          source: '   * over few lines followed by @tags',
-          tokens: {
-            start: '   ',
-            delimiter: '*',
-            postDelimiter: ' ',
-            tag: '',
-            postTag: '',
-            name: '',
-            postName: '',
-            type: '',
-            postType: '',
-            description: 'over few lines followed by @tags',
-            end: '',
-          },
-        },
-        {
-          number: 4,
-          source: '   * @param name {string} name parameter',
-          tokens: {
-            start: '   ',
-            delimiter: '*',
-            postDelimiter: ' ',
-            tag: '@param',
-            postTag: ' ',
-            name: 'name',
-            postName: ' ',
-            type: '{string}',
-            postType: ' ',
-            description: 'name parameter',
-            end: '',
-          },
-        },
-        {
-          number: 5,
-          source: '   * @param value {any} value of any type',
-          tokens: {
-            start: '   ',
-            delimiter: '*',
-            postDelimiter: ' ',
-            tag: '@param',
-            postTag: ' ',
-            name: 'value',
-            postName: ' ',
-            type: '{any}',
-            postType: ' ',
-            description: 'value of any type',
-            end: '',
-          },
-        },
-        {
-          number: 6,
-          source: '   */',
-          tokens: {
-            start: '   ',
-            delimiter: '',
-            postDelimiter: '',
-            tag: '',
-            postTag: '',
-            name: '',
-            postName: '',
-            type: '',
-            postType: '',
-            description: '',
-            end: '*/',
-          },
-        },
-      ],
-      problems: [],
-    },
-  ]);
-});
-
 test('description only', () => {
   const parsed = getParser()(`
   /**
@@ -260,7 +67,7 @@ test('description only', () => {
   ]);
 });
 
-test('one line block', () => {
+test('description one-liner', () => {
   const parsed = getParser()(`
   /** Description */
   var a`);
@@ -813,133 +620,50 @@ test('skip `/*** */` blocks', () => {
   expect(parsed).toHaveLength(0);
 });
 
-test('preserve formatting', () => {
-  const parsed = getParser({ spacing: 'preserve' })(`
-  /**
-   *   
-   *   Description first line   
-   *     second line   
-   *   
-   *       third line   
-   */
-  var a`);
+test('tag one-liner', () => {
+  const parsed = getParser()(`/** @param */`);
   expect(parsed).toEqual([
     {
-      description:
-        '  \n  Description first line   \n    second line   \n  \n      third line   ',
-      tags: [],
+      description: '',
+      tags: [
+        {
+          tag: 'param',
+          name: '',
+          type: '',
+          optional: false,
+          description: '',
+          problems: [],
+          source: [
+            {
+              number: 0,
+              source: '/** @param */',
+              tokens: {
+                start: '',
+                delimiter: '/**',
+                postDelimiter: ' ',
+                tag: '@param',
+                postTag: ' ',
+                name: '',
+                postName: '',
+                type: '',
+                postType: '',
+                description: '',
+                end: '*/',
+              },
+            },
+          ],
+        },
+      ],
       source: [
         {
-          number: 1,
-          source: '  /**',
+          number: 0,
+          source: '/** @param */',
           tokens: {
-            start: '  ',
+            start: '',
             delimiter: '/**',
-            postDelimiter: '',
-            tag: '',
-            postTag: '',
-            name: '',
-            postName: '',
-            type: '',
-            postType: '',
-            description: '',
-            end: '',
-          },
-        },
-        {
-          number: 2,
-          source: '   *   ',
-          tokens: {
-            start: '   ',
-            delimiter: '*',
-            postDelimiter: '   ',
-            tag: '',
-            postTag: '',
-            name: '',
-            postName: '',
-            type: '',
-            postType: '',
-            description: '',
-            end: '',
-          },
-        },
-        {
-          number: 3,
-          source: '   *   Description first line   ',
-          tokens: {
-            start: '   ',
-            delimiter: '*',
-            postDelimiter: '   ',
-            tag: '',
-            postTag: '',
-            name: '',
-            postName: '',
-            type: '',
-            postType: '',
-            description: 'Description first line   ',
-            end: '',
-          },
-        },
-        {
-          number: 4,
-          source: '   *     second line   ',
-          tokens: {
-            start: '   ',
-            delimiter: '*',
-            postDelimiter: '     ',
-            tag: '',
-            postTag: '',
-            name: '',
-            postName: '',
-            type: '',
-            postType: '',
-            description: 'second line   ',
-            end: '',
-          },
-        },
-        {
-          number: 5,
-          source: '   *   ',
-          tokens: {
-            start: '   ',
-            delimiter: '*',
-            postDelimiter: '   ',
-            tag: '',
-            postTag: '',
-            name: '',
-            postName: '',
-            type: '',
-            postType: '',
-            description: '',
-            end: '',
-          },
-        },
-        {
-          number: 6,
-          source: '   *       third line   ',
-          tokens: {
-            start: '   ',
-            delimiter: '*',
-            postDelimiter: '       ',
-            tag: '',
-            postTag: '',
-            name: '',
-            postName: '',
-            type: '',
-            postType: '',
-            description: 'third line   ',
-            end: '',
-          },
-        },
-        {
-          number: 7,
-          source: '   */',
-          tokens: {
-            start: '   ',
-            delimiter: '',
-            postDelimiter: '',
-            tag: '',
-            postTag: '',
+            postDelimiter: ' ',
+            tag: '@param',
+            postTag: ' ',
             name: '',
             postName: '',
             type: '',
@@ -953,27 +677,6 @@ test('preserve formatting', () => {
     },
   ]);
 });
-
-// test.skip('should parse one line block with tag', () => {
-//   expect(parse(`
-//     /** @tag */
-//     var a
-//   `))
-//     .to.toEqual([{
-//       description: '',
-//       line: 1,
-//       source: '@tag',
-//       tags: [{
-//         tag: 'tag',
-//         type: '',
-//         name: '',
-//         description: '',
-//         line: 1,
-//         optional: false,
-//         source: '@tag'
-//       }]
-//     }])
-// })
 
 // test.skip('should parse `@tag`', () => {
 //   expect(parse(`

@@ -11,6 +11,10 @@ export function splitSpace(source: string): [string, string] {
     : [source.slice(0, matches[0].length), source.slice(matches[0].length)];
 }
 
+export function splitLines(source: string): string[] {
+  return source.split(/\r?\n/);
+}
+
 export function seedBlock(block: Partial<Block> = {}): Block {
   return {
     description: '',
