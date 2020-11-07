@@ -1,11 +1,32 @@
-import getParser from '../src/block-parser';
-import { Line } from '../src/types';
-import { seedTokens } from '../src/util';
+import getParser, { Parser } from '../../src/source-parser';
+import { Block, Line } from '../../src/types';
+import { seedBlock, seedTokens } from '../../src/util';
 
-let source: Line[];
+let _parse: Parser;
+
+const nulls = (n: number): null[] => Array(n).fill(null);
+const parse = (source: string): Array<Line[] | null> =>
+  source.split('\n').map(_parse);
 
 beforeEach(() => {
-  source = [
+  _parse = getParser();
+});
+
+test('multi-line block', () => {
+  const parsed = parse(`
+    /**
+     * description 0
+     *
+     * description 1
+     *
+     * @param {string} value value description 0
+    \`\`\`
+    @sample code
+    \`\`\`
+    * description 1
+    */`);
+
+  const block = [
     {
       number: 1,
       source: '    /**',
@@ -107,12 +128,12 @@ beforeEach(() => {
     },
     {
       number: 10,
-      source: '    * value description 1',
+      source: '    * description 1',
       tokens: seedTokens({
         start: '    ',
         delimiter: '*',
         postDelimiter: ' ',
-        description: 'value description 1',
+        description: 'description 1',
         end: '',
       }),
     },
@@ -128,42 +149,66 @@ beforeEach(() => {
       }),
     },
   ];
+
+  expect(parsed).toEqual([...nulls(11), block]);
 });
 
-test('standard fences', () => {
-  const parser = getParser();
-  const groups: Line[][] = parser(source);
+test('one-line block', () => {
+  const parsed = parse(`
+  /** description */
+  `);
 
-  expect(groups.length).toBe(2);
-  expect(groups).toEqual([source.slice(0, 5), source.slice(5)]);
+  const block = [
+    {
+      number: 1,
+      source: '  /** description */',
+      tokens: seedTokens({
+        start: '  ',
+        delimiter: '/**',
+        postDelimiter: ' ',
+        description: 'description ',
+        end: '*/',
+      }),
+    },
+  ];
+
+  expect(parsed).toEqual([null, block, null]);
 });
 
-test('custom fence', () => {
-  source = source.map((line) => {
-    line.tokens.description = line.tokens.description.replace('```', '###');
-    return line;
-  });
+test('multiple blocks', () => {
+  const parsed = parse(`
+    /** description 0 */
 
-  const parser = getParser({ fence: '###' });
-  const groups: Line[][] = parser(source);
+    /** description 1 */
+    `);
 
-  expect(groups.length).toBe(2);
-  expect(groups).toEqual([source.slice(0, 5), source.slice(5)]);
-});
+  const block0 = [
+    {
+      number: 1,
+      source: '    /** description 0 */',
+      tokens: seedTokens({
+        start: '    ',
+        delimiter: '/**',
+        postDelimiter: ' ',
+        description: 'description 0 ',
+        end: '*/',
+      }),
+    },
+  ];
 
-test('fence function', () => {
-  source = source.map((line) => {
-    line.tokens.description = line.tokens.description.replace('```', '###');
-    return line;
-  });
+  const block1 = [
+    {
+      number: 3,
+      source: '    /** description 1 */',
+      tokens: seedTokens({
+        start: '    ',
+        delimiter: '/**',
+        postDelimiter: ' ',
+        description: 'description 1 ',
+        end: '*/',
+      }),
+    },
+  ];
 
-  function isFenced(source: string) {
-    return source.split('###').length % 2 === 0;
-  }
-
-  const parser = getParser({ fence: isFenced });
-  const groups: Line[][] = parser(source);
-
-  expect(groups.length).toBe(2);
-  expect(groups).toEqual([source.slice(0, 5), source.slice(5)]);
+  expect(parsed).toEqual([null, block0, null, block1, null]);
 });

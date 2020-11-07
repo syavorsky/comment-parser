@@ -1,6 +1,6 @@
-import getSpacer from '../src/spacer';
-import { Line } from '../src/types';
-import { seedTokens } from '../src/util';
+import getSpacer from '../../src/spacer';
+import { Line } from '../../src/types';
+import { seedTokens } from '../../src/util';
 
 const source: Line[] = [
   {
