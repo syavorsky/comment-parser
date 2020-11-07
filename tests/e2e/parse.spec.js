@@ -620,14 +620,14 @@ test('skip `/*** */` blocks', () => {
   expect(parsed).toHaveLength(0);
 });
 
-test('tag one-liner', () => {
-  const parsed = getParser()(`/** @param */`);
+test('tag only one-liner', () => {
+  const parsed = getParser()(`/** @my-tag */`);
   expect(parsed).toEqual([
     {
       description: '',
       tags: [
         {
-          tag: 'param',
+          tag: 'my-tag',
           name: '',
           type: '',
           optional: false,
@@ -636,12 +636,12 @@ test('tag one-liner', () => {
           source: [
             {
               number: 0,
-              source: '/** @param */',
+              source: '/** @my-tag */',
               tokens: {
                 start: '',
                 delimiter: '/**',
                 postDelimiter: ' ',
-                tag: '@param',
+                tag: '@my-tag',
                 postTag: ' ',
                 name: '',
                 postName: '',
@@ -657,12 +657,12 @@ test('tag one-liner', () => {
       source: [
         {
           number: 0,
-          source: '/** @param */',
+          source: '/** @my-tag */',
           tokens: {
             start: '',
             delimiter: '/**',
             postDelimiter: ' ',
-            tag: '@param',
+            tag: '@my-tag',
             postTag: ' ',
             name: '',
             postName: '',
@@ -678,29 +678,136 @@ test('tag one-liner', () => {
   ]);
 });
 
-// test.skip('should parse `@tag`', () => {
-//   expect(parse(`
-//     /**
-//      *
-//      * @my-tag
-//      */
-//     var a
-//   `))
-//     .to.toEqual([{
-//       line: 1,
-//       source: '@my-tag',
-//       description: '',
-//       tags: [{
-//         line: 3,
-//         tag: 'my-tag',
-//         source: '@my-tag',
-//         type: '',
-//         name: '',
-//         optional: false,
-//         description: ''
-//       }]
-//     }])
-// })
+test('tag only', () => {
+  const parsed = getParser()(`
+  /**
+   *
+   * @my-tag
+   */
+  var a`);
+  expect(parsed).toEqual([
+    {
+      description: '',
+      tags: [
+        {
+          tag: 'my-tag',
+          name: '',
+          type: '',
+          optional: false,
+          description: '',
+          problems: [],
+          source: [
+            {
+              number: 3,
+              source: '   * @my-tag',
+              tokens: {
+                start: '   ',
+                delimiter: '*',
+                postDelimiter: ' ',
+                tag: '@my-tag',
+                postTag: '',
+                name: '',
+                postName: '',
+                type: '',
+                postType: '',
+                description: '',
+                end: '',
+              },
+            },
+            {
+              number: 4,
+              source: '   */',
+              tokens: {
+                start: '   ',
+                delimiter: '',
+                postDelimiter: '',
+                tag: '',
+                postTag: '',
+                name: '',
+                postName: '',
+                type: '',
+                postType: '',
+                description: '',
+                end: '*/',
+              },
+            },
+          ],
+        },
+      ],
+      source: [
+        {
+          number: 1,
+          source: '  /**',
+          tokens: {
+            start: '  ',
+            delimiter: '/**',
+            postDelimiter: '',
+            tag: '',
+            postTag: '',
+            name: '',
+            postName: '',
+            type: '',
+            postType: '',
+            description: '',
+            end: '',
+          },
+        },
+        {
+          number: 2,
+          source: '   *',
+          tokens: {
+            start: '   ',
+            delimiter: '*',
+            postDelimiter: '',
+            tag: '',
+            postTag: '',
+            name: '',
+            postName: '',
+            type: '',
+            postType: '',
+            description: '',
+            end: '',
+          },
+        },
+        {
+          number: 3,
+          source: '   * @my-tag',
+          tokens: {
+            start: '   ',
+            delimiter: '*',
+            postDelimiter: ' ',
+            tag: '@my-tag',
+            postTag: '',
+            name: '',
+            postName: '',
+            type: '',
+            postType: '',
+            description: '',
+            end: '',
+          },
+        },
+        {
+          number: 4,
+          source: '   */',
+          tokens: {
+            start: '   ',
+            delimiter: '',
+            postDelimiter: '',
+            tag: '',
+            postTag: '',
+            name: '',
+            postName: '',
+            type: '',
+            postType: '',
+            description: '',
+            end: '*/',
+          },
+        },
+      ],
+      problems: [],
+    },
+  ]);
+});
 
 // test.skip('should parse `@tag {my.type}`', () => {
 //   expect(parse(`
