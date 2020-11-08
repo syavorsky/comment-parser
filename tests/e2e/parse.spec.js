@@ -940,6 +940,137 @@ test('tag and type', () => {
   ]);
 });
 
+test('tag and name', () => {
+  const parsed = getParser()(`
+  /**
+   *
+   * @my-tag my-name
+   */
+  var a`);
+  expect(parsed).toEqual([
+    {
+      description: '',
+      tags: [
+        {
+          tag: 'my-tag',
+          name: 'my-name',
+          type: '',
+          optional: false,
+          description: '',
+          problems: [],
+          source: [
+            {
+              number: 3,
+              source: '   * @my-tag my-name',
+              tokens: {
+                start: '   ',
+                delimiter: '*',
+                postDelimiter: ' ',
+                tag: '@my-tag',
+                postTag: ' ',
+                name: 'my-name',
+                postName: '',
+                type: '',
+                postType: '',
+                description: '',
+                end: '',
+              },
+            },
+            {
+              number: 4,
+              source: '   */',
+              tokens: {
+                start: '   ',
+                delimiter: '',
+                postDelimiter: '',
+                tag: '',
+                postTag: '',
+                name: '',
+                postName: '',
+                type: '',
+                postType: '',
+                description: '',
+                end: '*/',
+              },
+            },
+          ],
+        },
+      ],
+      source: [
+        {
+          number: 1,
+          source: '  /**',
+          tokens: {
+            start: '  ',
+            delimiter: '/**',
+            postDelimiter: '',
+            tag: '',
+            postTag: '',
+            name: '',
+            postName: '',
+            type: '',
+            postType: '',
+            description: '',
+            end: '',
+          },
+        },
+        {
+          number: 2,
+          source: '   *',
+          tokens: {
+            start: '   ',
+            delimiter: '*',
+            postDelimiter: '',
+            tag: '',
+            postTag: '',
+            name: '',
+            postName: '',
+            type: '',
+            postType: '',
+            description: '',
+            end: '',
+          },
+        },
+        {
+          number: 3,
+          source: '   * @my-tag my-name',
+          tokens: {
+            start: '   ',
+            delimiter: '*',
+            postDelimiter: ' ',
+            tag: '@my-tag',
+            postTag: ' ',
+            name: 'my-name',
+            postName: '',
+            type: '',
+            postType: '',
+            description: '',
+            end: '',
+          },
+        },
+        {
+          number: 4,
+          source: '   */',
+          tokens: {
+            start: '   ',
+            delimiter: '',
+            postDelimiter: '',
+            tag: '',
+            postTag: '',
+            name: '',
+            postName: '',
+            type: '',
+            postType: '',
+            description: '',
+            end: '*/',
+          },
+        },
+      ],
+      problems: [],
+    },
+  ]);
+});
+
 // test.skip('should parse tag with name only `@tag name`', () => {
 //   expect(parse(`
 //     /**
