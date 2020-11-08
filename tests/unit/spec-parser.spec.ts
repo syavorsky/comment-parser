@@ -68,6 +68,44 @@ test('all tokens', () => {
   );
 });
 
+test('quotes in description', () => {
+  const parsed = parse([
+    {
+      number: 1,
+      source: '...',
+      tokens: seedTokens({
+        description:
+          '@param {type} [name=value] description with "quoted" word',
+      }),
+    },
+  ]);
+  expect(parsed).toEqual(
+    seedSpec({
+      tag: 'param',
+      type: 'type',
+      name: 'name',
+      default: 'value',
+      optional: true,
+      description: 'description with "quoted" word',
+      source: [
+        {
+          number: 1,
+          source: '...',
+          tokens: seedTokens({
+            tag: '@param',
+            postTag: ' ',
+            type: '{type}',
+            postType: ' ',
+            name: '[name=value]',
+            postName: ' ',
+            description: 'description with "quoted" word',
+          }),
+        },
+      ],
+    })
+  );
+});
+
 test('collect non-critical errors', () => {
   const parse = getParser({
     tokenizers: [tokenizer('warning 1'), tokenizer('warning 2')],
