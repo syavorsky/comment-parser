@@ -12,7 +12,7 @@ test('ok', () => {
             number: 1,
             source: '...',
             tokens: seedTokens({
-              description: '{string} value value description 0',
+              description: '{string} param param description 0',
             }),
           },
         ],
@@ -28,7 +28,75 @@ test('ok', () => {
           tokens: seedTokens({
             type: '{string}',
             postType: ' ',
-            description: 'value value description 0',
+            description: 'param param description 0',
+          }),
+        },
+      ],
+    })
+  );
+});
+
+test('inconsistent curlies', () => {
+  expect(
+    tokenize(
+      seedSpec({
+        source: [
+          {
+            number: 1,
+            source: '...',
+            tokens: seedTokens({
+              description: '{string param param description 0',
+            }),
+          },
+        ],
+      })
+    )
+  ).toEqual(
+    seedSpec({
+      problems: [
+        {
+          code: 'spec:type:unpaired-curlies',
+          line: 1,
+          message: 'unpaired curlies',
+          critical: true,
+        },
+      ],
+      source: [
+        {
+          number: 1,
+          source: '...',
+          tokens: seedTokens({
+            description: '{string param param description 0',
+          }),
+        },
+      ],
+    })
+  );
+});
+
+test('omit', () => {
+  expect(
+    tokenize(
+      seedSpec({
+        source: [
+          {
+            number: 1,
+            source: '...',
+            tokens: seedTokens({
+              description: 'string param param description 0',
+            }),
+          },
+        ],
+      })
+    )
+  ).toEqual(
+    seedSpec({
+      source: [
+        {
+          number: 1,
+          source: '...',
+          tokens: seedTokens({
+            description: 'string param param description 0',
           }),
         },
       ],
