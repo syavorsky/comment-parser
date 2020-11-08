@@ -11,22 +11,22 @@ test('single word', () => {
           {
             number: 1,
             source: '...',
-            tokens: seedTokens({ description: 'value value description 0' }),
+            tokens: seedTokens({ description: 'param param description 0' }),
           },
         ],
       })
     )
   ).toEqual(
     seedSpec({
-      name: 'value',
+      name: 'param',
       source: [
         {
           number: 1,
           source: '...',
           tokens: seedTokens({
-            name: 'value',
+            name: 'param',
             postName: ' ',
-            description: 'value description 0',
+            description: 'param description 0',
           }),
         },
       ],
@@ -42,20 +42,20 @@ test('dash-delimitered', () => {
           {
             number: 1,
             source: '...',
-            tokens: seedTokens({ description: 'value-value description 0' }),
+            tokens: seedTokens({ description: 'param-param description 0' }),
           },
         ],
       })
     )
   ).toEqual(
     seedSpec({
-      name: 'value-value',
+      name: 'param-param',
       source: [
         {
           number: 1,
           source: '...',
           tokens: seedTokens({
-            name: 'value-value',
+            name: 'param-param',
             postName: ' ',
             description: 'description 0',
           }),
@@ -73,20 +73,20 @@ test('quoted', () => {
           {
             number: 1,
             source: '...',
-            tokens: seedTokens({ description: '"value value" description 0' }),
+            tokens: seedTokens({ description: '"param param" description 0' }),
           },
         ],
       })
     )
   ).toEqual(
     seedSpec({
-      name: 'value value',
+      name: 'param param',
       source: [
         {
           number: 1,
           source: '...',
           tokens: seedTokens({
-            name: '"value value"',
+            name: '"param param"',
             postName: ' ',
             description: 'description 0',
           }),
@@ -104,22 +104,314 @@ test('inconsistent quotes', () => {
           {
             number: 1,
             source: '...',
-            tokens: seedTokens({ description: '"value value description 0' }),
+            tokens: seedTokens({ description: '"param param description 0' }),
           },
         ],
       })
     )
   ).toEqual(
     seedSpec({
-      name: '"value',
+      name: '"param',
       source: [
         {
           number: 1,
           source: '...',
           tokens: seedTokens({
-            name: '"value',
+            name: '"param',
             postName: ' ',
-            description: 'value description 0',
+            description: 'param description 0',
+          }),
+        },
+      ],
+    })
+  );
+});
+
+test('optional', () => {
+  expect(
+    tokenize(
+      seedSpec({
+        source: [
+          {
+            number: 1,
+            source: '...',
+            tokens: seedTokens({ description: '[param] param description' }),
+          },
+        ],
+      })
+    )
+  ).toEqual(
+    seedSpec({
+      name: 'param',
+      optional: true,
+      source: [
+        {
+          number: 1,
+          source: '...',
+          tokens: seedTokens({
+            name: '[param]',
+            postName: ' ',
+            description: 'param description',
+          }),
+        },
+      ],
+    })
+  );
+});
+
+test('optional with default', () => {
+  expect(
+    tokenize(
+      seedSpec({
+        source: [
+          {
+            number: 1,
+            source: '...',
+            tokens: seedTokens({
+              description: '[param=value] param description',
+            }),
+          },
+        ],
+      })
+    )
+  ).toEqual(
+    seedSpec({
+      name: 'param',
+      optional: true,
+      default: 'value',
+      source: [
+        {
+          number: 1,
+          source: '...',
+          tokens: seedTokens({
+            name: '[param=value]',
+            postName: ' ',
+            description: 'param description',
+          }),
+        },
+      ],
+    })
+  );
+});
+
+test('name spacing', () => {
+  expect(
+    tokenize(
+      seedSpec({
+        source: [
+          {
+            number: 1,
+            source: '...',
+            tokens: seedTokens({
+              description: '[ param = value ] param description',
+            }),
+          },
+        ],
+      })
+    )
+  ).toEqual(
+    seedSpec({
+      name: 'param',
+      optional: true,
+      default: 'value',
+      source: [
+        {
+          number: 1,
+          source: '...',
+          tokens: seedTokens({
+            name: '[ param = value ]',
+            postName: ' ',
+            description: 'param description',
+          }),
+        },
+      ],
+    })
+  );
+});
+
+test('inconsistent brackets', () => {
+  expect(
+    tokenize(
+      seedSpec({
+        source: [
+          {
+            number: 1,
+            source: '...',
+            tokens: seedTokens({
+              description: '[param param description',
+            }),
+          },
+        ],
+      })
+    )
+  ).toEqual(
+    seedSpec({
+      problems: [
+        {
+          code: 'spec:name:unpaired-brackets',
+          line: 1,
+          critical: true,
+          message: 'unpaired brackets',
+        },
+      ],
+      source: [
+        {
+          number: 1,
+          source: '...',
+          tokens: seedTokens({
+            description: '[param param description',
+          }),
+        },
+      ],
+    })
+  );
+});
+
+test('empty name', () => {
+  expect(
+    tokenize(
+      seedSpec({
+        source: [
+          {
+            number: 1,
+            source: '...',
+            tokens: seedTokens({
+              description: '[=value] param description',
+            }),
+          },
+        ],
+      })
+    )
+  ).toEqual(
+    seedSpec({
+      problems: [
+        {
+          code: 'spec:name:empty-name',
+          line: 1,
+          critical: true,
+          message: 'empty name',
+        },
+      ],
+      source: [
+        {
+          number: 1,
+          source: '...',
+          tokens: seedTokens({
+            description: '[=value] param description',
+          }),
+        },
+      ],
+    })
+  );
+});
+
+test('empty default value', () => {
+  expect(
+    tokenize(
+      seedSpec({
+        source: [
+          {
+            number: 1,
+            source: '...',
+            tokens: seedTokens({
+              description: '[param=] param description',
+            }),
+          },
+        ],
+      })
+    )
+  ).toEqual(
+    seedSpec({
+      problems: [
+        {
+          code: 'spec:name:empty-default',
+          line: 1,
+          critical: true,
+          message: 'empty default value',
+        },
+      ],
+      source: [
+        {
+          number: 1,
+          source: '...',
+          tokens: seedTokens({
+            description: '[param=] param description',
+          }),
+        },
+      ],
+    })
+  );
+});
+
+test('empty', () => {
+  expect(
+    tokenize(
+      seedSpec({
+        source: [
+          {
+            number: 1,
+            source: '...',
+            tokens: seedTokens({
+              description: '[] param description',
+            }),
+          },
+        ],
+      })
+    )
+  ).toEqual(
+    seedSpec({
+      problems: [
+        {
+          code: 'spec:name:empty-name',
+          line: 1,
+          critical: true,
+          message: 'empty name',
+        },
+      ],
+      source: [
+        {
+          number: 1,
+          source: '...',
+          tokens: seedTokens({
+            description: '[] param description',
+          }),
+        },
+      ],
+    })
+  );
+});
+
+test('default value syntax', () => {
+  expect(
+    tokenize(
+      seedSpec({
+        source: [
+          {
+            number: 1,
+            source: '...',
+            tokens: seedTokens({
+              description: '[param=value=value] param description',
+            }),
+          },
+        ],
+      })
+    )
+  ).toEqual(
+    seedSpec({
+      problems: [
+        {
+          code: 'spec:name:invalid-default',
+          line: 1,
+          critical: true,
+          message: 'invalid default value syntax',
+        },
+      ],
+      source: [
+        {
+          number: 1,
+          source: '...',
+          tokens: seedTokens({
+            description: '[param=value=value] param description',
           }),
         },
       ],

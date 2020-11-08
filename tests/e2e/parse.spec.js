@@ -1779,28 +1779,136 @@ test('tag with multiline description', () => {
   ]);
 });
 
-// test.skip('should gracefully fail on syntax errors `@tag [name`', () => {
-//   expect(parse(`
-//     /**
-//      * @my-tag [name
-//      */
-//   `))
-//     .to.toEqual([{
-//       line: 1,
-//       description: '',
-//       source: '@my-tag [name',
-//       tags: [{
-//         tag: 'my-tag',
-//         line: 2,
-//         type: '',
-//         name: '',
-//         description: '',
-//         source: '@my-tag [name',
-//         optional: false,
-//         errors: ['parse_name: Invalid `name`, unpaired brackets']
-//       }]
-//     }])
-// })
+test('optional name', () => {
+  const parsed = getParser()(`
+  /**
+   *
+   * @my-tag {my.type} [my-name] description text
+   */
+  var a`);
+  expect(parsed).toEqual([
+    {
+      description: '',
+      tags: [
+        {
+          tag: 'my-tag',
+          name: 'my-name',
+          type: 'my.type',
+          optional: true,
+          description: 'description text',
+          problems: [],
+          source: [
+            {
+              number: 3,
+              source: '   * @my-tag {my.type} [my-name] description text',
+              tokens: {
+                start: '   ',
+                delimiter: '*',
+                postDelimiter: ' ',
+                tag: '@my-tag',
+                postTag: ' ',
+                name: '[my-name]',
+                postName: ' ',
+                type: '{my.type}',
+                postType: ' ',
+                description: 'description text',
+                end: '',
+              },
+            },
+            {
+              number: 4,
+              source: '   */',
+              tokens: {
+                start: '   ',
+                delimiter: '',
+                postDelimiter: '',
+                tag: '',
+                postTag: '',
+                name: '',
+                postName: '',
+                type: '',
+                postType: '',
+                description: '',
+                end: '*/',
+              },
+            },
+          ],
+        },
+      ],
+      source: [
+        {
+          number: 1,
+          source: '  /**',
+          tokens: {
+            start: '  ',
+            delimiter: '/**',
+            postDelimiter: '',
+            tag: '',
+            postTag: '',
+            name: '',
+            postName: '',
+            type: '',
+            postType: '',
+            description: '',
+            end: '',
+          },
+        },
+        {
+          number: 2,
+          source: '   *',
+          tokens: {
+            start: '   ',
+            delimiter: '*',
+            postDelimiter: '',
+            tag: '',
+            postTag: '',
+            name: '',
+            postName: '',
+            type: '',
+            postType: '',
+            description: '',
+            end: '',
+          },
+        },
+        {
+          number: 3,
+          source: '   * @my-tag {my.type} [my-name] description text',
+          tokens: {
+            start: '   ',
+            delimiter: '*',
+            postDelimiter: ' ',
+            tag: '@my-tag',
+            postTag: ' ',
+            name: '[my-name]',
+            postName: ' ',
+            type: '{my.type}',
+            postType: ' ',
+            description: 'description text',
+            end: '',
+          },
+        },
+        {
+          number: 4,
+          source: '   */',
+          tokens: {
+            start: '   ',
+            delimiter: '',
+            postDelimiter: '',
+            tag: '',
+            postTag: '',
+            name: '',
+            postName: '',
+            type: '',
+            postType: '',
+            description: '',
+            end: '*/',
+          },
+        },
+      ],
+      problems: [],
+    },
+  ]);
+});
 
 // test.skip('should gracefully fail on syntax errors `@tag [name=]`', () => {
 //   expect(parse(`

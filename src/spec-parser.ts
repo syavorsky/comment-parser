@@ -21,10 +21,6 @@ export default function getParser({ tokenizers }: Options): Parser {
   };
 }
 
-export function stubTokenizer(): Tokenizer {
-  return (spec: Spec) => spec;
-}
-
 export function tagTokenizer(): Tokenizer {
   return (spec: Spec): Spec => {
     const { tokens } = spec.source[0];
@@ -117,7 +113,7 @@ export function nameTokenizer(): Tokenizer {
     for (const ch of source) {
       if (brackets === 0 && isSpace(ch)) break;
       if (ch === '[') brackets++;
-      if (ch === ']') brackets++;
+      if (ch === ']') brackets--;
       name += ch;
     }
 
@@ -131,7 +127,7 @@ export function nameTokenizer(): Tokenizer {
       return spec;
     }
 
-    tokens.name = name;
+    const nameToken = name;
 
     if (name[0] === '[' && name[name.length - 1] === ']') {
       optional = true;
@@ -139,15 +135,16 @@ export function nameTokenizer(): Tokenizer {
 
       const parts = name.split('=');
       name = parts[0].trim();
-      defaultValue = parts[1].trim();
+      defaultValue = parts[1]?.trim();
 
       if (name === '') {
         spec.problems.push({
           code: 'spec:name:empty-name',
-          message: 'empty name value',
+          message: 'empty name',
           line: spec.source[0].number,
           critical: true,
         });
+        return spec;
       }
 
       if (parts.length > 2) {
@@ -157,6 +154,7 @@ export function nameTokenizer(): Tokenizer {
           line: spec.source[0].number,
           critical: true,
         });
+        return spec;
       }
 
       if (defaultValue === '') {
@@ -166,11 +164,14 @@ export function nameTokenizer(): Tokenizer {
           line: spec.source[0].number,
           critical: true,
         });
+        return spec;
       }
     }
 
     spec.optional = optional;
     spec.name = name;
+    tokens.name = nameToken;
+
     if (defaultValue !== undefined) spec.default = defaultValue;
     [tokens.postName, tokens.description] = splitSpace(
       source.slice(tokens.name.length)
