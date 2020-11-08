@@ -181,6 +181,6 @@ test.each([
 test.each([
   ['negative', -1],
   ['float', 1.5],
-])('invalid strat line - %s', (name, startLine) => {
+])('invalid start line - %s', (name, startLine) => {
   expect(() => getParser({ startLine })).toThrow('Invalid startLine');
 });
