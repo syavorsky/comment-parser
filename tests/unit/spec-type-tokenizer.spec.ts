@@ -74,6 +74,39 @@ test('inconsistent curlies', () => {
   );
 });
 
+test('object notation', () => {
+  expect(
+    tokenize(
+      seedSpec({
+        source: [
+          {
+            number: 1,
+            source: '...',
+            tokens: seedTokens({
+              description: '{{a: 1}} param description',
+            }),
+          },
+        ],
+      })
+    )
+  ).toEqual(
+    seedSpec({
+      type: '{a: 1}',
+      source: [
+        {
+          number: 1,
+          source: '...',
+          tokens: seedTokens({
+            type: '{{a: 1}}',
+            postType: ' ',
+            description: 'param description',
+          }),
+        },
+      ],
+    })
+  );
+});
+
 test('omit', () => {
   expect(
     tokenize(

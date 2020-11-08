@@ -194,6 +194,210 @@ test('optional with default', () => {
   );
 });
 
+test('quoted default', () => {
+  expect(
+    tokenize(
+      seedSpec({
+        source: [
+          {
+            number: 1,
+            source: '...',
+            tokens: seedTokens({
+              description: '[param="value"] param description',
+            }),
+          },
+        ],
+      })
+    )
+  ).toEqual(
+    seedSpec({
+      name: 'param',
+      optional: true,
+      default: '"value"',
+      source: [
+        {
+          number: 1,
+          source: '...',
+          tokens: seedTokens({
+            name: '[param="value"]',
+            postName: ' ',
+            description: 'param description',
+          }),
+        },
+      ],
+    })
+  );
+});
+
+test('loosely quoted default', () => {
+  expect(
+    tokenize(
+      seedSpec({
+        source: [
+          {
+            number: 1,
+            source: '...',
+            tokens: seedTokens({
+              description: '[param="value] param description',
+            }),
+          },
+        ],
+      })
+    )
+  ).toEqual(
+    seedSpec({
+      name: 'param',
+      optional: true,
+      default: '"value',
+      source: [
+        {
+          number: 1,
+          source: '...',
+          tokens: seedTokens({
+            name: '[param="value]',
+            postName: ' ',
+            description: 'param description',
+          }),
+        },
+      ],
+    })
+  );
+});
+
+test('non-alphanumeric', () => {
+  expect(
+    tokenize(
+      seedSpec({
+        source: [
+          {
+            number: 1,
+            source: '...',
+            tokens: seedTokens({
+              description: '$param description',
+            }),
+          },
+        ],
+      })
+    )
+  ).toEqual(
+    seedSpec({
+      name: '$param',
+      source: [
+        {
+          number: 1,
+          source: '...',
+          tokens: seedTokens({
+            name: '$param',
+            postName: ' ',
+            description: 'description',
+          }),
+        },
+      ],
+    })
+  );
+});
+
+test('spread notation', () => {
+  expect(
+    tokenize(
+      seedSpec({
+        source: [
+          {
+            number: 1,
+            source: '...',
+            tokens: seedTokens({
+              description: '...params description',
+            }),
+          },
+        ],
+      })
+    )
+  ).toEqual(
+    seedSpec({
+      name: '...params',
+      source: [
+        {
+          number: 1,
+          source: '...',
+          tokens: seedTokens({
+            name: '...params',
+            postName: ' ',
+            description: 'description',
+          }),
+        },
+      ],
+    })
+  );
+});
+
+test('optionsl spread notation', () => {
+  expect(
+    tokenize(
+      seedSpec({
+        source: [
+          {
+            number: 1,
+            source: '...',
+            tokens: seedTokens({
+              description: '[...params] description',
+            }),
+          },
+        ],
+      })
+    )
+  ).toEqual(
+    seedSpec({
+      name: '...params',
+      optional: true,
+      source: [
+        {
+          number: 1,
+          source: '...',
+          tokens: seedTokens({
+            name: '[...params]',
+            postName: ' ',
+            description: 'description',
+          }),
+        },
+      ],
+    })
+  );
+});
+
+test('optional multiple words', () => {
+  expect(
+    tokenize(
+      seedSpec({
+        source: [
+          {
+            number: 1,
+            source: '...',
+            tokens: seedTokens({
+              description: '[param name] param description',
+            }),
+          },
+        ],
+      })
+    )
+  ).toEqual(
+    seedSpec({
+      name: 'param name',
+      optional: true,
+      source: [
+        {
+          number: 1,
+          source: '...',
+          tokens: seedTokens({
+            name: '[param name]',
+            postName: ' ',
+            description: 'param description',
+          }),
+        },
+      ],
+    })
+  );
+});
+
 test('name spacing', () => {
   expect(
     tokenize(

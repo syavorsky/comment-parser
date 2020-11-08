@@ -73,3 +73,40 @@ test('require @', () => {
     })
   );
 });
+
+test.each([
+  ['@+tag', '+tag'],
+  ['@-tag', '-tag'],
+  ['@.tag', '.tag'],
+])('loose tag - %s', (token, tag) => {
+  expect(
+    tokenize(
+      seedSpec({
+        source: [
+          {
+            number: 1,
+            source: '...',
+            tokens: seedTokens({
+              description: token + ' name description',
+            }),
+          },
+        ],
+      })
+    )
+  ).toEqual(
+    seedSpec({
+      tag,
+      source: [
+        {
+          number: 1,
+          source: '...',
+          tokens: seedTokens({
+            tag: token,
+            postTag: ' ',
+            description: 'name description',
+          }),
+        },
+      ],
+    })
+  );
+});

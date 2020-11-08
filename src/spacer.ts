@@ -18,9 +18,22 @@ function compactSpacer(lines: Line[]): string {
 }
 
 function preserveSpacer(lines: Line[]): string {
-  if (lines[0]?.tokens.delimiter === Markers.start) lines = lines.slice(1);
-  if (lines[lines.length - 1]?.tokens.end.startsWith(Markers.end))
+  if (lines.length === 0) return '';
+
+  if (
+    lines[0].tokens.description === '' &&
+    lines[0].tokens.delimiter === Markers.start
+  )
+    lines = lines.slice(1);
+
+  const lastLine = lines[lines.length - 1];
+  if (
+    lastLine !== undefined &&
+    lastLine.tokens.description === '' &&
+    lastLine.tokens.end.endsWith(Markers.end)
+  )
     lines = lines.slice(0, -1);
+
   return lines
     .map(
       ({ tokens }) =>
