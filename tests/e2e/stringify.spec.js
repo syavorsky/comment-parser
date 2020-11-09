@@ -1,5 +1,4 @@
-const { default: getParser } = require('../../lib/parser');
-const { default: getStrigifier } = require('../../lib/stringifier');
+const { parse, stringify } = require('../../lib/');
 
 test('no formatting', () => {
   const source = `
@@ -8,8 +7,8 @@ test('no formatting', () => {
       description line 2
     * description line 3
    */`.slice(1);
-  const parsed = getParser()(source);
-  const out = getStrigifier()(parsed[0]);
+  const parsed = parse(source);
+  const out = stringify(parsed[0]);
   expect(out).toBe(source);
 });
 
@@ -21,8 +20,8 @@ test('align', () => {
     * description line 3
    */`.slice(1);
 
-  const parsed = getParser()(source);
-  const out = getStrigifier({ format: 'align' })(parsed[0]);
+  const parsed = parse(source);
+  const out = stringify(parsed[0], { format: 'align' });
   expect(out).toBe(
     `
 /**
