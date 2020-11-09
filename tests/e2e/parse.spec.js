@@ -1,5 +1,4 @@
-const { getSupportedCodeFixes } = require('typescript');
-const { default: getParser } = require('../../lib');
+const { default: getParser } = require('../../lib/parser');
 
 test('description only', () => {
   const parsed = getParser()(`
