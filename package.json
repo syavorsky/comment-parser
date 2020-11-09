@@ -11,6 +11,7 @@
     "@types/jest": "^26.0.14",
     "jest": "^26.5.3",
     "prettier": "2.1.2",
+    "rimraf": "^3.0.2",
     "ts-jest": "^26.4.1",
     "typescript": "^4.0.3"
   },
@@ -18,9 +19,9 @@
     "node": ">= 10.0.0"
   },
   "scripts": {
-    "build": "tsc",
+    "build": "rimraf lib; tsc",
     "format": "prettier --write src/ tests/",
-    "pretest": "rm -rf coverage; npm run build",
+    "pretest": "rimraf coverage; npm run build",
     "test": "prettier --check src/ tests/ && jest --verbose"
   },
   "repository": {
