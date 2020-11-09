@@ -1,7 +1,7 @@
-const { default: getParser } = require('../../lib/parser');
+const { parse } = require('../../lib');
 
 test('description only', () => {
-  const parsed = getParser()(`
+  const parsed = parse(`
   /**
    * Description
    */`);
@@ -68,7 +68,7 @@ test('description only', () => {
 });
 
 test('description one-liner', () => {
-  const parsed = getParser()(`
+  const parsed = parse(`
   /** Description */
   var a`);
   expect(parsed).toEqual([
@@ -100,7 +100,7 @@ test('description one-liner', () => {
 });
 
 test('block closed on same line', () => {
-  const parsed = getParser()(`
+  const parsed = parse(`
   /**
    * Description */`);
   expect(parsed).toEqual([
@@ -149,7 +149,7 @@ test('block closed on same line', () => {
 });
 
 test('no mid stars', () => {
-  const parsed = getParser()(`
+  const parsed = parse(`
   /**
      Description
   */`);
@@ -216,7 +216,7 @@ test('no mid stars', () => {
 });
 
 test('skip surrounding empty lines while preserving line numbers', () => {
-  const parsed = getParser()(`
+  const parsed = parse(`
   /**
    *
    *
@@ -374,7 +374,7 @@ test('skip surrounding empty lines while preserving line numbers', () => {
 });
 
 test('description on the first line', () => {
-  const parsed = getParser()(`
+  const parsed = parse(`
   /** Description first line
    *
    * Description second line
@@ -460,7 +460,7 @@ test('description on the first line', () => {
 });
 
 test('skip empty blocks', () => {
-  const parsed = getParser()(`
+  const parsed = parse(`
   /**
    *
    */
@@ -469,7 +469,7 @@ test('skip empty blocks', () => {
 });
 
 test('multiple blocks', () => {
-  const parsed = getParser()(`
+  const parsed = parse(`
   /**
    * Description first line
    */
@@ -603,7 +603,7 @@ test('multiple blocks', () => {
 });
 
 test('skip `/* */` blocks', () => {
-  const parsed = getParser()(`
+  const parsed = parse(`
   /*
    *
    */
@@ -612,7 +612,7 @@ test('skip `/* */` blocks', () => {
 });
 
 test('skip `/*** */` blocks', () => {
-  const parsed = getParser()(`
+  const parsed = parse(`
   /***
    *
    */
@@ -621,7 +621,7 @@ test('skip `/*** */` blocks', () => {
 });
 
 test('tag only one-liner', () => {
-  const parsed = getParser()(`/** @my-tag */`);
+  const parsed = parse(`/** @my-tag */`);
   const source = [
     {
       number: 0,
@@ -662,7 +662,7 @@ test('tag only one-liner', () => {
 });
 
 test('tag only', () => {
-  const parsed = getParser()(`
+  const parsed = parse(`
   /**
    *
    * @my-tag
@@ -759,7 +759,7 @@ test('tag only', () => {
 });
 
 test('tag and type only', () => {
-  const parsed = getParser()(`
+  const parsed = parse(`
   /**
    *
    * @my-tag {my.type}
@@ -856,7 +856,7 @@ test('tag and type only', () => {
 });
 
 test('tag and name only', () => {
-  const parsed = getParser()(`
+  const parsed = parse(`
   /**
    *
    * @my-tag my-name
@@ -953,7 +953,7 @@ test('tag and name only', () => {
 });
 
 test('tag, type, and name', () => {
-  const parsed = getParser()(`
+  const parsed = parse(`
   /**
    *
    * @my-tag {my.type} my-name
@@ -1050,7 +1050,7 @@ test('tag, type, and name', () => {
 });
 
 test('tag, type, name, and description', () => {
-  const parsed = getParser()(`
+  const parsed = parse(`
   /**
    *
    * @my-tag {my.type} my-name description text
@@ -1147,7 +1147,7 @@ test('tag, type, name, and description', () => {
 });
 
 test('description contains /**', () => {
-  const parsed = getParser()(`
+  const parsed = parse(`
   /**
    *
    * @my-tag {my.type} my-name description text /**
@@ -1244,7 +1244,7 @@ test('description contains /**', () => {
 });
 
 test('tag, type, name, and description separated by mixed spaces', () => {
-  const parsed = getParser()(`
+  const parsed = parse(`
   /**
    *
    * @my-tag\t {my.type}\t my-name\t description text
@@ -1341,7 +1341,7 @@ test('tag, type, name, and description separated by mixed spaces', () => {
 });
 
 test('tag with multiline description', () => {
-  const parsed = getParser()(`
+  const parsed = parse(`
   /**
    * @my-tag {my.type} my-name description line 1
    * description line 2
@@ -1457,7 +1457,7 @@ test('tag with multiline description', () => {
 });
 
 test('optional name', () => {
-  const parsed = getParser()(`
+  const parsed = parse(`
   /**
    *
    * @my-tag {my.type} [my-name] description text
@@ -1554,7 +1554,7 @@ test('optional name', () => {
 });
 
 test('report name errors', () => {
-  const parsed = getParser()(`
+  const parsed = parse(`
   /**
    *
    * @my-tag {my.type} [my-name description text
@@ -1659,7 +1659,7 @@ test('report name errors', () => {
 });
 
 test('misaligned block', () => {
-  const parsed = getParser()(`
+  const parsed = parse(`
   /**
 * @my-tag {my.type} my-name description line 1
       description line 2
