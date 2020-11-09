@@ -1,4 +1,4 @@
-import getParser from '../../src/index';
+import getParser from '../../src/parser';
 import { seedTokens } from '../../src/util';
 
 test('block with tags', () => {
