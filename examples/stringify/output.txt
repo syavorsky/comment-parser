@@ -1,0 +1,7 @@
+/**
+ * Description may go
+ * over few lines followed by @tags
+ *
+ * @param {string} name  the name parameter
+ * @param {any}    value the value parameter
+ */
