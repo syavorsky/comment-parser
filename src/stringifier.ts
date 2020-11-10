@@ -17,8 +17,7 @@ export default function getStringifier({
   return (block: Block): string =>
     block.source
       .map(({ tokens }) => formatter(tokens))
-      .filter((lines) => lines.length > 0)
-      .flat()
+      .reduce((acc, lines) => acc.concat(lines), []) //flatmap
       .join('\n');
 }
 
