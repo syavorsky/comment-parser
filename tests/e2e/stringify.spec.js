@@ -15,6 +15,9 @@ test('no formatting', () => {
 test('align', () => {
   const source = `
   /**
+   * Description may go
+   * over multiple lines followed by @tags
+   * 
 * @my-tag {my.type} my-name description line 1
       description line 2
     * description line 3
@@ -24,10 +27,13 @@ test('align', () => {
   const out = stringify(parsed[0], { format: 'align' });
   expect(out).toBe(
     `
-/**
- * @my-tag {my.type} my-name description line 1
-                             description line 2
- *                           description line 3
- */`.slice(1)
+  /**
+   * Description may go
+   * over multiple lines followed by @tags
+   *
+   * @my-tag {my.type} my-name description line 1
+                               description line 2
+   *                           description line 3
+   */`.slice(1)
   );
 });
