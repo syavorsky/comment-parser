@@ -140,4 +140,35 @@ While `.source[].tokens` are not providing readable annotation information, they
 
 ## Stringifier
 
-Stringifier is an important piece for other tools updating updating your source code. Basically it assembles tokens back into lines using provided formatter
+Stringifier is an important piece used by other tools updating the source code. Basically, it assembles tokens back into lines using provided formatter. Stringifier is using only `Block.source` field and doesn't care about the rest. Available formatters are `"none"` (default) and `"align"`. Also you can provide your custom [Formatter](./lib/strigifier.d.ts) having completely different logic
+
+```js
+const { parse, stringify } = require('../../lib/');
+
+const source = `
+  /**
+   * Description may go
+   * over multiple lines followed by @tags
+   * 
+* @my-tag {my.type} my-name description line 1
+      description line 2
+    * description line 3
+   */`;
+
+const parsed = parse(source);
+
+console.log(stringify(parsed[0], { format: 'align' }));
+```
+
+would output following
+
+```
+  /**
+   * Description may go
+   * over multiple lines followed by @tags
+   *
+   * @my-tag {my.type} my-name description line 1
+                               description line 2
+   *                           description line 3
+   */
+```

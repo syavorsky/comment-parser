@@ -6,10 +6,10 @@ test('no formatting', () => {
 * @my-tag {my.type} my-name description line 1
       description line 2
     * description line 3
-   */`.slice(1);
+   */`;
   const parsed = parse(source);
   const out = stringify(parsed[0]);
-  expect(out).toBe(source);
+  expect(out).toBe(source.slice(1));
 });
 
 test('align', () => {
@@ -21,7 +21,7 @@ test('align', () => {
 * @my-tag {my.type} my-name description line 1
       description line 2
     * description line 3
-   */`.slice(1);
+   */`;
 
   const parsed = parse(source);
   const out = stringify(parsed[0], { format: 'align' });
