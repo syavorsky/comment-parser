@@ -138,6 +138,15 @@ Parsing result is an array of Block objects, see [full output](./examples/parse-
 
 While `.source[].tokens` are not providing readable annotation information, they are essential for tracing data origins and assembling string blocks with `stringify`
 
+### options
+
+> WIP: this section needs better description and example references
+
+- `startLine = 0` surce lines start count
+- ` fence = "```"  `, `string | (source: string) => boolean` – escape characters sequence saving description from parsing. Useful when comments contains code samples, etc
+- `spacing = "compact"`, `"compact" | "preserve" | (lines: Line[]) => string` – Description formatting strategy
+- `tokenizers = [tagTokenizer(), typeTokenizer(), nameTokenizer(), descriptionTokenizer(getSpacer(spacing))]` – tag, type, name, and description extractors
+
 ## Stringifier
 
 Stringifier is an important piece used by other tools updating the source code. Basically, it assembles tokens back into lines using provided formatter. Stringifier is using only `Block.source` field and doesn't care about the rest. Available formatters are `"none"` (default) and `"align"`. Also you can provide your custom [Formatter](./lib/strigifier.d.ts) having completely different logic
@@ -172,3 +181,13 @@ would output following
    *                           description line 3
    */
 ```
+
+### options
+
+> WIP: this section needs better description and example references
+
+- `format = "none"` `"none" | "align" | (tokens: Tokens) => string[]` sorce to string rendering strategy
+
+## Migrating from 0.x version
+
+Code of pre-1.0 version is forked into [0.x](https://github.com/syavorsky/comment-parser/tree/0.x) and will phase out eventually. Please file the issue if you find some previously existing functionality can't be achieved with 1.x API. Check out [migration notes](migrate-1.0.md).
