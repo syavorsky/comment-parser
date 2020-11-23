@@ -12,11 +12,13 @@
 npm install comment-parser
 ```
 
-Lib mainly provides two pieces Parser and Strigifier
+### 💡 Check out the [Playground](https://syavorsky.github.io/comment-parser)
+
+Lib mainly provides two pieces [Parser](#Parser) and [Strigifier](#Stringifier).
 
 ## Parser
 
-Lets go over string parsing [example](./examples/parse-string)
+Lets go over string parsing
 
 ```
 const { parse } = require('comment-parser/lib')
@@ -32,11 +34,11 @@ const source = `
 const parsed = parse(source)
 ```
 
-Lib source code is written in TypeScript and all data shapes are conveniently available for your IDE of choice. All types described below can be found in [types.d.ts](./lib/types.d.ts)
+Lib source code is written in TypeScript and all data shapes are conveniently available for your IDE of choice. All types described below can be found in [types.d.ts](src/types.ts)
 
 The input source is fist parsed into lines, then lines split into tokens, and finally, tokens are processed into blocks of tags
 
-Block
+### Block
 
 ```
 /**
@@ -47,7 +49,7 @@ Block
  */
 ```
 
-Block description
+### Description
 
 ```
 /**
@@ -55,7 +57,7 @@ Block description
  * over multiple lines followed by @tags
 ```
 
-Block tags
+### Tags
 
 ```
  * @param {string} name the name parameter
@@ -66,13 +68,15 @@ Block tags
  */
 ```
 
-Tokens
+### Tokens
 
 ```
 | ... | * | ... | @param | ... | value | ... | {any} | ... | value of any type
 ```
 
-Parsing result is an array of Block objects, see [full output](./examples/parse-string/output.json)
+### Result
+
+Result is an array of Block objects, see the the full ouput on the [playground](https://syavorsky.github.io/comment-parser)
 
 ```js
 [{
@@ -143,13 +147,13 @@ While `.source[].tokens` are not providing readable annotation information, they
 > WIP: this section needs better description and example references
 
 - `startLine = 0` surce lines start count
-- ` fence = "```"  `, `string | (source: string) => boolean` – escape characters sequence saving description from parsing. Useful when comments contains code samples, etc
+- ` fence = "```" `, `string | (source: string) => boolean` – escape characters sequence saving description from parsing. Useful when comments contains code samples, etc
 - `spacing = "compact"`, `"compact" | "preserve" | (lines: Line[]) => string` – Description formatting strategy
 - `tokenizers = [tagTokenizer(), typeTokenizer(), nameTokenizer(), descriptionTokenizer(getSpacer(spacing))]` – tag, type, name, and description extractors
 
 ## Stringifier
 
-Stringifier is an important piece used by other tools updating the source code. Basically, it assembles tokens back into lines using provided formatter. Stringifier is using only `Block.source` field and doesn't care about the rest. Available formatters are `"none"` (default) and `"align"`. Also you can provide your custom [Formatter](./lib/strigifier.d.ts) having completely different logic
+Stringifier is an important piece used by other tools updating the source code. Basically, it assembles tokens back into lines using provided formatter. Stringifier is using only `Block.source` field and doesn't care about the rest. Available formatters are `"none"` (default) and `"align"`. Also you can provide your custom [Formatter](src/strigifier.ts) having completely different logic
 
 ```js
 const { parse, stringify } = require('../../lib/');
@@ -169,7 +173,7 @@ const parsed = parse(source);
 console.log(stringify(parsed[0], { format: 'align' }));
 ```
 
-would output following
+### Result
 
 ```
   /**

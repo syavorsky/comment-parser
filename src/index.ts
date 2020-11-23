@@ -12,5 +12,3 @@ export function stringify(
 ) {
   return getStringifier(options)(block);
 }
-
-module.exports = { parse, stringify };
