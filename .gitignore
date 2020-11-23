@@ -11,6 +11,8 @@ pids
 logs
 results
 lib
+es6
+browser
 
 npm-debug.log
 node_modules
