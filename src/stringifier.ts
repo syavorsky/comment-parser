@@ -1,5 +1,5 @@
 import { Tokenizer } from './spec-parser';
-import { Block, Markers, Tokens } from './types';
+import { Block, Markers, Tokens } from './primitives';
 import { isSpace, splitSpace } from './util';
 
 export type Formatter = (tokens: Tokens) => string[];

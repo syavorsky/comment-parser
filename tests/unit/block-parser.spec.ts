@@ -1,5 +1,5 @@
 import getParser from '../../src/block-parser';
-import { Line } from '../../src/types';
+import { Line } from '../../src/primitives';
 import { seedTokens } from '../../src/util';
 
 let source: Line[];

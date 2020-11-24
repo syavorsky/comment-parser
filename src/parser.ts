@@ -1,4 +1,4 @@
-import { Problem } from './types';
+import { Problem } from './primitives';
 import sourceParser, { Options as SourceOptions } from './source-parser';
 import blockParser, { Options as BlockOptions } from './block-parser';
 import specParser, {
@@ -8,7 +8,7 @@ import specParser, {
   typeTokenizer,
   descriptionTokenizer,
 } from './spec-parser';
-import { Block, Line, Spec } from './types';
+import { Block, Line, Spec } from './primitives';
 import getSpacer, { Spacer } from './spacer';
 import { splitLines } from './util';
 

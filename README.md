@@ -14,7 +14,7 @@ npm install comment-parser
 
 ### 💡 Check out the [Playground](https://syavorsky.github.io/comment-parser)
 
-Lib mainly provides two pieces [Parser](#Parser) and [Strigifier](#Stringifier).
+Lib mainly provides two pieces [Parser](#Parser) and [Stringifier](#Stringifier).
 
 ## Parser
 
@@ -34,7 +34,7 @@ const source = `
 const parsed = parse(source)
 ```
 
-Lib source code is written in TypeScript and all data shapes are conveniently available for your IDE of choice. All types described below can be found in [types.d.ts](src/types.ts)
+Lib source code is written in TypeScript and all data shapes are conveniently available for your IDE of choice. All types described below can be found in [primitives.ts](src/primitives.ts)
 
 The input source is fist parsed into lines, then lines split into tokens, and finally, tokens are processed into blocks of tags
 
@@ -153,7 +153,7 @@ While `.source[].tokens` are not providing readable annotation information, they
 
 ## Stringifier
 
-Stringifier is an important piece used by other tools updating the source code. Basically, it assembles tokens back into lines using provided formatter. Stringifier is using only `Block.source` field and doesn't care about the rest. Available formatters are `"none"` (default) and `"align"`. Also you can provide your custom [Formatter](src/strigifier.ts) having completely different logic
+Stringifier is an important piece used by other tools updating the source code. Basically, it assembles tokens back into lines using provided formatter. Stringifier is using only `Block.source` field and doesn't care about the rest. Available formatters are `"none"` (default) and `"align"`. Also you can provide your custom [Formatter](src/stringifier.ts) having completely different logic
 
 ```js
 const { parse, stringify } = require('../../lib/');
