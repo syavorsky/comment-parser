@@ -7,7 +7,7 @@ import getParser, {
 } from '../../src/spec-parser';
 import getSpacer from '../../src/spacer';
 import { seedTokens, seedSpec } from '../../src/util';
-import { Spec, Problem } from '../../src/types';
+import { Spec, Problem } from '../../src/primitives';
 
 const parse = getParser({
   tokenizers: [

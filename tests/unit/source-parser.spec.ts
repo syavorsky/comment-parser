@@ -1,5 +1,5 @@
 import getParser, { Parser } from '../../src/source-parser';
-import { Block, Line } from '../../src/types';
+import { Block, Line } from '../../src/primitives';
 import { splitLines, seedBlock, seedTokens } from '../../src/util';
 
 let _parse: Parser;
