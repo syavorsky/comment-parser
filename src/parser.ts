@@ -13,9 +13,13 @@ import getSpacer, { Spacer } from './spacer';
 import { splitLines } from './util';
 
 export interface Options {
+  // start count for source line numbers
   startLine: number;
+  // escaping chars sequence marking wrapped content literal for the parser
   fence: string;
+  // block and comment description compaction strategy, see Spacer
   spacing: 'compact' | 'preserve' | Spacer;
+  // tokenizer functions extracting name, type, and description out of tag, see Tokenizer
   tokenizers: Tokenizer[];
 }
 

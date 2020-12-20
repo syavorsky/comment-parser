@@ -2,11 +2,11 @@
 
 `comment-parser` is a library helping to handle Generic JSDoc-style comments. It is
 
-- **language-agnostic** – no semantic enforced. You may use it anywhere as long as `/** */` cpmments are supported.
+- **language-agnostic** – no semantic enforced. You may use it anywhere as long as `/** */` comments are supported.
 - **no dependencies** – it is compact and environment-agnostic, can be ran on both server and browser sides
 - **highly customizable** – with a little of code you can deeply customize how comments are parsed
 - **bidirectional** - you can write comment blocks back to the source after updating or formatting
-- **strictly typed** - comes with generated `d.ts` data defenitions since written in TypeScript
+- **strictly typed** - comes with generated `d.ts` data definitions since written in TypeScript
 
 ```sh
 npm install comment-parser
@@ -76,7 +76,7 @@ The input source is fist parsed into lines, then lines split into tokens, and fi
 
 ### Result
 
-Result is an array of Block objects, see the the full ouput on the [playground](https://syavorsky.github.io/comment-parser)
+The result is an array of Block objects, see the full output on the [playground](https://syavorsky.github.io/comment-parser)
 
 ```js
 [{
@@ -144,16 +144,30 @@ While `.source[].tokens` are not providing readable annotation information, they
 
 ### options
 
-> WIP: this section needs better description and example references
+```ts
+interface Options {
+  // start count for source line numbers
+  startLine: number;
+  // escaping chars sequence marking wrapped content literal for the parser
+  fence: string;
+  // block and comment description compaction strategy, see Spacer
+  spacing: 'compact' | 'preserve' | Spacer;
+  // tokenizer functions extracting name, type, and description out of tag, see Tokenizer
+  tokenizers: Tokenizer[];
+}
+```
 
-- `startLine = 0` surce lines start count
-- ` fence = "```" `, `string | (source: string) => boolean` – escape characters sequence saving description from parsing. Useful when comments contains code samples, etc
-- `spacing = "compact"`, `"compact" | "preserve" | (lines: Line[]) => string` – Description formatting strategy
-- `tokenizers = [tagTokenizer(), typeTokenizer(), nameTokenizer(), descriptionTokenizer(getSpacer(spacing))]` – tag, type, name, and description extractors
+examples 
+- [default config](https://syavorsky.github.io/comment-parser/#parse-defaults)
+- [line numbers control](https://syavorsky.github.io/comment-parser/#parse-line-numbering)
+- [description spacing](https://syavorsky.github.io/comment-parser/#parse-spacing)
+- [escaping](https://syavorsky.github.io/comment-parser/#parse-escaping)
+
+[suggest more examples](https://github.com/syavorsky/comment-parser/issues/new?title=example+suggestion%3A+...&labels=example,parser)
 
 ## Stringifier
 
-Stringifier is an important piece used by other tools updating the source code. Basically, it assembles tokens back into lines using provided formatter. Stringifier is using only `Block.source` field and doesn't care about the rest. Available formatters are `"none"` (default) and `"align"`. Also you can provide your custom [Formatter](src/stringifier.ts) having completely different logic
+The stringifier is an important piece used by other tools updating the source code. Basically, it assembles tokens back into lines using the provided formatter. Stringifier is using only `Block.source` field and doesn't care about the rest. Available formatters are `"none"` (default) and `"align"`. Also, you can provide your custom [Formatter](src/stringifier.ts) having completely different logic
 
 ```js
 const { parse, stringify } = require('../../lib/');
@@ -188,9 +202,17 @@ console.log(stringify(parsed[0], { format: 'align' }));
 
 ### options
 
-> WIP: this section needs better description and example references
+```ts
+interface Options {
+  // formatting strategy, see Formatter
+  format: 'none' | 'align' | Formatter;
+}
+```
 
-- `format = "none"` `"none" | "align" | (tokens: Tokens) => string[]` sorce to string rendering strategy
+examples
+- [using standard formats](https://syavorsky.github.io/comment-parser/#stringify-formatting)
+
+[suggest more examples](https://github.com/syavorsky/comment-parser/issues/new?title=example+suggestion%3A+...&labels=example,stringifier)
 
 ## Migrating from 0.x version
 
