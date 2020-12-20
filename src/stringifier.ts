@@ -1,13 +1,12 @@
 import { Tokenizer } from './spec-parser';
-import { Block, Markers, Tokens } from './types';
+import { Block, Markers, Tokens } from './primitives';
 import { isSpace, splitSpace } from './util';
 
 export type Formatter = (tokens: Tokens) => string[];
 
-type AliasedFormatter = 'none' | 'align' | Formatter;
-
 export interface Options {
-  format: AliasedFormatter;
+  // formatting strategy, see Formatter
+  format: 'none' | 'align' | Formatter;
 }
 
 export default function getStringifier({
@@ -21,7 +20,7 @@ export default function getStringifier({
       .join('\n');
 }
 
-function getFormatter(formatter: AliasedFormatter): Formatter {
+function getFormatter(formatter: 'none' | 'align' | Formatter): Formatter {
   if (formatter === 'none') return noneFormatter;
   if (formatter === 'align') return alignFormatter();
   return formatter;

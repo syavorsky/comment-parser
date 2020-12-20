@@ -1,5 +1,5 @@
 import { splitSpace, isSpace, seedSpec } from './util';
-import { Line, Spec } from './types';
+import { Line, Spec } from './primitives';
 import { Spacer } from './spacer';
 
 export type Parser = (source: Line[]) => Spec;

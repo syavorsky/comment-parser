@@ -1,4 +1,4 @@
-import { Markers, Tokens } from '../../lib/types';
+import { Markers, Tokens } from '../../lib/primitives';
 import getStringifier from '../../src/stringifier';
 
 const source = [

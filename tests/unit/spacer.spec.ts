@@ -1,5 +1,5 @@
 import getSpacer from '../../src/spacer';
-import { Line } from '../../src/types';
+import { Line } from '../../src/primitives';
 import { seedTokens } from '../../src/util';
 
 const source: Line[] = [

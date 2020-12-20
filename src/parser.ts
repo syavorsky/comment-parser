@@ -1,4 +1,4 @@
-import { Problem } from './types';
+import { Problem } from './primitives';
 import sourceParser, { Options as SourceOptions } from './source-parser';
 import blockParser, { Options as BlockOptions } from './block-parser';
 import specParser, {
@@ -8,14 +8,18 @@ import specParser, {
   typeTokenizer,
   descriptionTokenizer,
 } from './spec-parser';
-import { Block, Line, Spec } from './types';
+import { Block, Line, Spec } from './primitives';
 import getSpacer, { Spacer } from './spacer';
 import { splitLines } from './util';
 
 export interface Options {
+  // start count for source line numbers
   startLine: number;
+  // escaping chars sequence marking wrapped content literal for the parser
   fence: string;
+  // block and comment description compaction strategy, see Spacer
   spacing: 'compact' | 'preserve' | Spacer;
+  // tokenizer functions extracting name, type, and description out of tag, see Tokenizer
   tokenizers: Tokenizer[];
 }
 

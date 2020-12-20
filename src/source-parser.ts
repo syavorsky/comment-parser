@@ -1,5 +1,5 @@
 import { splitSpace } from './util';
-import { Line, Tokens, Markers } from './types';
+import { Line, Tokens, Markers } from './primitives';
 import { seedTokens } from './util';
 
 export interface Options {
