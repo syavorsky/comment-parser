@@ -1,4 +1,4 @@
-import { Line } from './primitives';
+import { Line } from '../primitives';
 
 const reTag = /^@\S+/;
 

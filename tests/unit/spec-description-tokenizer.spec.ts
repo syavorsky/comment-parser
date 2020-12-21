@@ -1,6 +1,6 @@
-import { descriptionTokenizer } from '../../src/spec-parser';
+import { descriptionTokenizer } from '../../src/parser/spec-parser';
 import { seedTokens, seedSpec } from '../../src/util';
-import getSpacer from '../../src/spacer';
+import getSpacer from '../../src/parser/spacer';
 
 const sourceSingle = [
   {

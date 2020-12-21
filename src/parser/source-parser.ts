@@ -1,6 +1,5 @@
-import { splitSpace } from './util';
-import { Line, Tokens, Markers } from './primitives';
-import { seedTokens } from './util';
+import { splitSpace, seedTokens } from '../util';
+import { Line, Tokens, Markers } from '../primitives';
 
 export interface Options {
   startLine: number;

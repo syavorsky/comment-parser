@@ -1,4 +1,4 @@
-import getSpacer from '../../src/spacer';
+import getSpacer from '../../src/parser/spacer';
 import { Line } from '../../src/primitives';
 import { seedTokens } from '../../src/util';
 

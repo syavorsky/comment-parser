@@ -1,4 +1,4 @@
-import { Problem } from './primitives';
+import { Problem } from '../primitives';
 import sourceParser, { Options as SourceOptions } from './source-parser';
 import blockParser, { Options as BlockOptions } from './block-parser';
 import specParser, {
@@ -8,9 +8,9 @@ import specParser, {
   typeTokenizer,
   descriptionTokenizer,
 } from './spec-parser';
-import { Block, Line, Spec } from './primitives';
+import { Block, Line, Spec } from '../primitives';
 import getSpacer, { Spacer } from './spacer';
-import { splitLines } from './util';
+import { splitLines } from '../util';
 
 export interface Options {
   // start count for source line numbers

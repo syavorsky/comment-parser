@@ -2,11 +2,11 @@
 
 ## Parser
 
-0.x can be mostly translated into 1.x one way or another. Idea behind new options structure is to handle only the most common cases, and provide the fallback for alternative implementation.
+0.x can be mostly translated into 1.x one way or another. The idea behind the new config structure is to handle only the most common cases, and provide the fallback for alternative implementation.
 
 ### `dotted_names: boolean`
 
-> By default dotted names like name.subname.subsubname will be expanded into nested sections, this can be prevented by passing opts.dotted_names = false.
+> By default dotted names like `name.subname.subsubname` will be expanded into nested sections, this can be prevented by passing opts.dotted_names = false.
 
 **Removed** This feature is removed but still can be done on top of the `parse()` output. Please post a request or contribute a PR if you need it.
 
@@ -14,17 +14,17 @@
 
 > Set this to false to avoid the default of trimming whitespace at the start and end of each line.
 
-In the new parser all original spacing is kept along with conmtent lines in `.source`. Description lines are joined togather depending on `spacing` option
+In the new parser all original spacing is kept along with comment lines in `.source`. Description lines are joined together depending on `spacing` option
 
 **New option:**
 
 - `spacing: "compact"` lines concatenated with a single space and no line breaks
-- `spacing: "preserve"` keeps line breaks and space around as is. Indentation space counts from `*` delimiter or from start of the line if delimiter is omitted
+- `spacing: "preserve"` keeps line breaks and space around as is. Indentation space counts from `*` delimiter or from the start of the line if the delimiter is omitted
 - `spacing: (lines: Line[]) => string` completely freeform joining strategy, since all original spacing can be accessed, there is no limit to how this can be implemented. See [types.s.ts](./lib/types.s.ts) and [spacer.s.ts](./lib/spacer.s.ts)
 
 ### `join: string | number | boolean`
 
-> If the following lines of a multiline comment do not start with a star, join will have the following effect on tag source (and description) when joining the lines together:
+> If the following lines of a multiline comment do not start with a star, `join` will have the following effect on tag source (and description) when joining the lines together:
 >
 > - If a string, use that string in place of the leading whitespace (and avoid newlines).
 > - If a non-zero number (e.g., 1), do no trimming and avoid newlines.
@@ -41,7 +41,7 @@ See the `spacing` option above, all the variations can be fine-tunned with `spac
 >
 > If set to a function, it should return true to toggle fenced state; upon returning true the first time, this will prevent subsequent lines from being interpreted as starting a new jsdoc tag until such time as the function returns true again to indicate that the state has toggled back.
 
-This is mostly kept same
+This is mostly kept the same
 
 **New optoins:**
 
@@ -92,13 +92,13 @@ chain starts with blank `Spec` and each tokenizer fulfills a piece using `.sourc
 > One may also convert comment-parser JSON structures back into strings using the stringify method (stringify(o: (object|Array) [, opts: object]): string).
 > ...
 
-Stringifier config follows same stratagy – couple of common cases, and freeform formatter
+Stringifier config follows the same strategy – a couple of common cases, and freeform formatter as a fallback
 
 **New Options:**
 
-- `format: "none"` re-assables the source with original spacing and delimiters preserved
+- `format: "none"` re-assembles the source with original spacing and delimiters preserved
 - `format: "align"` aligns tag, name, type, and descriptions into fixed-width columns
-- `format: (tokens: Tokens) => string[]` do what you like, resulting lines will be concatednated into the output. Despite the simple interface, this can be turned into complex stateful formatter, see `"align"` implementation in [stringifier.ts](./src/stringifier.ts)
+- `format: (tokens: Tokens) => string[]` do what you like, resulting lines will be concatenated into the output. Despite the simple interface, this can be turned into a complex stateful formatter, see `"align"` implementation in [stringifier.ts](./src/stringifier.ts)
 
 ## Stream
 

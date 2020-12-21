@@ -4,8 +4,8 @@ import getParser, {
   typeTokenizer,
   nameTokenizer,
   descriptionTokenizer,
-} from '../../src/spec-parser';
-import getSpacer from '../../src/spacer';
+} from '../../src/parser/spec-parser';
+import getSpacer from '../../src/parser/spacer';
 import { seedTokens, seedSpec } from '../../src/util';
 import { Spec, Problem } from '../../src/primitives';
 

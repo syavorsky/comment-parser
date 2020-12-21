@@ -1,5 +1,7 @@
-import getParser, { Options as ParserOptions } from './parser';
-import getStringifier, { Options as StringifierOptions } from './stringifier';
+import getParser, { Options as ParserOptions } from './parser/index';
+import getStringifier, {
+  Options as StringifierOptions,
+} from './stringifier/index';
 import { Block } from './primitives';
 
 export function parse(source: string, options: Partial<ParserOptions> = {}) {
