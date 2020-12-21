@@ -70,22 +70,6 @@ function alignFormatter() {
     buffer.push(tokens);
     if (!tokens.end.endsWith(Markers.end)) return [];
 
-    // if (buffer.length === 1) {
-    //   return [
-    //     buffer[0].start +
-    //       buffer[0].delimiter +
-    //       buffer[0].postDelimiter +
-    //       buffer[0].tag +
-    //       buffer[0].postTag +
-    //       buffer[0].type +
-    //       buffer[0].postType +
-    //       buffer[0].name +
-    //       buffer[0].postName +
-    //       buffer[0].description +
-    //       buffer[0].end,
-    //   ];
-    // }
-
     const w = buffer.reduce(getWidth, { ...zeroWidth });
     const postDelimiter = ' ';
 
