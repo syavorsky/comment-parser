@@ -1,4 +1,4 @@
-import { Markers, Line } from './primitives';
+import { Markers, Line } from '../primitives';
 
 export type Spacer = (lines: Line[]) => string;
 

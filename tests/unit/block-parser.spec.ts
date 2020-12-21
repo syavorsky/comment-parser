@@ -1,4 +1,4 @@
-import getParser from '../../src/block-parser';
+import getParser from '../../src/parser/block-parser';
 import { Line } from '../../src/primitives';
 import { seedTokens } from '../../src/util';
 
