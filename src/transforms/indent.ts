@@ -1,3 +1,4 @@
+import { Transform } from './index';
 import { Block, Tokens, Spec, Line } from '../primitives';
 
 const pull = (offset: number) => (str) => str.slice(offset);
@@ -6,7 +7,7 @@ const push = (offset: number) => {
   return (str) => str + space;
 };
 
-export default function indent(pos: number): (Block) => Block {
+export default function indent(pos: number): Transform {
   let shift: (string) => string;
   const pad = (start: string) => {
     if (shift === undefined) {
