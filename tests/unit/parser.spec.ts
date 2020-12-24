@@ -167,6 +167,18 @@ test('block with tags', () => {
   ]);
 });
 
+test('no source clonning', () => {
+  const parsed = getParser()(`
+  /**
+   * Description may go 
+   * over few lines followed by @tags
+   * @param {string} name name parameter
+   *
+   * @param {any} value value of any type
+   */`);
+  expect(parsed[0].tags[0].source[0]).toBe(parsed[0].source[3]);
+});
+
 test.each([
   ['empty', '/**\n*\n*/'],
   ['one-star', '/*\n*\n*/'],
