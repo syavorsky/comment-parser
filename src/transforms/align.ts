@@ -1,5 +1,6 @@
 import { Transform } from './index';
 import { Markers, Tokens, Block, Line } from '../primitives';
+import { rewireSource } from '../util';
 
 interface Width {
   start: number;
@@ -76,6 +77,6 @@ export default function align(): Transform {
 
   return ({ source, ...fields }: Block): Block => {
     w = source.reduce(getWidth, { ...zeroWidth });
-    return { ...fields, source: source.map(update) };
+    return rewireSource({ ...fields, source: source.map(update) });
   };
 }

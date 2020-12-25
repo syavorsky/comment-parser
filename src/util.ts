@@ -1,4 +1,4 @@
-import { Block, Tokens, Spec } from './primitives';
+import { Block, Tokens, Spec, Line } from './primitives';
 
 export function isSpace(source: string): boolean {
   return /^\s+$/.test(source);
@@ -53,4 +53,15 @@ export function seedTokens(tokens: Partial<Tokens> = {}): Tokens {
     end: '',
     ...tokens,
   };
+}
+
+export function rewireSource(block: Block): Block {
+  const source = block.source.reduce(
+    (acc, line) => acc.set(line.number, line),
+    new Map<number, Line>()
+  );
+  for (const spec of block.tags) {
+    spec.source = spec.source.map((line) => source.get(line.number));
+  }
+  return block;
 }

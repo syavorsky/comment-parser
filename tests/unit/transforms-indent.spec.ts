@@ -81,15 +81,15 @@ test('force pull', () => {
   expect(out).toBe(expected.slice(1));
 });
 
-test('no source clonning', () => {
-  const parsed = getParser()(`
-  /**
-   * Description may go 
-   * over few lines followed by @tags
-   * @param {string} name name parameter
-   *
-   * @param {any} value value of any type
-   */`);
+test('spec source referencing', () => {
+  const parsed = getParser()(`/** @tag {type} name Description */`);
   const block = indent(0)(parsed[0]);
-  expect(block.tags[0].source[0] === block.source[3]).toBe(true);
+  expect(block.tags[0].source[0] === block.source[0]).toBe(true);
+});
+
+test('block source clonning', () => {
+  const parsed = getParser()(`/** @tag {type} name Description */`);
+  const block = indent(0)(parsed[0]);
+  parsed[0].source[0].tokens.description = 'test';
+  expect(block.source[0].tokens.description).toBe('Description ');
 });
