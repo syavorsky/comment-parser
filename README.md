@@ -12,7 +12,9 @@
 npm install comment-parser
 ```
 
-### 💡 Check out the [Playground](https://syavorsky.github.io/comment-parser)
+> 💡 Check out the [Playground](https://syavorsky.github.io/comment-parser)
+
+> 💡 Previous version lives in [0.x](https://github.com/syavorsky/comment-parser/tree/0.x) branch
 
 Lib mainly provides two pieces [Parser](#Parser) and [Stringifier](#Stringifier).
 
