@@ -7,3 +7,5 @@ export function parse(source: string, options: Partial<ParserOptions> = {}) {
 }
 
 export const stringify = getStringifier();
+
+export * as transforms from './transforms/index';

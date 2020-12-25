@@ -98,7 +98,7 @@ The result is an array of Block objects, see the full output on the [playground]
     description: 'the name parameter',
     // problems occured while parsing this tag section, subset of ../problems array
     problems: [],
-    // source lines processed for extracting this tag, subset of ../source array
+    // source lines processed for extracting this tag, "slice" of the ../source item reference
     source: [ ... ],
   }, ... ],
   // source is an array of `Line` items having the source
@@ -167,10 +167,10 @@ examples
 
 ## Stringifier
 
-The stringifier is an important piece used by other tools updating the source code. Basically, it assembles tokens back into lines using the provided formatter. Stringifier is using only `Block.source` field and doesn't care about the rest. Available formatters are `"none"` (default) and `"align"`. Also, you can provide your custom [Formatter](src/stringifier.ts) having completely different logic
+The stringifier is an important piece used by other tools updating the source code. It goes over `Block.source[].tokens` and assembles them back to a string. It might be used with various transforms applied to the parsed data before strngifying.
 
 ```js
-const { parse, stringify } = require('../../lib/');
+const { parse, stringify, transforms: {flow, align, indent} } = require('./lib/');
 
 const source = `
   /**
@@ -183,30 +183,21 @@ const source = `
    */`;
 
 const parsed = parse(source);
-
-console.log(stringify(parsed[0], { format: 'align' }));
+const transform = flow(align(), indent(0))
+console.log(stringify(transform(parsed[0])));
 ```
 
 ### Result
 
 ```
-  /**
-   * Description may go
-   * over multiple lines followed by @tags
-   *
-   * @my-tag {my.type} my-name description line 1
-                               description line 2
-   *                           description line 3
-   */
-```
-
-### options
-
-```ts
-interface Options {
-  // formatting strategy, see Formatter
-  format: 'none' | 'align' | Formatter;
-}
+/**
+ * Description may go
+ * over multiple lines followed by @tags
+ *
+ * @my-tag {my.type} my-name description line 1
+                             description line 2
+ *                           description line 3
+ */
 ```
 
 examples
