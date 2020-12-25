@@ -110,10 +110,57 @@ function stringify_formatting(source, parse, stringify, transforms) {
   const stringified = stringify(transform(parsed[0]));
 }
 
+function parse_source_exploration(source, parse, stringify, transforms) {
+  // parse() produces Block[].source keeping accurate track of origin source
+
+  /**
+   * Description may go
+   * over multiple lines followed by @tags
+   * @param {string} name the name parameter
+   * @param {any} value the value parameter
+   */
+
+  const parsed = parse(source);
+
+  const summary = ({ source }) => ({
+    source: source
+      .map(
+        ({ tokens }) =>
+          tokens.start +
+          tokens.delimiter +
+          tokens.postDelimiter +
+          tokens.tag +
+          tokens.postTag +
+          tokens.type +
+          tokens.postType +
+          tokens.name +
+          tokens.postName +
+          tokens.description +
+          tokens.end
+      )
+      .join('\n'),
+    start: {
+      line: source[0].number + 1,
+      column: source[0].tokens.start.length,
+    },
+    end: {
+      line: source[source.length - 1].number + 1,
+      column: source[source.length - 1].source.length,
+    },
+  });
+
+  const pos = (p) => p.line + ':' + p.column;
+
+  const stringified = parsed[0].tags
+    .map(summary)
+    .map((s) => `${pos(s.start)} - ${pos(s.end)}\n${s.source}`);
+}
+
 (typeof window === 'undefined' ? module.exports : window).examples = [
   parse_defaults,
   parse_line_numbering,
   parse_escaping,
   parse_spacing,
+  parse_source_exploration,
   stringify_formatting,
 ];

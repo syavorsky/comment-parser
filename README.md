@@ -162,6 +162,7 @@ examples
 - [line numbers control](https://syavorsky.github.io/comment-parser/#parse-line-numbering)
 - [description spacing](https://syavorsky.github.io/comment-parser/#parse-spacing)
 - [escaping](https://syavorsky.github.io/comment-parser/#parse-escaping)
+- [explore the origin source](https://syavorsky.github.io/comment-parser/#parse-source-exploration)
 
 [suggest more examples](https://github.com/syavorsky/comment-parser/issues/new?title=example+suggestion%3A+...&labels=example,parser)
 
