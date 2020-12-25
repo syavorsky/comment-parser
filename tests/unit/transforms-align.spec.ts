@@ -58,3 +58,16 @@ test('same line close', () => {
 
   expect(out).toBe(source);
 });
+
+test('spec source referencing', () => {
+  const parsed = getParser()(`/** @tag {type} name Description */`);
+  const block = align()(parsed[0]);
+  expect(block.tags[0].source[0] === block.source[0]).toBe(true);
+});
+
+test('block source clonning', () => {
+  const parsed = getParser()(`/** @tag {type} name Description */`);
+  const block = align()(parsed[0]);
+  parsed[0].source[0].tokens.description = 'test';
+  expect(block.source[0].tokens.description).toBe('Description ');
+});

@@ -167,7 +167,7 @@ examples
 
 ## Stringifier
 
-The stringifier is an important piece used by other tools updating the source code. It goes over `Block.source[].tokens` and assembles them back to a string. It might be used with various transforms applied to the parsed data before strngifying.
+The stringifier is an important piece used by other tools updating the source code. It goes over `Block.source[].tokens` and assembles them back to a string. It might be used with various transforms applied to the parsed data before stringifying.
 
 ```js
 const { parse, stringify, transforms: {flow, align, indent} } = require('./lib/');
@@ -201,7 +201,7 @@ console.log(stringify(transform(parsed[0])));
 ```
 
 examples
-- [using standard formats](https://syavorsky.github.io/comment-parser/#stringify-formatting)
+- [format comments](https://syavorsky.github.io/comment-parser/#stringify-formatting)
 
 [suggest more examples](https://github.com/syavorsky/comment-parser/issues/new?title=example+suggestion%3A+...&labels=example,stringifier)
 

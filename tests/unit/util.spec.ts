@@ -5,6 +5,7 @@ import {
   splitLines,
   splitSpace,
   seedSpec,
+  rewireSource,
 } from '../../src/util';
 
 test.each([
@@ -115,4 +116,51 @@ test('seedSpec overrides', () => {
     problems: [],
     source: [],
   });
+});
+
+test('rewireSource', () => {
+  const source = () => [
+    {
+      number: 42,
+      source: '/** @my-tag */',
+      tokens: {
+        start: '',
+        delimiter: '/**',
+        postDelimiter: ' ',
+        tag: '@my-tag',
+        postTag: ' ',
+        name: '',
+        postName: '',
+        type: '',
+        postType: '',
+        description: '',
+        end: '*/',
+      },
+    },
+  ];
+
+  const parsed = {
+    description: '',
+    tags: [
+      {
+        tag: 'my-tag',
+        name: '',
+        type: '',
+        optional: false,
+        description: '',
+        problems: [],
+        source: source(),
+      },
+    ],
+    source: source(),
+    problems: [],
+  };
+
+  expect(parsed.source[0] === parsed.tags[0].source[0]).toBe(false);
+
+  rewireSource(parsed);
+
+  expect(parsed.source[0] === parsed.tags[0].source[0]).toBe(true);
+  parsed.source[0].tokens.name = 'test';
+  expect(parsed.tags[0].source[0].tokens.name).toBe('test');
 });
