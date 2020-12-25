@@ -1,7 +1,7 @@
 // This file is a source for playground examples.
 // Examples integrity is smoke-checked with examples.spec.js
 
-function parse_defaults(source, parse, stringify) {
+function parse_defaults(source, parse, stringify, transforms) {
   // Invoking parser with default config covers the most genearic cases.
   // Note how /*** and /* blocks are ignored
 
@@ -23,7 +23,7 @@ function parse_defaults(source, parse, stringify) {
   const stringified = parsed.map((block) => stringify(block));
 }
 
-function parse_line_numbering(source, parse, stringify) {
+function parse_line_numbering(source, parse, stringify, transforms) {
   // Note, line numbers are off by 5 from what you see in editor
   //
   // Try changeing start line back to 0, or omit the option
@@ -43,7 +43,7 @@ function parse_line_numbering(source, parse, stringify) {
     .join('\n');
 }
 
-function parse_spacing(source, parse, stringify) {
+function parse_spacing(source, parse, stringify, transforms) {
   // Note, when spacing option is set to 'compact' or omited, tag and block descriptions are collapsed to look like a single sentense.
   //
   // Try changeing it to 'preserve' or defining custom function
@@ -68,7 +68,7 @@ function parse_spacing(source, parse, stringify) {
     .join('\n');
 }
 
-function parse_escaping(source, parse, stringify) {
+function parse_escaping(source, parse, stringify, transforms) {
   // Note, @decorator is not parsed as another tag because block is wrapped into ###.
   //
   // Try setting alternative escape sequence
@@ -91,10 +91,10 @@ function parse_escaping(source, parse, stringify) {
     .join('\n');
 }
 
-function stringify_formatting(source, parse, stringify) {
-  // stringify preserves exact formatting be default, see how behavior is changes with:
-  // stringify(parsed[0], {format: 'none'}) -- default
-  // stringify(parsed[0], {format: 'align'}) -- align name, type, and description
+function stringify_formatting(source, parse, stringify, transforms) {
+  // stringify preserves exact formatting by default, but you can transform parsing result first
+  // transform = align() -- align name, type, and description
+  // transform = flow(align(), indent(4)) -- align, then place the block's opening marker at pos 4
 
   /**
    * Description may go
@@ -103,8 +103,11 @@ function stringify_formatting(source, parse, stringify) {
    * @param {any} value the value parameter
    */
 
+  const { flow, align, indent } = transforms;
+  const transform = flow(align(), indent(4));
+
   const parsed = parse(source);
-  const stringified = stringify(parsed[0], { format: 'align' });
+  const stringified = stringify(transform(parsed[0]));
 }
 
 (typeof window === 'undefined' ? module.exports : window).examples = [
