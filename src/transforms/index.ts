@@ -3,3 +3,9 @@ import { Block } from '../primitives';
 export type Transform = (Block) => Block;
 
 export { default as indent } from './indent';
+export { default as align } from './align';
+
+export function flow(...transforms: Transform[]): Transform {
+  return (block: Block): Block =>
+    transforms.reduce((block, t) => t(block), block);
+}

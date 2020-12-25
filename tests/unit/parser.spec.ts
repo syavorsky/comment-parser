@@ -176,7 +176,7 @@ test('no source clonning', () => {
    *
    * @param {any} value value of any type
    */`);
-  expect(parsed[0].tags[0].source[0]).toBe(parsed[0].source[3]);
+  expect(parsed[0].tags[0].source[0] === parsed[0].source[3]).toBe(true);
 });
 
 test.each([
