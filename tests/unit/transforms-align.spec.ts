@@ -1,0 +1,60 @@
+import { align } from '../../src/transforms/index';
+import getParser from '../../src/parser/index';
+import getStringifier from '../../src/stringifier/index';
+
+test('multiline', () => {
+  const source = `
+  /**
+   * Description may go
+   * over multiple lines followed by @tags
+   *
+* @some-tag {some-type} some-name description line 1
+* @another-tag {another-type} another-name description line 1
+      description line 2
+      * description line 3
+   */`;
+
+  const expected = `
+  /**
+   * Description may go
+   * over multiple lines followed by @tags
+   *
+   * @some-tag    {some-type}    some-name    description line 1
+   * @another-tag {another-type} another-name description line 1
+                                              description line 2
+   *                                          description line 3
+   */`;
+
+  const parsed = getParser()(source);
+  const out = getStringifier()(align()(parsed[0]));
+
+  expect(out).toBe(expected.slice(1));
+});
+
+test('one-liner', () => {
+  const source = `  /** @tag {type} name description */`;
+  const parsed = getParser()(source);
+  const out = getStringifier()(align()(parsed[0]));
+
+  expect(out).toBe(source);
+});
+
+test('same line open', () => {
+  const source = `
+  /** @tag {type} name description
+   */`.slice(1);
+  const parsed = getParser()(source);
+  const out = getStringifier()(align()(parsed[0]));
+
+  expect(out).toBe(source);
+});
+
+test('same line close', () => {
+  const source = `
+  /** 
+   * @tag {type} name description */`.slice(1);
+  const parsed = getParser()(source);
+  const out = getStringifier()(align()(parsed[0]));
+
+  expect(out).toBe(source);
+});

@@ -1,5 +1,5 @@
 import { Transform } from './index';
-import { Block, Tokens, Spec, Line } from '../primitives';
+import { Block, Line } from '../primitives';
 
 const pull = (offset: number) => (str) => str.slice(offset);
 const push = (offset: number) => {
@@ -17,10 +17,10 @@ export default function indent(pos: number): Transform {
     return shift(start);
   };
 
-  const update = (line: Line): Line => ({
-    ...line,
-    tokens: { ...line.tokens, start: pad(line.tokens.start) },
-  });
+  const update = (line: Line): Line => {
+    line.tokens.start = pad(line.tokens.start);
+    return line;
+  };
 
   return ({ description, tags, source, problems }: Block): Block => ({
     description,

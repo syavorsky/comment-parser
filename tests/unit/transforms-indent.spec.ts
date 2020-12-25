@@ -2,7 +2,7 @@ import indent from '../../src/transforms/indent';
 import getParser from '../../src/parser/index';
 import getStringifier from '../../src/stringifier/index';
 
-test('indent - push', () => {
+test('push', () => {
   const source = `
   /**
    * Description may go
@@ -28,7 +28,7 @@ test('indent - push', () => {
   expect(out).toBe(expected.slice(1));
 });
 
-test('indent - pull', () => {
+test('pull', () => {
   const source = `
     /**
      * Description may go
@@ -54,7 +54,7 @@ test('indent - pull', () => {
   expect(out).toBe(expected.slice(1));
 });
 
-test('indent - force pull', () => {
+test('force pull', () => {
   const source = `
     /**
      * Description may go
@@ -76,6 +76,20 @@ test('indent - force pull', () => {
  */`;
 
   const parsed = getParser()(source);
-  const out = getStringifier()(indent(0)(parsed[0]));
+  const indented = indent(0)(parsed[0]);
+  const out = getStringifier()(indented);
   expect(out).toBe(expected.slice(1));
+});
+
+test('no source clonning', () => {
+  const parsed = getParser()(`
+  /**
+   * Description may go 
+   * over few lines followed by @tags
+   * @param {string} name name parameter
+   *
+   * @param {any} value value of any type
+   */`);
+  const block = indent(0)(parsed[0]);
+  expect(block.tags[0].source[0] === block.source[3]).toBe(true);
 });
