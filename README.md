@@ -2,7 +2,7 @@
 
 `comment-parser` is a library helping to handle Generic JSDoc-style comments. It is
 
-- **language-agnostic** – no semantic enforced. You may use it anywhere as long as `/** */` comments are supported.
+- **language-agnostic** – no semantic enforced. You decide what tags are and what they mean. And it can be used with any language supporting `/** */` source comments.
 - **no dependencies** – it is compact and environment-agnostic, can be ran on both server and browser sides
 - **highly customizable** – with a little of code you can deeply customize how comments are parsed
 - **bidirectional** - you can write comment blocks back to the source after updating or formatting
@@ -170,7 +170,7 @@ examples
 
 ## Stringifier
 
-The stringifier is an important piece used by other tools updating the source code. It goes over `Block.source[].tokens` and assembles them back to a string. It might be used with various transforms applied to the parsed data before stringifying.
+The stringifier is an important piece used by other tools updating the source code. It goes over `Block.source[].tokens` items and assembles them back to the string. It might be used with various transforms applied before stringifying.
 
 ```js
 const { parse, stringify, transforms: {flow, align, indent} } = require('./lib/');
