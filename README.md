@@ -2,9 +2,9 @@
 
 `comment-parser` is a library helping to handle Generic JSDoc-style comments. It is
 
-- **language-agnostic** – no semantic enforced. You decide what tags are and what they mean. And it can be used with any language supporting `/** */` source comments.
-- **no dependencies** – it is compact and environment-agnostic, can be ran on both server and browser sides
-- **highly customizable** – with a little of code you can deeply customize how comments are parsed
+- **language-agnostic** – no semantics enforced. You decide what tags are and what they mean. And it can be used with any language supporting `/** */` source comments.
+- **no dependencies** – it is compact and environment-agnostic, can be run on both the server and browser sides
+- **highly customizable** – with a little code you can deeply customize how comments are parsed
 - **bidirectional** - you can write comment blocks back to the source after updating or formatting
 - **strictly typed** - comes with generated `d.ts` data definitions since written in TypeScript
 
@@ -20,7 +20,7 @@ Lib mainly provides two pieces [Parser](#Parser) and [Stringifier](#Stringifier)
 
 ## Parser
 
-Lets go over string parsing
+Let's go over string parsing:
 
 ```js
 const { parse } = require('comment-parser/lib')
@@ -38,7 +38,7 @@ const parsed = parse(source)
 
 Lib source code is written in TypeScript and all data shapes are conveniently available for your IDE of choice. All types described below can be found in [primitives.ts](src/primitives.ts)
 
-The input source is fist parsed into lines, then lines split into tokens, and finally, tokens are processed into blocks of tags
+The input source is first parsed into lines, then lines split into tokens, and finally, tokens are processed into blocks of tags
 
 ### Block
 
