@@ -2,9 +2,9 @@
 
 `comment-parser` is a library helping to handle Generic JSDoc-style comments. It is
 
-- **language-agnostic** – no semantic enforced. You decide what tags are and what they mean. And it can be used with any language supporting `/** */` source comments.
-- **no dependencies** – it is compact and environment-agnostic, can be ran on both server and browser sides
-- **highly customizable** – with a little of code you can deeply customize how comments are parsed
+- **language-agnostic** – no semantics enforced. You decide what tags are and what they mean. And it can be used with any language supporting `/** */` source comments.
+- **no dependencies** – it is compact and environment-agnostic, can be run on both the server and browser sides
+- **highly customizable** – with a little code you can deeply customize how comments are parsed
 - **bidirectional** - you can write comment blocks back to the source after updating or formatting
 - **strictly typed** - comes with generated `d.ts` data definitions since written in TypeScript
 
@@ -20,9 +20,9 @@ Lib mainly provides two pieces [Parser](#Parser) and [Stringifier](#Stringifier)
 
 ## Parser
 
-Lets go over string parsing
+Let's go over string parsing:
 
-```
+```js
 const { parse } = require('comment-parser/lib')
 
 const source = `
@@ -38,11 +38,11 @@ const parsed = parse(source)
 
 Lib source code is written in TypeScript and all data shapes are conveniently available for your IDE of choice. All types described below can be found in [primitives.ts](src/primitives.ts)
 
-The input source is fist parsed into lines, then lines split into tokens, and finally, tokens are processed into blocks of tags
+The input source is first parsed into lines, then lines split into tokens, and finally, tokens are processed into blocks of tags
 
 ### Block
 
-```
+```js
 /**
  * Description may go
  * over multiple lines followed by @tags
@@ -53,7 +53,7 @@ The input source is fist parsed into lines, then lines split into tokens, and fi
 
 ### Description
 
-```
+```js
 /**
  * Description may go
  * over multiple lines followed by @tags
@@ -61,11 +61,11 @@ The input source is fist parsed into lines, then lines split into tokens, and fi
 
 ### Tags
 
-```
+```js
  * @param {string} name the name parameter
 ```
 
-```
+```js
  * @param {any} value the value parameter
  */
 ```
@@ -159,7 +159,7 @@ interface Options {
 }
 ```
 
-examples 
+examples
 - [default config](https://syavorsky.github.io/comment-parser/#parse-defaults)
 - [line numbers control](https://syavorsky.github.io/comment-parser/#parse-line-numbering)
 - [description spacing](https://syavorsky.github.io/comment-parser/#parse-spacing)
@@ -173,13 +173,13 @@ examples
 The stringifier is an important piece used by other tools updating the source code. It goes over `Block.source[].tokens` items and assembles them back to the string. It might be used with various transforms applied before stringifying.
 
 ```js
-const { parse, stringify, transforms: {flow, align, indent} } = require('./lib/');
+const { parse, stringify, transforms: {flow, align, indent} } = require('comment-parser');
 
 const source = `
   /**
    * Description may go
    * over multiple lines followed by @tags
-   * 
+   *
 * @my-tag {my.type} my-name description line 1
       description line 2
     * description line 3
@@ -192,7 +192,7 @@ console.log(stringify(transform(parsed[0])));
 
 ### Result
 
-```
+```js
 /**
  * Description may go
  * over multiple lines followed by @tags
