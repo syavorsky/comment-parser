@@ -20,7 +20,7 @@ In the new parser all original spacing is kept along with comment lines in `.sou
 
 - `spacing: "compact"` lines concatenated with a single space and no line breaks
 - `spacing: "preserve"` keeps line breaks and space around as is. Indentation space counts from `*` delimiter or from the start of the line if the delimiter is omitted
-- `spacing: (lines: Line[]) => string` completely freeform joining strategy, since all original spacing can be accessed, there is no limit to how this can be implemented. See [types.s.ts](./lib/types.s.ts) and [spacer.s.ts](./lib/spacer.s.ts)
+- `spacing: (lines: Line[]) => string` completely freeform joining strategy, since all original spacing can be accessed, there is no limit to how this can be implemented. See [primitives.d.ts](./lib/primitives.d.ts) and [spacer.d.ts](./lib/parser/spacer.d.ts)
 
 ### `join: string | number | boolean`
 
@@ -46,7 +46,7 @@ This is mostly kept the same
 **New optoins:**
 
 - ```` fence: '```' ```` same as 0.x
-- `fencer: (source: string) => boolean` same as 0.x, see [block-parser.d.ts](./lib/block-parser.d.ts)
+- `fencer: (source: string) => boolean` same as 0.x, see [block-parser.d.ts](./lib/parser/block-parser.d.ts)
 
 ### `parsers: Parser[]`
 
@@ -55,7 +55,7 @@ This is mostly kept the same
 
 **New options:**
 
-- `tokenizers: []Tokenizer` is a list of functions extracting the `tag`, `type`, `name` and `description` tokens from this string. See [spec-parser.ts](./lib/spec-parser.ts) and [types.ts](./lib/types.ts)
+- `tokenizers: []Tokenizer` is a list of functions extracting the `tag`, `type`, `name` and `description` tokens from this string. See [spec-parser.ts](./lib/parser/spec-parser.d.ts) and [primitives.d.ts](./lib/primitives.d.ts)
 
 Default tokenizers chain is
 
@@ -98,7 +98,7 @@ Stringifier config follows the same strategy – a couple of common cases, and f
 
 - `format: "none"` re-assembles the source with original spacing and delimiters preserved
 - `format: "align"` aligns tag, name, type, and descriptions into fixed-width columns
-- `format: (tokens: Tokens) => string[]` do what you like, resulting lines will be concatenated into the output. Despite the simple interface, this can be turned into a complex stateful formatter, see `"align"` implementation in [stringifier.ts](./src/stringifier.ts)
+- `format: (tokens: Tokens) => string[]` do what you like, resulting lines will be concatenated into the output. Despite the simple interface, this can be turned into a complex stateful formatter, see `"align"` implementation in [stringifier/index.d.ts](./lib/stringifier/index.d.ts)
 
 ## Stream
 
