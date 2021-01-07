@@ -29,8 +29,8 @@ const source = `
 /**
  * Description may go
  * over few lines followed by @tags
- * @param name {string} name parameter
- * @param value {any} value of any type
+ * @param {string} name name parameter
+ * @param {any} value value of any type
  */`
 
 const parsed = parse(source)
@@ -73,7 +73,7 @@ The input source is first parsed into lines, then lines split into tokens, and f
 ### Tokens
 
 ```
-| ... | * | ... | @param | ... | value | ... | {any} | ... | value of any type
+| ... | * | ... | @param | ... | {any} | ... | value | ... | the value of any type
 ```
 
 ### Result
