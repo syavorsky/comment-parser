@@ -22,7 +22,7 @@ Lib mainly provides two pieces [Parser](#Parser) and [Stringifier](#Stringifier)
 
 Lets go over string parsing
 
-```
+```js
 const { parse } = require('comment-parser/lib')
 
 const source = `
@@ -42,7 +42,7 @@ The input source is fist parsed into lines, then lines split into tokens, and fi
 
 ### Block
 
-```
+```js
 /**
  * Description may go
  * over multiple lines followed by @tags
@@ -53,7 +53,7 @@ The input source is fist parsed into lines, then lines split into tokens, and fi
 
 ### Description
 
-```
+```js
 /**
  * Description may go
  * over multiple lines followed by @tags
@@ -61,11 +61,11 @@ The input source is fist parsed into lines, then lines split into tokens, and fi
 
 ### Tags
 
-```
+```js
  * @param {string} name the name parameter
 ```
 
-```
+```js
  * @param {any} value the value parameter
  */
 ```
@@ -159,7 +159,7 @@ interface Options {
 }
 ```
 
-examples 
+examples
 - [default config](https://syavorsky.github.io/comment-parser/#parse-defaults)
 - [line numbers control](https://syavorsky.github.io/comment-parser/#parse-line-numbering)
 - [description spacing](https://syavorsky.github.io/comment-parser/#parse-spacing)
@@ -179,7 +179,7 @@ const source = `
   /**
    * Description may go
    * over multiple lines followed by @tags
-   * 
+   *
 * @my-tag {my.type} my-name description line 1
       description line 2
     * description line 3
@@ -192,7 +192,7 @@ console.log(stringify(transform(parsed[0])));
 
 ### Result
 
-```
+```js
 /**
  * Description may go
  * over multiple lines followed by @tags

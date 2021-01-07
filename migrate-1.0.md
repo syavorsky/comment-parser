@@ -45,7 +45,7 @@ This is mostly kept the same
 
 **New optoins:**
 
-- ` fence: '```' ` same as 0.x
+- ```` fence: '```' ```` same as 0.x
 - `fencer: (source: string) => boolean` same as 0.x, see [block-parser.d.ts](./lib/block-parser.d.ts)
 
 ### `parsers: Parser[]`
@@ -59,7 +59,7 @@ This is mostly kept the same
 
 Default tokenizers chain is
 
-```
+```js
 [
   tagTokenizer(),
   typeTokenizer(),
@@ -70,7 +70,7 @@ Default tokenizers chain is
 
 where
 
-```
+```ts
 type Tokenizer = (spec: Spec) => Spec
 
 interface Spec {
