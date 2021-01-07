@@ -173,7 +173,7 @@ examples
 The stringifier is an important piece used by other tools updating the source code. It goes over `Block.source[].tokens` items and assembles them back to the string. It might be used with various transforms applied before stringifying.
 
 ```js
-const { parse, stringify, transforms: {flow, align, indent} } = require('./lib/');
+const { parse, stringify, transforms: {flow, align, indent} } = require('comment-parser');
 
 const source = `
   /**
