@@ -55,6 +55,11 @@ export function seedTokens(tokens: Partial<Tokens> = {}): Tokens {
   };
 }
 
+/**
+ * Assures Block.tags[].source contains references to the Block.source items,
+ * using Block.source as a source of truth. This is a counterpart of rewireSpecs
+ * @param block parsed coments block
+ */
 export function rewireSource(block: Block): Block {
   const source = block.source.reduce(
     (acc, line) => acc.set(line.number, line),
@@ -63,5 +68,20 @@ export function rewireSource(block: Block): Block {
   for (const spec of block.tags) {
     spec.source = spec.source.map((line) => source.get(line.number));
   }
+  return block;
+}
+
+/**
+ * Assures Block.tags[].source contains references to the Block.source items,
+ * using Block.tags[].source as a source of truth. This is a counterpart of rewireSource
+ * @param block parsed coments block
+ */
+export function rewireSpecs(block: Block): Block {
+  const source = block.tags.reduce(
+    (acc, spec) =>
+      spec.source.reduce((acc, line) => acc.set(line.number, line), acc),
+    new Map<number, Line>()
+  );
+  block.source = block.source.map((line) => source.get(line.number) || line);
   return block;
 }
