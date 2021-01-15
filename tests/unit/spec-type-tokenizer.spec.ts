@@ -179,7 +179,7 @@ test('multiline - preserve', () => {
 
   const tokenized = tokenize(spec);
   const expected = seedSpec({
-    type: 'function(\n  number\n)',
+    type: 'function(number)',
     source: [
       {
         number: 1,
@@ -223,13 +223,13 @@ test('multiline - preserve', () => {
 });
 
 test.each([
-  ['default', undefined, 'function(\n  number,\n  string\n)'],
+  ['default', undefined, 'function(number,string)'],
   ['preserve', 'preserve', 'function(\n  number,\n  string\n)'],
   ['compact', 'compact', 'function(number,string)'],
 ])('spacing - %s', (name, spacing, type) => {
   const tokenize =
     spacing === 'preserve' || spacing === 'compact'
-      ? typeTokenizer({ spacing })
+      ? typeTokenizer(spacing)
       : typeTokenizer();
 
   const spec = seedSpec({

@@ -1,6 +1,6 @@
 import { splitSpace, isSpace, seedSpec } from '../util';
 import { Line, Spec, Tokens } from '../primitives';
-import { Spacer } from './spacer';
+import getSpacer, { Spacer } from './spacer';
 
 export type Parser = (source: Line[]) => Spec;
 
@@ -45,13 +45,9 @@ export function tagTokenizer(): Tokenizer {
   };
 }
 
-export type TypeOptions = {
-  spacing: 'compact' | 'preserve' | ((type: string[]) => string);
-};
+export type TypeSpacer = 'compact' | 'preserve' | ((type: string[]) => string);
 
-export function typeTokenizer({
-  spacing = 'compact',
-}: Partial<TypeOptions> = {}): Tokenizer {
+export function typeTokenizer(spacing: TypeSpacer = 'compact'): Tokenizer {
   const trim = (s: string) => s.trim();
 
   let join;
@@ -208,7 +204,12 @@ export function nameTokenizer(): Tokenizer {
   };
 }
 
-export function descriptionTokenizer(join: Spacer): Tokenizer {
+export type DescriptionSpacer = 'compact' | 'preserve' | Spacer;
+
+export function descriptionTokenizer(
+  spacing: DescriptionSpacer = 'compact'
+): Tokenizer {
+  const join = getSpacer(spacing);
   return (spec: Spec): Spec => {
     spec.description = join(spec.source);
     return spec;
