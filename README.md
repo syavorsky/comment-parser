@@ -159,8 +159,8 @@ interface Options {
   startLine: number;
   // escaping chars sequence marking wrapped content literal for the parser
   fence: string;
-  // block and comment description compaction strategy, see Spacer
-  spacing: 'compact' | 'preserve' | Spacer;
+  // block and comment description compaction strategy
+  spacing: 'compact' | 'preserve';
   // tokenizer functions extracting name, type, and description out of tag, see Tokenizer
   tokenizers: Tokenizer[];
 }

@@ -7,6 +7,8 @@ import specParser, {
   nameTokenizer,
   typeTokenizer,
   descriptionTokenizer,
+  TypeSpacer,
+  DescriptionSpacer,
 } from './spec-parser';
 import { Block, Line, Spec } from '../primitives';
 import getSpacer, { Spacer } from './spacer';
@@ -17,8 +19,8 @@ export interface Options {
   startLine: number;
   // escaping chars sequence marking wrapped content literal for the parser
   fence: string;
-  // block and comment description compaction strategy, see Spacer
-  spacing: 'compact' | 'preserve' | Spacer;
+  // block and comment description compaction strategy
+  spacing: 'compact' | 'preserve';
   // tokenizer functions extracting name, type, and description out of tag, see Tokenizer
   tokenizers: Tokenizer[];
 }
@@ -29,9 +31,9 @@ export default function getParser({
   spacing = 'compact',
   tokenizers = [
     tagTokenizer(),
-    typeTokenizer(),
+    typeTokenizer(spacing),
     nameTokenizer(),
-    descriptionTokenizer(getSpacer(spacing)),
+    descriptionTokenizer(spacing),
   ],
 }: Partial<Options> = {}) {
   if (startLine < 0 || startLine % 1 > 0) throw new Error('Invalid startLine');

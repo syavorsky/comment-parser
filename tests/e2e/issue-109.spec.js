@@ -1,6 +1,6 @@
-const { parse, inspect } = require('../../lib');
+const { parse, tokenizers } = require('../../lib');
 
-test('compact', () => {
+test('default', () => {
   const parsed = parse(`
   /**
    * Typedef with multi-line property type.
@@ -20,7 +20,8 @@ test('compact', () => {
 });
 
 test('preserve', () => {
-  const parsed = parse(`
+  const parsed = parse(
+    `
   /**
    * Typedef with multi-line property type.
    *
@@ -29,7 +30,9 @@ test('preserve', () => {
    *   number,
    *   {x:string}
    * )} numberEater Method which takes a number.
-   */`);
+   */`,
+    { spacing: 'preserve' }
+  );
 
   // console.log(inspect(parsed[0]));
 
@@ -38,4 +41,26 @@ test('preserve', () => {
   expect(parsed[0].tags[1].type).toEqual(
     'function(\n  number,\n  {x:string}\n)'
   );
+});
+
+test('compact', () => {
+  const parsed = parse(
+    `
+  /**
+   * Typedef with multi-line property type.
+   *
+   * @typedef {object} MyType
+   * @property {function(
+   *   number,
+   *   {x:string}
+   * )} numberEater Method which takes a number.
+   */`,
+    { spacing: 'compact' }
+  );
+
+  // console.log(inspect(parsed[0]));
+
+  expect(parsed[0].problems).toEqual([]);
+  expect(parsed[0].tags[1].problems).toEqual([]);
+  expect(parsed[0].tags[1].type).toEqual('function(number,{x:string})');
 });

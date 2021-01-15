@@ -1,5 +1,8 @@
-const { parse, stringify } = require('../../lib/');
-const { flow, indent, align } = require('../../lib/transforms');
+const {
+  parse,
+  stringify,
+  transforms: { flow, indent, align },
+} = require('../../lib/');
 
 test('align + indent', () => {
   const source = `

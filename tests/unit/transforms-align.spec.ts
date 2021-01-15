@@ -1,4 +1,4 @@
-import { align } from '../../src/transforms/index';
+import align from '../../src/transforms/align';
 import getParser from '../../src/parser/index';
 import getStringifier from '../../src/stringifier/index';
 
