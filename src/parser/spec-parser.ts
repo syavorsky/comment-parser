@@ -45,15 +45,19 @@ export function tagTokenizer(): Tokenizer {
   };
 }
 
-export function typeTokenizer(): Tokenizer {
-  const lineType = ({ tokens: { type } }: Line) => type;
+export type TypeOptions = {
+  spacing: 'compact' | 'preserve' | ((type: string[]) => string);
+};
 
-  function splitTokens(tokens: Tokens, type: string) {
-    tokens.type = type;
-    [tokens.postType, tokens.description] = splitSpace(
-      tokens.description.slice(tokens.type.length)
-    );
-  }
+export function typeTokenizer({
+  spacing = 'compact',
+}: Partial<TypeOptions> = {}): Tokenizer {
+  const trim = (s: string) => s.trim();
+
+  let join;
+  if (spacing === 'compact') join = (t: string[]) => t.map(trim).join('');
+  else if (spacing === 'preserve') join = (t: string[]) => t.join('\n');
+  else join = spacing;
 
   return (spec: Spec): Spec => {
     let curlies = 0;
@@ -64,15 +68,14 @@ export function typeTokenizer(): Tokenizer {
       if (i === 0 && tokens.description[0] !== '{') return spec;
 
       for (const ch of tokens.description) {
-        const prev = curlies;
         if (ch === '{') curlies++;
         if (ch === '}') curlies--;
-
         type += ch;
-        if (curlies === 0 && prev === 1) break;
+        if (curlies === 0) break;
       }
 
       lines.push([tokens, type]);
+      if (curlies === 0) break;
     }
 
     if (curlies !== 0) {
@@ -85,18 +88,25 @@ export function typeTokenizer(): Tokenizer {
       return spec;
     }
 
-    spec.type = '';
-    for (const [tokens, type] of lines) {
+    const parts: string[] = [];
+    const offset = lines[0][0].postDelimiter.length;
+
+    for (const [i, [tokens, type]] of lines.entries()) {
       if (type === '') continue;
-      spec.type += '\n' + type;
       tokens.type = type;
+      if (i > 0) {
+        tokens.type = tokens.postDelimiter.slice(offset) + type;
+        tokens.postDelimiter = tokens.postDelimiter.slice(0, offset);
+      }
       [tokens.postType, tokens.description] = splitSpace(
         tokens.description.slice(tokens.type.length)
       );
+      parts.push(tokens.type);
     }
 
-    spec.type = spec.type.slice(2, -1);
-
+    parts[0] = parts[0].slice(1);
+    parts[parts.length - 1] = parts[parts.length - 1].slice(0, -1);
+    spec.type = join(parts);
     return spec;
   };
 }

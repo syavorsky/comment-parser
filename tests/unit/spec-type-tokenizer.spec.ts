@@ -137,7 +137,7 @@ test('omit', () => {
   );
 });
 
-test('line breaks', () => {
+test('multiline - preserve', () => {
   const spec = seedSpec({
     source: [
       {
@@ -151,7 +151,8 @@ test('line breaks', () => {
         number: 2,
         source: '...',
         tokens: seedTokens({
-          description: '  number',
+          postDelimiter: '  ',
+          description: 'number',
         }),
       },
       {
@@ -219,4 +220,53 @@ test('line breaks', () => {
   });
 
   expect(tokenized).toEqual(expected);
+});
+
+test.each([
+  ['default', undefined, 'function(\n  number,\n  string\n)'],
+  ['preserve', 'preserve', 'function(\n  number,\n  string\n)'],
+  ['compact', 'compact', 'function(number,string)'],
+])('spacing - %s', (name, spacing, type) => {
+  const tokenize =
+    spacing === 'preserve' || spacing === 'compact'
+      ? typeTokenizer({ spacing })
+      : typeTokenizer();
+
+  const spec = seedSpec({
+    source: [
+      {
+        number: 1,
+        source: '...',
+        tokens: seedTokens({
+          description: '{function(',
+        }),
+      },
+      {
+        number: 2,
+        source: '...',
+        tokens: seedTokens({
+          postDelimiter: '  ',
+          description: 'number,',
+        }),
+      },
+      {
+        number: 2,
+        source: '...',
+        tokens: seedTokens({
+          postDelimiter: '  ',
+          description: 'string',
+        }),
+      },
+      {
+        number: 3,
+        source: '...',
+        tokens: seedTokens({
+          description: ')} function type',
+        }),
+      },
+    ],
+  });
+
+  const tokenized = tokenize(spec);
+  expect(tokenized.type).toEqual(type);
 });
