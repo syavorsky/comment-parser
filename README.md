@@ -29,8 +29,8 @@ const source = `
 /**
  * Description may go
  * over few lines followed by @tags
- * @param {string} name name parameter
- * @param {any} value value of any type
+ * @param {string} name the name parameter
+ * @param {any} value the value of any type
  */`
 
 const parsed = parse(source)
@@ -73,7 +73,14 @@ The input source is first parsed into lines, then lines split into tokens, and f
 ### Tokens
 
 ```
-| ... | * | ... | @param | ... | {any} | ... | value | ... | the value of any type
+|line|start|delimiter|postDelimiter|tag   |postTag|name |postName|type    |postType|description                     |end|
+|----|-----|---------|-------------|------|-------|-----|--------|--------|--------|--------------------------------|---|
+|   0|{2}  |/**      |             |      |       |     |        |        |        |                                |   |
+|   1|{3}  |*        |{1}          |      |       |     |        |        |        |Description may go              |   |
+|   2|{3}  |*        |{1}          |      |       |     |        |        |        |over few lines followed by @tags|   |
+|   3|{3}  |*        |{1}          |@param|{1}    |name |{1}     |{string}|{1}     |the name parameter              |   |
+|   4|{3}  |*        |{1}          |@param|{1}    |value|{1}     |{any}   |{1}     |the value of any type           |   |
+|   5|{3}  |         |             |      |       |     |        |        |        |                                |*/ |
 ```
 
 ### Result
