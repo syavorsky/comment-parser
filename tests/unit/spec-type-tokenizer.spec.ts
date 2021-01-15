@@ -136,3 +136,87 @@ test('omit', () => {
     })
   );
 });
+
+test('line breaks', () => {
+  const spec = seedSpec({
+    source: [
+      {
+        number: 1,
+        source: '...',
+        tokens: seedTokens({
+          description: '{function(',
+        }),
+      },
+      {
+        number: 2,
+        source: '...',
+        tokens: seedTokens({
+          description: '  number',
+        }),
+      },
+      {
+        number: 3,
+        source: '...',
+        tokens: seedTokens({
+          description: ')} function type',
+        }),
+      },
+      {
+        number: 4,
+        source: '...',
+        tokens: seedTokens(),
+      },
+      {
+        number: 5,
+        source: '...',
+        tokens: seedTokens({
+          end: '*/',
+        }),
+      },
+    ],
+  });
+
+  const tokenized = tokenize(spec);
+  const expected = seedSpec({
+    type: 'function(\n  number\n)',
+    source: [
+      {
+        number: 1,
+        source: '...',
+        tokens: seedTokens({
+          type: '{function(',
+        }),
+      },
+      {
+        number: 2,
+        source: '...',
+        tokens: seedTokens({
+          type: '  number',
+        }),
+      },
+      {
+        number: 3,
+        source: '...',
+        tokens: seedTokens({
+          type: ')}',
+          postType: ' ',
+          description: 'function type',
+        }),
+      },
+      {
+        number: 4,
+        source: '...',
+        tokens: seedTokens(),
+      },
+      {
+        number: 5,
+        source: '...',
+        tokens: seedTokens({
+          end: '*/',
+        }),
+      },
+    ],
+  });
+
+  expect(tokenized).toEqual(expected);
+});

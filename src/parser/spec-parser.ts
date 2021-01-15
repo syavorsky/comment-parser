@@ -1,5 +1,5 @@
 import { splitSpace, isSpace, seedSpec } from '../util';
-import { Line, Spec } from '../primitives';
+import { Line, Spec, Tokens } from '../primitives';
 import { Spacer } from './spacer';
 
 export type Parser = (source: Line[]) => Spec;
@@ -46,21 +46,33 @@ export function tagTokenizer(): Tokenizer {
 }
 
 export function typeTokenizer(): Tokenizer {
+  const lineType = ({ tokens: { type } }: Line) => type;
+
+  function splitTokens(tokens: Tokens, type: string) {
+    tokens.type = type;
+    [tokens.postType, tokens.description] = splitSpace(
+      tokens.description.slice(tokens.type.length)
+    );
+  }
+
   return (spec: Spec): Spec => {
-    let res = '';
     let curlies = 0;
-    const { tokens } = spec.source[0];
-    const source = tokens.description.trimLeft();
+    let lines: [Tokens, string][] = [];
 
-    if (source[0] !== '{') return spec;
+    for (const [i, { tokens }] of spec.source.entries()) {
+      let type = '';
+      if (i === 0 && tokens.description[0] !== '{') return spec;
 
-    for (const ch of source) {
-      if (ch === '{') curlies++;
-      if (ch === '}') curlies--;
-      res += ch;
-      if (curlies === 0) {
-        break;
+      for (const ch of tokens.description) {
+        const prev = curlies;
+        if (ch === '{') curlies++;
+        if (ch === '}') curlies--;
+
+        type += ch;
+        if (curlies === 0 && prev === 1) break;
       }
+
+      lines.push([tokens, type]);
     }
 
     if (curlies !== 0) {
@@ -73,11 +85,17 @@ export function typeTokenizer(): Tokenizer {
       return spec;
     }
 
-    spec.type = res.slice(1, -1);
-    tokens.type = res;
-    [tokens.postType, tokens.description] = splitSpace(
-      source.slice(tokens.type.length)
-    );
+    spec.type = '';
+    for (const [tokens, type] of lines) {
+      if (type === '') continue;
+      spec.type += '\n' + type;
+      tokens.type = type;
+      [tokens.postType, tokens.description] = splitSpace(
+        tokens.description.slice(tokens.type.length)
+      );
+    }
+
+    spec.type = spec.type.slice(2, -1);
 
     return spec;
   };
