@@ -20,3 +20,4 @@ coverage
 
 .vscode
 .tmp
+.DS_Store

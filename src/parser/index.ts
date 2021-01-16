@@ -1,18 +1,15 @@
-import { Problem } from '../primitives';
-import sourceParser, { Options as SourceOptions } from './source-parser';
-import blockParser, { Options as BlockOptions } from './block-parser';
-import specParser, {
-  Tokenizer,
-  tagTokenizer,
-  nameTokenizer,
-  typeTokenizer,
-  descriptionTokenizer,
-  TypeSpacer,
-  DescriptionSpacer,
-} from './spec-parser';
-import { Block, Line, Spec } from '../primitives';
-import getSpacer, { Spacer } from './spacer';
+import { Block, Line, Problem } from '../primitives';
 import { splitLines } from '../util';
+import blockParser from './block-parser';
+import sourceParser from './source-parser';
+import specParser from './spec-parser';
+import { Tokenizer } from './tokenizers/index';
+import tokenizeTag from './tokenizers/tag';
+import tokenizeType from './tokenizers/type';
+import tokenizeName from './tokenizers/name';
+import tokenizeDescription, {
+  getJoiner as getDescriptionJoiner,
+} from './tokenizers/description';
 
 export interface Options {
   // start count for source line numbers
@@ -30,10 +27,10 @@ export default function getParser({
   fence = '```',
   spacing = 'compact',
   tokenizers = [
-    tagTokenizer(),
-    typeTokenizer(spacing),
-    nameTokenizer(),
-    descriptionTokenizer(spacing),
+    tokenizeTag(),
+    tokenizeType(spacing),
+    tokenizeName(),
+    tokenizeDescription(spacing),
   ],
 }: Partial<Options> = {}) {
   if (startLine < 0 || startLine % 1 > 0) throw new Error('Invalid startLine');
@@ -41,7 +38,7 @@ export default function getParser({
   const parseSource = sourceParser({ startLine });
   const parseBlock = blockParser({ fence });
   const parseSpec = specParser({ tokenizers });
-  const join = getSpacer(spacing);
+  const joinDescription = getDescriptionJoiner(spacing);
 
   const notEmpty = (line: Line): boolean =>
     line.tokens.description.trim() != '';
@@ -58,7 +55,7 @@ export default function getParser({
       const specs = sections.slice(1).map(parseSpec);
 
       blocks.push({
-        description: join(sections[0]),
+        description: joinDescription(sections[0]),
         tags: specs,
         source: lines,
         problems: specs.reduce(

@@ -1,4 +1,3 @@
-import { Markers, Tokens } from '../../lib/primitives';
 import getStringifier from '../../src/stringifier';
 
 const source = [

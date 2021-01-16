@@ -1,11 +1,8 @@
-import getParser, {
-  Tokenizer,
-  tagTokenizer,
-  typeTokenizer,
-  nameTokenizer,
-  descriptionTokenizer,
-} from '../../src/parser/spec-parser';
-import getSpacer from '../../src/parser/spacer';
+import descriptionTokenizer from '../../src/parser/tokenizers/description';
+import nameTokenizer from '../../src/parser/tokenizers/name';
+import tagTokenizer from '../../src/parser/tokenizers/tag';
+import typeTokenizer from '../../src/parser/tokenizers/type';
+import getParser from '../../src/parser/spec-parser';
 import { seedTokens, seedSpec } from '../../src/util';
 import { Spec, Problem } from '../../src/primitives';
 
@@ -14,7 +11,7 @@ const parse = getParser({
     tagTokenizer(),
     typeTokenizer(),
     nameTokenizer(),
-    descriptionTokenizer(getSpacer('compact')),
+    descriptionTokenizer(),
   ],
 });
 

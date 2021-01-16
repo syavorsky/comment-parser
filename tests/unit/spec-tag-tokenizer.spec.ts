@@ -1,4 +1,4 @@
-import { tagTokenizer } from '../../src/parser/spec-parser';
+import tagTokenizer from '../../src/parser/tokenizers/tag';
 import { seedTokens, seedSpec } from '../../src/util';
 
 const tokenize = tagTokenizer();

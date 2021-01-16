@@ -1,4 +1,4 @@
-import { nameTokenizer } from '../../src/parser/spec-parser';
+import nameTokenizer from '../../src/parser/tokenizers/name';
 import { seedTokens, seedSpec } from '../../src/util';
 
 const tokenize = nameTokenizer();

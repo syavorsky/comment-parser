@@ -1,6 +1,5 @@
-import { descriptionTokenizer } from '../../src/parser/spec-parser';
-import { seedTokens, seedSpec } from '../../src/util';
-import getSpacer from '../../src/parser/spacer';
+import descriptionTokenizer from '../../src/parser/tokenizers/description';
+import { seedSpec, seedTokens } from '../../src/util';
 
 const sourceSingle = [
   {
@@ -34,14 +33,14 @@ const sourceMultiple = [
 ];
 
 test('compact - single line', () => {
-  const tokenize = descriptionTokenizer(getSpacer('compact'));
+  const tokenize = descriptionTokenizer('compact');
   const input = seedSpec({ source: sourceSingle });
   const output = seedSpec({ source: sourceSingle, description: 'one  two' });
   expect(tokenize(input)).toEqual(output);
 });
 
 test('compact - multiple lines', () => {
-  const tokenize = descriptionTokenizer(getSpacer('compact'));
+  const tokenize = descriptionTokenizer('compact');
   const input = seedSpec({ source: sourceMultiple });
   const output = seedSpec({
     source: sourceMultiple,
@@ -51,7 +50,7 @@ test('compact - multiple lines', () => {
 });
 
 test('preserve - multiple lines', () => {
-  const tokenize = descriptionTokenizer(getSpacer('preserve'));
+  const tokenize = descriptionTokenizer('preserve');
   const input = seedSpec({ source: sourceMultiple });
   const output = seedSpec({
     source: sourceMultiple,
@@ -62,7 +61,7 @@ test('preserve - multiple lines', () => {
 });
 
 test('preserve - one-liner', () => {
-  const tokenize = descriptionTokenizer(getSpacer('preserve'));
+  const tokenize = descriptionTokenizer('preserve');
   const input = seedSpec({
     source: [
       {

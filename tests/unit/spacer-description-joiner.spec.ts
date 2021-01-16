@@ -1,4 +1,4 @@
-import getSpacer from '../../src/parser/spacer';
+import { getJoiner } from '../../src/parser/tokenizers/description';
 import { Line } from '../../src/primitives';
 import { seedTokens } from '../../src/util';
 
@@ -70,26 +70,26 @@ const source: Line[] = [
 ];
 
 test('compact', () => {
-  const joined = getSpacer('compact')(source);
+  const joined = getJoiner('compact')(source);
   expect(joined).toBe(
     'Description first line\twith\ttabs second line third line'
   );
 });
 
 test('preserve', () => {
-  const joined = getSpacer('preserve')(source);
+  const joined = getJoiner('preserve')(source);
   expect(joined).toBe(
     '  \n  Description first line\twith\ttabs   \n    second line   \n  \n      third line   '
   );
 });
 
 test('preserve - empty', () => {
-  const joined = getSpacer('preserve')([]);
+  const joined = getJoiner('preserve')([]);
   expect(joined).toBe('');
 });
 
 test('preserve - no delimiter', () => {
-  const joined = getSpacer('preserve')([
+  const joined = getJoiner('preserve')([
     {
       number: 1,
       source: '...',
@@ -113,7 +113,7 @@ test('custom', () => {
       .filter((s) => s !== '')
       .join(' ');
 
-  const joined = getSpacer(spacerFn)(source);
+  const joined = getJoiner(spacerFn)(source);
   expect(joined).toBe(
     'DESCRIPTION FIRST LINE WITH TABS SECOND LINE THIRD LINE'
   );
