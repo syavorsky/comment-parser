@@ -60,6 +60,10 @@ function parse_spacing(source, parse, stringify, transforms) {
    * over multiple lines followed by
    * @param {string} name the name parameter
    *   with multiline description
+   * @param {function(
+   *   number,
+   *   string
+   * )} options the options
    */
 
   const parsed = parse(source, { spacing: 'preserve' });
