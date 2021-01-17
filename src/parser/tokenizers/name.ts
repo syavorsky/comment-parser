@@ -1,6 +1,8 @@
 import { Spec } from '../../primitives';
-import { splitSpace, isSpace } from '../../util';
+import { splitSpace, isSpace, seedBlock } from '../../util';
 import { Tokenizer } from './index';
+
+const isQuoted = (s: string) => s && s.startsWith('"') && s.endsWith('"');
 
 /**
  * Splits remaining `spec.lines[].tokens.description` into `name` and `descriptions` tokens,
@@ -30,7 +32,7 @@ export default function nameTokenizer(): Tokenizer {
     let brackets = 0;
     let name = '';
     let optional = false;
-    let defaultValue;
+    let defaultValue: string;
 
     // assume name is non-space string or anything wrapped into brackets
     for (const ch of source) {
@@ -58,7 +60,8 @@ export default function nameTokenizer(): Tokenizer {
 
       const parts = name.split('=');
       name = parts[0].trim();
-      defaultValue = parts[1]?.trim();
+      if (parts[1] !== undefined)
+        defaultValue = parts.slice(1).join('=').trim();
 
       if (name === '') {
         spec.problems.push({
@@ -70,20 +73,21 @@ export default function nameTokenizer(): Tokenizer {
         return spec;
       }
 
-      if (parts.length > 2) {
+      if (defaultValue === '') {
         spec.problems.push({
-          code: 'spec:name:invalid-default',
-          message: 'invalid default value syntax',
+          code: 'spec:name:empty-default',
+          message: 'empty default value',
           line: spec.source[0].number,
           critical: true,
         });
         return spec;
       }
 
-      if (defaultValue === '') {
+      // has "=" and is not a string, except for "=>"
+      if (!isQuoted(defaultValue) && /=(?!>)/.test(defaultValue)) {
         spec.problems.push({
-          code: 'spec:name:empty-default',
-          message: 'empty default value',
+          code: 'spec:name:invalid-default',
+          message: 'invalid default value syntax',
           line: spec.source[0].number,
           critical: true,
         });

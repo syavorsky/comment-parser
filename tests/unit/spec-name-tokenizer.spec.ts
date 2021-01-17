@@ -264,6 +264,41 @@ test('loosely quoted default', () => {
   );
 });
 
+test('quoted default with =', () => {
+  expect(
+    tokenize(
+      seedSpec({
+        source: [
+          {
+            number: 1,
+            source: '...',
+            tokens: seedTokens({
+              description: '[param="value=1"] param description',
+            }),
+          },
+        ],
+      })
+    )
+  ).toEqual(
+    seedSpec({
+      name: 'param',
+      optional: true,
+      default: '"value=1"',
+      source: [
+        {
+          number: 1,
+          source: '...',
+          tokens: seedTokens({
+            name: '[param="value=1"]',
+            postName: ' ',
+            description: 'param description',
+          }),
+        },
+      ],
+    })
+  );
+});
+
 test('non-alphanumeric', () => {
   expect(
     tokenize(
@@ -616,6 +651,41 @@ test('default value syntax', () => {
           source: '...',
           tokens: seedTokens({
             description: '[param=value=value] param description',
+          }),
+        },
+      ],
+    })
+  );
+});
+
+test('default with arrow', () => {
+  expect(
+    tokenize(
+      seedSpec({
+        source: [
+          {
+            number: 1,
+            source: '...',
+            tokens: seedTokens({
+              description: '[param = value => value] param description',
+            }),
+          },
+        ],
+      })
+    )
+  ).toEqual(
+    seedSpec({
+      name: 'param',
+      optional: true,
+      default: 'value => value',
+      source: [
+        {
+          number: 1,
+          source: '...',
+          tokens: seedTokens({
+            name: '[param = value => value]',
+            postName: ' ',
+            description: 'param description',
           }),
         },
       ],
