@@ -72,7 +72,7 @@ export function rewireSource(block: Block): Block {
 }
 
 /**
- * Assures Block.tags[].source contains references to the Block.source items,
+ * Assures Block.source contains references to the Block.tags[].source items,
  * using Block.tags[].source as a source of truth. This is a counterpart of rewireSource
  * @param block parsed coments block
  */
