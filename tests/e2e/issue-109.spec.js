@@ -1,4 +1,4 @@
-const { parse, stringify, inspect } = require('../../lib');
+const { parse, inspect } = require('../../lib');
 
 const source = `
   /**
@@ -8,7 +8,7 @@ const source = `
    * @property {function(
    *   number,
    *   {x:string}
-   * )} numberEater Method 
+   * )} numberEater Method
    *    which takes a number.
    */`;
 
