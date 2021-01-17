@@ -68,8 +68,8 @@ function parse_spacing(source, parse, stringify, transforms) {
 
   const parsed = parse(source, { spacing: 'preserve' });
   const stringified = parsed[0].tags
-    .map((tag) => `@${tag.tag} - ${tag.description}`)
-    .join('\n');
+    .map((tag) => `@${tag.tag} - ${tag.description}\n\n${tag.type}`)
+    .join('\n----\n');
 }
 
 function parse_escaping(source, parse, stringify, transforms) {
@@ -160,11 +160,44 @@ function parse_source_exploration(source, parse, stringify, transforms) {
     .map((s) => `${pos(s.start)} - ${pos(s.end)}\n${s.source}`);
 }
 
+function parse_advanced_parsing(source, parse, _, _, tokenizers) {
+  // Each '@tag ...' section results into Spec. Spec is computed by
+  // the chain of tokenizers each contributing change to the Spec.* and Spec.tags[].tokens.
+  // Default parse() options come with stadart tokenizers
+  // {
+  //   ...,
+  //   spacing = 'compact',
+  //   tokenizers = [
+  //     tokenizers.tag(),
+  //     tokenizers.type(spacing),
+  //     tokenizers.name(),
+  //     tokenizers.description(spacing),
+  //   ]
+  // }
+  // You can reorder those, or even replace any with a custom function (spec: Spec) => Spec
+  // This example allows to parse "@tag description" comments
+
+  /**
+   * @arg0 my parameter
+   * @arg1
+   *   another parameter
+   *      with a strange formatting
+   */
+
+  const parsed = parse(source, {
+    tokenizers: [tokenizers.tag(), tokenizers.description('preserve')],
+  });
+  const stringified = parsed[0].tags
+    .map((tag) => `@${tag.tag} - ${tag.description}`)
+    .join('\n');
+}
+
 (typeof window === 'undefined' ? module.exports : window).examples = [
   parse_defaults,
   parse_line_numbering,
   parse_escaping,
   parse_spacing,
   parse_source_exploration,
+  parse_advanced_parsing,
   stringify_formatting,
 ];
