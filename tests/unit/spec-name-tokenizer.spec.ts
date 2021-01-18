@@ -692,3 +692,45 @@ test('default with arrow', () => {
     })
   );
 });
+
+test('after multiline {type}', () => {
+  const sourceIn = [
+    {
+      number: 0,
+      source: '...',
+      tokens: seedTokens({
+        tag: '@aram',
+        postTag: ' ',
+        type: '{function(',
+      }),
+    },
+    {
+      number: 1,
+      source: '...',
+      tokens: seedTokens({ type: '  number' }),
+    },
+    {
+      number: 2,
+      source: '...',
+      tokens: seedTokens({
+        type: ')}',
+        postType: ' ',
+        description: 'paramname description text',
+      }),
+    },
+  ];
+
+  const sourceOut = JSON.parse(JSON.stringify(sourceIn));
+  Object.assign(sourceOut[2].tokens, {
+    name: 'paramname',
+    postName: ' ',
+    description: 'description text',
+  });
+
+  expect(tokenize(seedSpec({ source: sourceIn }))).toEqual(
+    seedSpec({
+      name: 'paramname',
+      source: sourceOut,
+    })
+  );
+});

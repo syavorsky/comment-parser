@@ -1,4 +1,4 @@
-import { Spec } from '../../primitives';
+import { Spec, Line } from '../../primitives';
 import { splitSpace, isSpace, seedBlock } from '../../util';
 import { Tokenizer } from './index';
 
@@ -9,8 +9,12 @@ const isQuoted = (s: string) => s && s.startsWith('"') && s.endsWith('"');
  * and populates the `spec.name`
  */
 export default function nameTokenizer(): Tokenizer {
+  const typeEnd = (num: number, { tokens }: Line, i: number) =>
+    tokens.type === '' ? num : i;
+
   return (spec: Spec): Spec => {
-    const { tokens } = spec.source[0];
+    // look for the name in the line where {type} ends
+    const { tokens } = spec.source[spec.source.reduce(typeEnd, 0)];
     const source = tokens.description.trimLeft();
 
     const quotedGroups = source.split('"');

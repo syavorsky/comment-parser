@@ -15,31 +15,35 @@ const source = `
 test('default', () => {
   const parsed = parse(source);
   // console.log(inspect(parsed[0]));
-  expect(parsed[0].problems).toEqual([]);
-  expect(parsed[0].tags[1].problems).toEqual([]);
-  expect(parsed[0].tags[1].type).toEqual('function(number,{x:string})');
+  expect(parsed[0].tags[1]).toMatchObject({
+    tag: 'property',
+    type: 'function(number,{x:string})',
+    name: 'numberEater',
+    description: 'Method which takes a number.',
+    problems: [],
+  });
 });
 
 test('preserve', () => {
   const parsed = parse(source, { spacing: 'preserve' });
   // console.log(inspect(parsed[0]));
-  expect(parsed[0].problems).toEqual([]);
-  expect(parsed[0].tags[1].problems).toEqual([]);
-  expect(parsed[0].tags[1].type).toEqual(
-    'function(\n  number,\n  {x:string}\n)'
-  );
-  expect(parsed[0].tags[1].description).toEqual(
-    'numberEater Method\n   which takes a number.'
-  );
+  expect(parsed[0].tags[1]).toMatchObject({
+    tag: 'property',
+    type: 'function(\n  number,\n  {x:string}\n)',
+    name: 'numberEater',
+    description: 'Method\n   which takes a number.',
+    problems: [],
+  });
 });
 
 test('compact', () => {
   const parsed = parse(source, { spacing: 'compact' });
   // console.log(inspect(parsed[0]));
-  expect(parsed[0].problems).toEqual([]);
-  expect(parsed[0].tags[1].problems).toEqual([]);
-  expect(parsed[0].tags[1].type).toEqual('function(number,{x:string})');
-  expect(parsed[0].tags[1].description).toEqual(
-    'numberEater Method which takes a number.'
-  );
+  expect(parsed[0].tags[1]).toMatchObject({
+    tag: 'property',
+    type: 'function(number,{x:string})',
+    name: 'numberEater',
+    description: 'Method which takes a number.',
+    problems: [],
+  });
 });
