@@ -23,15 +23,6 @@ const getWidth = (w: Width, { tokens: t }: Line) => ({
   name: Math.max(w.name, t.name.length),
 });
 
-//  /**
-//   * Description may go
-//   * over multiple lines followed by @tags
-//   *
-//* @my-tag {my.type} my-name description line 1
-//      description line 2
-//      * description line 3
-//   */
-
 const space = (len: number) => ''.padStart(len, ' ');
 
 export default function align(): Transform {
@@ -62,15 +53,49 @@ export default function align(): Transform {
         tokens.start = space(w.start + 1);
         break;
       default:
-        tokens.start = space(w.start + 3);
         tokens.delimiter = '';
+        tokens.start = space(w.start + 2); // compensate delimiter
     }
 
-    if (intoTags) {
-      tokens.postTag = space(w.tag - tokens.tag.length + 1);
-      tokens.postType = space(w.type - tokens.type.length + 1);
-      tokens.postName = space(w.name - tokens.name.length + 1);
+    if (!intoTags) {
+      tokens.postDelimiter = tokens.description === '' ? '' : ' ';
+      return { ...line, tokens };
     }
+
+    const nothingAfter = {
+      delim: false,
+      tag: false,
+      type: false,
+      name: false,
+    };
+
+    if (tokens.description === '') {
+      nothingAfter.name = true;
+      tokens.postName = '';
+
+      if (tokens.name === '') {
+        nothingAfter.type = true;
+        tokens.postType = '';
+
+        if (tokens.type === '') {
+          nothingAfter.tag = true;
+          tokens.postTag = '';
+
+          if (tokens.tag === '') {
+            nothingAfter.delim = true;
+          }
+        }
+      }
+    }
+
+    tokens.postDelimiter = nothingAfter.delim ? '' : ' ';
+
+    if (!nothingAfter.tag)
+      tokens.postTag = space(w.tag - tokens.tag.length + 1);
+    if (!nothingAfter.type)
+      tokens.postType = space(w.type - tokens.type.length + 1);
+    if (!nothingAfter.name)
+      tokens.postName = space(w.name - tokens.name.length + 1);
 
     return { ...line, tokens };
   }

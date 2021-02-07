@@ -22,6 +22,8 @@ export interface Options {
   tokenizers: Tokenizer[];
 }
 
+export type Parser = (source: string) => Block[];
+
 export default function getParser({
   startLine = 0,
   fence = '```',
@@ -32,7 +34,7 @@ export default function getParser({
     tokenizeName(),
     tokenizeDescription(spacing),
   ],
-}: Partial<Options> = {}) {
+}: Partial<Options> = {}): Parser {
   if (startLine < 0 || startLine % 1 > 0) throw new Error('Invalid startLine');
 
   const parseSource = sourceParser({ startLine });

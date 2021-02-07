@@ -161,9 +161,9 @@ function parse_source_exploration(source, parse, stringify, transforms) {
 }
 
 function parse_advanced_parsing(source, parse, _, _, tokenizers) {
-  // Each '@tag ...' section results into Spec. Spec is computed by
-  // the chain of tokenizers each contributing change to the Spec.* and Spec.tags[].tokens.
-  // Default parse() options come with stadart tokenizers
+  // Each '@tag ...' section results into a Spec. The Spec is computed by
+  // the chain of tokenizers each contributing a change to the the Spec.* and the Spec.tags[].tokens.
+  // Default parse() options come with stadart tokenizers:
   // {
   //   ...,
   //   spacing = 'compact',

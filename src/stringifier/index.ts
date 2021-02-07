@@ -1,5 +1,7 @@
 import { Block, Tokens } from '../primitives';
 
+export type Stringifier = (block: Block) => string;
+
 function join(tokens: Tokens): string {
   return (
     tokens.start +
@@ -16,7 +18,7 @@ function join(tokens: Tokens): string {
   );
 }
 
-export default function getStringifier() {
+export default function getStringifier(): Stringifier {
   return (block: Block): string =>
     block.source.map(({ tokens }) => join(tokens)).join('\n');
 }
