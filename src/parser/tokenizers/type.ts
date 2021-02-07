@@ -71,7 +71,7 @@ export default function typeTokenizer(spacing: Spacing = 'compact'): Tokenizer {
         tokens.postDelimiter = tokens.postDelimiter.slice(0, offset);
       }
       [tokens.postType, tokens.description] = splitSpace(
-        tokens.description.slice(tokens.type.length)
+        tokens.description.slice(type.length)
       );
       parts.push(tokens.type);
     }

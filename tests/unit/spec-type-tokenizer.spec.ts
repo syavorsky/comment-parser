@@ -137,7 +137,7 @@ test('omit', () => {
   );
 });
 
-test('multiline - preserve', () => {
+test('multiline', () => {
   const spec = seedSpec({
     source: [
       {
@@ -152,23 +152,16 @@ test('multiline - preserve', () => {
         source: '...',
         tokens: seedTokens({
           postDelimiter: '  ',
-          description: 'number',
+          description: 'number)} function type',
         }),
       },
       {
         number: 3,
         source: '...',
-        tokens: seedTokens({
-          description: ')} function type',
-        }),
-      },
-      {
-        number: 4,
-        source: '...',
         tokens: seedTokens(),
       },
       {
-        number: 5,
+        number: 4,
         source: '...',
         tokens: seedTokens({
           end: '*/',
@@ -192,25 +185,18 @@ test('multiline - preserve', () => {
         number: 2,
         source: '...',
         tokens: seedTokens({
-          type: '  number',
-        }),
-      },
-      {
-        number: 3,
-        source: '...',
-        tokens: seedTokens({
-          type: ')}',
+          type: '  number)}',
           postType: ' ',
           description: 'function type',
         }),
       },
       {
-        number: 4,
+        number: 3,
         source: '...',
         tokens: seedTokens(),
       },
       {
-        number: 5,
+        number: 4,
         source: '...',
         tokens: seedTokens({
           end: '*/',
