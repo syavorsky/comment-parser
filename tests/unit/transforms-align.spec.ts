@@ -1,7 +1,6 @@
 import align from '../../src/transforms/align';
 import getParser, { Parser } from '../../src/parser/index';
 import getStringifier, { Stringifier } from '../../src/stringifier/index';
-import { inspect } from '../../lib';
 
 let parse: Parser;
 let stringify: Stringifier;
@@ -73,7 +72,6 @@ test('same line close', () => {
   const aligned = align()(parsed[0]);
   const out = stringify(aligned);
 
-  console.log(inspect(aligned));
   expect(out).toBe(expected);
 });
 
