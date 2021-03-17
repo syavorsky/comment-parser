@@ -8,6 +8,8 @@ import alignTransform from './transforms/align';
 import indentTransform from './transforms/indent';
 import { flow as flowTransform } from './transforms/index';
 
+export * from './primitives';
+
 export function parse(source: string, options: Partial<ParserOptions> = {}) {
   return getParser(options)(source);
 }
