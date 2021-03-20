@@ -1,12 +1,18 @@
+# v1.1.3
+- export primitive type on the top level: Markers, Block, Spec, Line, Tokens, Problem
+# v1.1.2
+- `bugfix` Allow to build nested tags from `name.subname` even if `name` wasn't d
+- `bugfix` Preserve indentation when extracting comments
+
+# v1.1.1
+- add helpers for rewiring Spec.source <-> Spec.tags.source
+
 # v1.1.0
 - split tokenizers into separate modules
 - allow multiline {type} definitions - issue #109
 - allow using "=>" in [name=default] defaults – issue #112
 - allow using "=" in quoted [name=default] defaults – issue #112
 - add tokenizers usage example - issue #111
-
-# v1.1.1
-- add helpers for rewiring Spec.source <-> Spec.tags.source
 
 # v1.0.0
 - complete rewrite in TS with more flexible API
