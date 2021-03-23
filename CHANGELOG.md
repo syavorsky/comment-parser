@@ -1,5 +1,9 @@
+# v1.1.4
+- `bugfix` fix unsynced lib/
+
 # v1.1.3
 - export primitive type on the top level: Markers, Block, Spec, Line, Tokens, Problem
+
 # v1.1.2
 - `bugfix` Allow to build nested tags from `name.subname` even if `name` wasn't d
 - `bugfix` Preserve indentation when extracting comments
