@@ -23,7 +23,8 @@
     "build": "rimraf lib es6 browser; tsc -p tsconfig.es6.json && tsc -p tsconfig.node.json && rollup -o browser/index.js -f iife --context window -n CommentParser es6/index.js",
     "format": "prettier --write src/ tests/",
     "pretest": "rimraf coverage; npm run build",
-    "test": "prettier --check src/ tests/ && jest --verbose"
+    "test": "prettier --check src/ tests/ && jest --verbose",
+    "preversion": "npm build"
   },
   "repository": {
     "type": "git",
