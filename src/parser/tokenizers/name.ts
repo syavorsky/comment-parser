@@ -1,5 +1,5 @@
 import { Spec, Line } from '../../primitives';
-import { splitSpace, isSpace, seedBlock } from '../../util';
+import { splitSpace, isSpace } from '../../util';
 import { Tokenizer } from './index';
 
 const isQuoted = (s: string) => s && s.startsWith('"') && s.endsWith('"');
