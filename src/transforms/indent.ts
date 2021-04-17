@@ -9,7 +9,7 @@ const push = (offset: number) => {
 };
 
 export default function indent(pos: number): Transform {
-  let shift: (string) => string;
+  let shift: (string: string) => string;
   const pad = (start: string) => {
     if (shift === undefined) {
       const offset = pos - start.length;

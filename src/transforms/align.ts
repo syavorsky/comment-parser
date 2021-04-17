@@ -1,5 +1,5 @@
 import { Transform } from './index';
-import { Markers, Tokens, Block, Line } from '../primitives';
+import { Markers, Block, Line } from '../primitives';
 import { rewireSource } from '../util';
 
 interface Width {

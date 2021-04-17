@@ -1,5 +1,5 @@
-import { Block, Line, Tokens } from '../primitives';
-import { seedTokens, isSpace } from '../util';
+import { Block, Tokens } from '../primitives';
+import { isSpace } from '../util';
 
 interface Width {
   line: number;

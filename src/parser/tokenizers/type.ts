@@ -1,4 +1,4 @@
-import { Spec, Line, Tokens } from '../../primitives';
+import { Spec, Tokens } from '../../primitives';
 import { splitSpace } from '../../util';
 import { Tokenizer } from './index';
 
