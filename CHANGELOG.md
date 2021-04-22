@@ -1,3 +1,7 @@
+# v1.1.5
+- drop unused variables
+- add .editorconfig
+
 # v1.1.4
 - `bugfix` fix unsynced lib/
 
