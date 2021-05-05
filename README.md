@@ -122,7 +122,7 @@ The result is an array of Block objects, see the full output on the [playground]
     tokens: {
       // indentation
       start: "",
-      // delimiter, either '/**', '*/', or ''. Mid lines may have no delimiters
+      // delimiter, either '/**', '*/', '*', or ''. Mid lines may have no delimiters
       delimiter: "/**",
       // space between delimiter and tag
       postDelimiter: "",
