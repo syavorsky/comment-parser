@@ -1,4 +1,4 @@
-import typeTokenizer from '../../src/parser/tokenizers/type';
+import typeTokenizer, { Joiner } from '../../src/parser/tokenizers/type';
 import { seedTokens, seedSpec } from '../../src/util';
 
 const tokenize = typeTokenizer();
@@ -212,9 +212,10 @@ test.each([
   ['default', undefined, 'function(number,string)'],
   ['preserve', 'preserve', 'function(\n  number,\n  string\n)'],
   ['compact', 'compact', 'function(number,string)'],
+  ['custom', (t: string[]) => t.map((x: string) => x.trim()).join(''), 'function(number,string)']
 ])('spacing - %s', (name, spacing, type) => {
   const tokenize =
-    spacing === 'preserve' || spacing === 'compact'
+    spacing === 'preserve' || spacing === 'compact' || typeof spacing === 'function'
       ? typeTokenizer(spacing)
       : typeTokenizer();
 

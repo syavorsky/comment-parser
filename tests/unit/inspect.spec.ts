@@ -1,5 +1,6 @@
 import getParser from '../../src/parser/index';
 import inspect from '../../src/stringifier/inspect';
+import { seedBlock } from '../../src/util';
 
 test('multiple lines', () => {
   const source = `
@@ -33,4 +34,10 @@ test('single line', () => {
 |12345|     |/**      |{1}          |@param|{1}    |name|{1}     |{string}|{1}     |name parameter |*/ |`;
 
   expect(inspect(parsed[0])).toEqual(expected.slice(1));
+});
+
+test('empty', () => {
+  const expected = '';
+
+  expect(inspect(seedBlock())).toEqual(expected.slice(1));
 });

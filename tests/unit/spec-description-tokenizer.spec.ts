@@ -188,3 +188,36 @@ test('preserve - leading type lines', () => {
 
   expect(tokenize(input)).toEqual(output);
 });
+
+test('custom joiner - single line', () => {
+  const tokenize = descriptionTokenizer((lines) => {
+    return lines.reduce((str, {tokens: {description}}) => {
+      const trimmed = description.trim();
+      if (!trimmed) {
+        return str;
+      }
+      return str + ' ' + trimmed;
+    }, '').slice(1);
+  });
+  const input = seedSpec({ source: sourceSingle });
+  const output = seedSpec({ source: sourceSingle, description: 'one  two' });
+  expect(tokenize(input)).toEqual(output);
+});
+
+test('custom joiner - multiple lines', () => {
+  const tokenize = descriptionTokenizer((lines) => {
+    return lines.reduce((str, {tokens: {description}}) => {
+      const trimmed = description.trim();
+      if (!trimmed) {
+        return str;
+      }
+      return str + ' ' + trimmed;
+    }, '').slice(1);
+  });
+  const input = seedSpec({ source: sourceMultiple });
+  const output = seedSpec({
+    source: sourceMultiple,
+    description: 'one  two three  four',
+  });
+  expect(tokenize(input)).toEqual(output);
+});
