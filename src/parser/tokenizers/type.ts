@@ -64,7 +64,6 @@ export default function typeTokenizer(spacing: Spacing = 'compact'): Tokenizer {
     const offset = lines[0][0].postDelimiter.length;
 
     for (const [i, [tokens, type]] of lines.entries()) {
-      if (type === '') continue;
       tokens.type = type;
       if (i > 0) {
         tokens.type = tokens.postDelimiter.slice(offset) + type;
