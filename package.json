@@ -45,7 +45,7 @@
     "typescript": "^4.3.4"
   },
   "engines": {
-    "node": ">= 10.0.0"
+    "node": ">= 12.0.0"
   },
   "scripts": {
     "build": "rimraf lib es6 browser; tsc -p tsconfig.json && tsc -p tsconfig.node.json && rollup -o browser/index.js -f iife --context window -n CommentParser es6/index.js && cd es6 && replace \"from '(\\.[^']*)'\" \"from '\\$1.js'\" * -r",
