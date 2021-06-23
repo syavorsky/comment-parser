@@ -2,7 +2,34 @@
   "name": "comment-parser",
   "version": "1.1.5",
   "description": "Generic JSDoc-like comment parser",
+  "type": "module",
   "main": "lib/index.js",
+  "exports": {
+    ".": {
+      "import": "./es6/index.js",
+      "require": "./lib/index.js"
+    },
+    "./primitives": {
+      "import": "./es6/primitives.js",
+      "require": "./lib/primitives.js"
+    },
+    "./util": {
+      "import": "./es6/util.js",
+      "require": "./lib/util.js"
+    },
+    "./parser/*": {
+      "import": "./es6/parser/*.js",
+      "require": "./lib/parser/*.js"
+    },
+    "./stringifier/*": {
+      "import": "./es6/stringifier/*.js",
+      "require": "./lib/stringifier/*.js"
+    },
+    "./transforms/*": {
+      "import": "./es6/transforms/*.js",
+      "require": "./lib/transforms/*.js"
+    }
+  },
   "types": "lib/index.d.ts",
   "directories": {
     "test": "tests"
