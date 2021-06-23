@@ -61,7 +61,7 @@ test('same line open', () => {
 
 test('same line close', () => {
   const source = `
-  /** 
+  /**
    * @tag {type} name description */`;
 
   const expected = `
@@ -93,16 +93,20 @@ test('ignore right whitespace', () => {
     /**
      * Description may go
      * over multiple lines followed by @tags
+     * @private
      * @param {string} name
      * @param {any} value the value parameter
+     *
      */`.slice(1);
 
   const expected = `
     /**
      * Description may go
      * over multiple lines followed by @tags
-     * @param {string} name
-     * @param {any}    value the value parameter
+     * @private
+     * @param   {string} name
+     * @param   {any}    value the value parameter
+     *
      */`.slice(1);
 
   const parsed = parse(source);
