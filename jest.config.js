@@ -4,7 +4,7 @@
 import {readFileSync} from 'fs';
 const {
   compilerOptions: tsconfig
-} = JSON.parse(await readFileSync(new URL('./tsconfig.node.json', import.meta.url)));
+} = JSON.parse(readFileSync(new URL('./tsconfig.node.json', import.meta.url)));
 
 export default {
   globals: {
