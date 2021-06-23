@@ -1,10 +1,15 @@
 // For a detailed explanation regarding each configuration property, visit:
 // https://jestjs.io/docs/en/configuration.html
 
-module.exports = {
+import {readFileSync} from 'fs';
+const {
+  compilerOptions: tsconfig
+} = JSON.parse(await readFileSync(new URL('./tsconfig.node.json', import.meta.url)));
+
+export default {
   globals: {
     'ts-jest': {
-      tsconfig: require('./tsconfig.node.json').compilerOptions,
+      tsconfig,
     },
   },
 
