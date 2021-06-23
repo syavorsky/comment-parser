@@ -70,8 +70,7 @@ test('name cut off', () => {
     tags: [
       {
         tag: 'param',
-        type:
-          '{includeWhiteSpace: (boolean|undefined),ignoreElementOrder: (boolean|undefined)}',
+        type: '{includeWhiteSpace: (boolean|undefined),ignoreElementOrder: (boolean|undefined)}',
         name: 'options',
         optional: true,
         description: 'The options.',
