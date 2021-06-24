@@ -212,10 +212,16 @@ test.each([
   ['default', undefined, 'function(number,string)'],
   ['preserve', 'preserve', 'function(\n  number,\n  string\n)'],
   ['compact', 'compact', 'function(number,string)'],
-  ['custom', (t: string[]) => t.map((x: string) => x.trim()).join(''), 'function(number,string)']
+  [
+    'custom',
+    (t: string[]) => t.map((x: string) => x.trim()).join(''),
+    'function(number,string)',
+  ],
 ])('spacing - %s', (name, spacing, type) => {
   const tokenize =
-    spacing === 'preserve' || spacing === 'compact' || typeof spacing === 'function'
+    spacing === 'preserve' ||
+    spacing === 'compact' ||
+    typeof spacing === 'function'
       ? typeTokenizer(spacing)
       : typeTokenizer();
 

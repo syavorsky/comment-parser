@@ -191,13 +191,15 @@ test('preserve - leading type lines', () => {
 
 test('custom joiner - single line', () => {
   const tokenize = descriptionTokenizer((lines) => {
-    return lines.reduce((str, {tokens: {description}}) => {
-      const trimmed = description.trim();
-      if (!trimmed) {
-        return str;
-      }
-      return str + ' ' + trimmed;
-    }, '').slice(1);
+    return lines
+      .reduce((str, { tokens: { description } }) => {
+        const trimmed = description.trim();
+        if (!trimmed) {
+          return str;
+        }
+        return str + ' ' + trimmed;
+      }, '')
+      .slice(1);
   });
   const input = seedSpec({ source: sourceSingle });
   const output = seedSpec({ source: sourceSingle, description: 'one  two' });
@@ -206,13 +208,15 @@ test('custom joiner - single line', () => {
 
 test('custom joiner - multiple lines', () => {
   const tokenize = descriptionTokenizer((lines) => {
-    return lines.reduce((str, {tokens: {description}}) => {
-      const trimmed = description.trim();
-      if (!trimmed) {
-        return str;
-      }
-      return str + ' ' + trimmed;
-    }, '').slice(1);
+    return lines
+      .reduce((str, { tokens: { description } }) => {
+        const trimmed = description.trim();
+        if (!trimmed) {
+          return str;
+        }
+        return str + ' ' + trimmed;
+      }, '')
+      .slice(1);
   });
   const input = seedSpec({ source: sourceMultiple });
   const output = seedSpec({
