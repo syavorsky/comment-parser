@@ -12,7 +12,7 @@ export function splitSpace(source: string): [string, string] {
 }
 
 export function splitLines(source: string): string[] {
-  return source.split(/\r?\n/);
+  return source.split(/\n/);
 }
 
 export function seedBlock(block: Partial<Block> = {}): Block {

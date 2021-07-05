@@ -1,5 +1,5 @@
 import getParser, { Parser } from '../../src/parser/source-parser';
-import { Block, Line } from '../../src/primitives';
+import { Line } from '../../src/primitives';
 import { splitLines, seedBlock, seedTokens } from '../../src/util';
 
 let _parse: Parser;
@@ -234,4 +234,52 @@ test('start line number', () => {
   ];
 
   expect(parsed).toEqual([null, block]);
+});
+
+test('carriage returns', () => {
+  const source = splitLines(
+    ['/**', ' * description', ' *', ' */', ''].join('\r\n')
+  );
+
+  const parsed = source.map(getParser());
+
+  const block = [
+    {
+      number: 0,
+      source: '/**\r',
+      tokens: seedTokens({
+        delimiter: '/**',
+        postDelimiter: '\r',
+      }),
+    },
+    {
+      number: 1,
+      source: ' * description\r',
+      tokens: seedTokens({
+        start: ' ',
+        delimiter: '*',
+        postDelimiter: ' ',
+        description: 'description\r',
+      }),
+    },
+    {
+      number: 2,
+      source: ' *\r',
+      tokens: seedTokens({
+        start: ' ',
+        delimiter: '*',
+        postDelimiter: '\r',
+      }),
+    },
+    {
+      number: 3,
+      source: ' */\r',
+      tokens: seedTokens({
+        start: ' ',
+        end: '*/\r',
+      }),
+    },
+  ];
+
+  expect(parsed).toEqual([...nulls(3), block, null]);
 });
