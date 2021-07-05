@@ -6,6 +6,7 @@ import typeTokenizer from './parser/tokenizers/type';
 import getStringifier from './stringifier/index';
 import alignTransform from './transforms/align';
 import indentTransform from './transforms/indent';
+import crlfTransform from './transforms/crlf';
 import { flow as flowTransform } from './transforms/index';
 
 export * from './primitives';
@@ -21,6 +22,7 @@ export const transforms = {
   flow: flowTransform,
   align: alignTransform,
   indent: indentTransform,
+  crlf: crlfTransform,
 };
 
 export const tokenizers = {
