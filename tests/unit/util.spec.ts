@@ -8,9 +8,9 @@ import {
 } from '../../src/util';
 
 test.each([
-  ['win', 'a\r\nb\r\nc', ['a', 'b', 'c']],
+  ['win', 'a\r\nb\r\nc', ['a\r', 'b\r', 'c']],
   ['unix', 'a\nb\nc', ['a', 'b', 'c']],
-  ['mixed', 'a\nb\r\nc', ['a', 'b', 'c']],
+  ['mixed', 'a\nb\r\nc', ['a', 'b\r', 'c']],
   ['none', 'abc', ['abc']],
 ])('spliLines - %s', (name, source, parsed) =>
   expect(splitLines(source)).toEqual(parsed)
