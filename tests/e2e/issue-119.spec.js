@@ -2,7 +2,7 @@ const {
   parse,
   stringify,
   transforms: { align },
-} = require('../../lib');
+} = require('../../lib/index.cjs');
 
 test('align - ignore trailing right space', () => {
   const source = `

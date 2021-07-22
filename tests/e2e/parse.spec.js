@@ -1,4 +1,4 @@
-const { parse } = require('../../lib');
+const { parse } = require('../../lib/index.cjs');
 
 test('description only', () => {
   const parsed = parse(`
