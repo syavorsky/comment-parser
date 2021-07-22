@@ -4,6 +4,10 @@ export function isSpace(source: string): boolean {
   return /^\s+$/.test(source);
 }
 
+export function hasCR(source: string): boolean {
+  return /\r$/.test(source);
+}
+
 export function splitSpace(source: string): [string, string] {
   const matches = source.match(/^\s+/);
   return matches == null

@@ -139,3 +139,27 @@ test('collapse postDelimiter', () => {
 
   expect(stringified).toEqual(expected);
 });
+
+test('keep carriage returns', () => {
+  const source = `
+     /**\r
+      * Description may go\r
+      * over multiple lines followed by @tags\r
+      * @param {string} name the name parameter\r
+      * @param {any} value\r
+      */\r`.slice(1);
+
+  const expected = `
+     /**
+      * Description may go
+      * over multiple lines followed by @tags
+      * @param {string} name  the name parameter
+      * @param {any}    value
+      */`.slice(1);
+
+  const parsed = parse(source);
+  const aligned = align()(parsed[0]);
+  const stringified = stringify(aligned);
+
+  expect(stringified).toEqual(expected);
+});
