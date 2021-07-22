@@ -1,4 +1,9 @@
-const { parse, inspect } = require('../../lib/index.cjs');
+const {
+  parse,
+  inspect,
+  stringify,
+  transforms: { align },
+} = require('../../lib');
 
 const tokens = {
   start: '',
@@ -108,4 +113,28 @@ test('carriage returns', () => {
       },
     ],
   });
+});
+
+test('carriage returns with alignment', () => {
+  const source = `
+     /**\r
+      * Description may go\r
+      * over multiple lines followed by @tags\r
+      *  @param {string} name the name parameter\r
+      *     @param {any} value\r
+      */\r`.slice(1);
+
+  const expected = `
+     /**
+      * Description may go
+      * over multiple lines followed by @tags
+      * @param {string} name  the name parameter
+      * @param {any}    value
+      */`.slice(1);
+
+  const parsed = parse(source);
+  const aligned = align()(parsed[0]);
+  const stringified = stringify(aligned);
+
+  expect(stringified).toEqual(expected);
 });

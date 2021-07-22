@@ -1,6 +1,6 @@
 import { Transform } from './index';
 import { Markers, Block, Line } from '../primitives';
-import { rewireSource } from '../util';
+import { hasCR, isSpace, rewireSource } from '../util';
 
 interface Width {
   start: number;
@@ -25,6 +25,8 @@ const getWidth = (w: Width, { tokens: t }: Line) => ({
 
 const space = (len: number) => ''.padStart(len, ' ');
 
+const isEmpty = (s) => s === '' || isSpace(s);
+
 export default function align(): Transform {
   let intoTags = false;
   let w: Width;
@@ -33,14 +35,14 @@ export default function align(): Transform {
     const tokens = { ...line.tokens };
     if (tokens.tag !== '') intoTags = true;
 
-    const isEmpty =
-      tokens.tag === '' &&
-      tokens.name === '' &&
-      tokens.type === '' &&
-      tokens.description === '';
-
     // dangling '*/'
-    if (tokens.end === Markers.end && isEmpty) {
+    if (
+      tokens.end === Markers.end &&
+      isEmpty(tokens.tag) &&
+      isEmpty(tokens.name) &&
+      isEmpty(tokens.type) &&
+      isEmpty(tokens.description)
+    ) {
       tokens.start = space(w.start + 1);
       return { ...line, tokens };
     }
@@ -58,7 +60,9 @@ export default function align(): Transform {
     }
 
     if (!intoTags) {
-      tokens.postDelimiter = tokens.description === '' ? '' : ' ';
+      tokens.postDelimiter = ' ';
+      if (isEmpty(tokens.description))
+        tokens.postDelimiter = hasCR(tokens.description) ? '\r' : '';
       return { ...line, tokens };
     }
 
