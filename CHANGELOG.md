@@ -1,3 +1,5 @@
+# v1.1.6-beta.1
+- support native ESM
 # v1.1.6-beta.0
 - keep original CR line endings
 - allow to normalize line endings with `crlf` transform
