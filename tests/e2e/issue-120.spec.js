@@ -2,7 +2,7 @@ const {
   parse,
   stringify,
   transforms: { align },
-} = require('../../lib');
+} = require('../../lib/index.cjs');
 
 test('align - collapse postDelim', () => {
   const source = `

@@ -1,4 +1,4 @@
-const { parse, inspect } = require('../../lib');
+const { parse, inspect } = require('../../lib/index.cjs');
 
 const source = `
   /** Multi-line typedef for an options object type.

@@ -2,7 +2,7 @@ const {
   parse,
   stringify,
   transforms: { flow, indent, align },
-} = require('../../lib/');
+} = require('../../lib/index.cjs');
 
 test('align + indent', () => {
   const source = `
