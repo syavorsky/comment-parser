@@ -1,4 +1,4 @@
-const { default: getParser } = require('../../lib/parser');
+const { default: getParser } = require('../../lib/parser/index.cjs');
 
 test('fenced description', () => {
   const parsed = getParser({ spacing: 'preserve' })(`

@@ -1,4 +1,4 @@
-const { parse, stringify } = require('../../lib/');
+const { parse, stringify } = require('../../lib/index.cjs');
 
 test('preserve formatting', () => {
   const source = `

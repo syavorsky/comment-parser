@@ -1,4 +1,9 @@
-const { parse, stringify, transforms, tokenizers } = require('../../lib');
+const {
+  parse,
+  stringify,
+  transforms,
+  tokenizers,
+} = require('../../lib/index.cjs');
 const { examples } = require('./examples');
 
 const table = examples.map((fn) => [fn.name.replace(/_/g, ' '), fn]);

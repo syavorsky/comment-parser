@@ -1,4 +1,4 @@
-const { parse, inspect } = require('../../lib');
+const { parse, inspect } = require('../../lib/index.cjs');
 
 test('name cut off', () => {
   const source = `

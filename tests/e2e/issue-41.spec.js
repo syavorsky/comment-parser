@@ -1,4 +1,4 @@
-const { default: getParser } = require('../../lib/parser');
+const { default: getParser } = require('../../lib/parser/index.cjs');
 
 test('quoted name', () => {
   const parsed = getParser()(`
