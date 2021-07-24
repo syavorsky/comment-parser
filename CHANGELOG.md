@@ -1,7 +1,12 @@
+# v1.1.6-beta.3
+- process CRs as a separate .lineEnd toke
+
 # v1.1.6-beta.2
 - ESM/CJS compatibility fixes
+
 # v1.1.6-beta.1
 - support native ESM
+
 # v1.1.6-beta.0
 - keep original CR line endings
 - allow to normalize line endings with `crlf` transform
