@@ -1,3 +1,5 @@
+# v1.1.6-beta.2
+- ESM/CJS compatibility fixes
 # v1.1.6-beta.1
 - support native ESM
 # v1.1.6-beta.0
