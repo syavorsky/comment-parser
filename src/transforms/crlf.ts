@@ -19,18 +19,11 @@ const order = [
 export type Ending = 'LF' | 'CRLF';
 
 export default function crlf(ending: Ending): Transform {
-  const normalize = (source: string): string =>
-    source.replace(/\r*$/, ending === 'LF' ? '' : '\r');
-
   function update(line: Line): Line {
-    const { tokens } = line;
-    for (const f of order) {
-      if (tokens[f] !== '') {
-        tokens[f] = normalize(tokens[f]);
-        break;
-      }
-    }
-    return { ...line, tokens };
+    return {
+      ...line,
+      tokens: { ...line.tokens, lineEnd: ending === 'LF' ? '' : '\r' },
+    };
   }
 
   return ({ source, ...fields }: Block): Block =>

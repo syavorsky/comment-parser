@@ -34,6 +34,7 @@ test('quoted name', () => {
                 postType: '',
                 description: '- Here you can find all the brand colors...',
                 end: '',
+                lineEnd: '',
               },
             },
             {
@@ -51,6 +52,7 @@ test('quoted name', () => {
                 postType: '',
                 description: '',
                 end: '*/',
+                lineEnd: '',
               },
             },
           ],
@@ -72,6 +74,7 @@ test('quoted name', () => {
             postType: '',
             description: '',
             end: '',
+            lineEnd: '',
           },
         },
         {
@@ -90,6 +93,7 @@ test('quoted name', () => {
             postType: '',
             description: '- Here you can find all the brand colors...',
             end: '',
+            lineEnd: '',
           },
         },
         {
@@ -107,6 +111,7 @@ test('quoted name', () => {
             postType: '',
             description: '',
             end: '*/',
+            lineEnd: '',
           },
         },
       ],
@@ -149,6 +154,7 @@ test('optional name', () => {
                 postType: '',
                 description: '- Here you can find all the brand colors...',
                 end: '',
+                lineEnd: '',
               },
             },
             {
@@ -166,6 +172,7 @@ test('optional name', () => {
                 postType: '',
                 description: '',
                 end: '*/',
+                lineEnd: '',
               },
             },
           ],
@@ -187,6 +194,7 @@ test('optional name', () => {
             postType: '',
             description: '',
             end: '',
+            lineEnd: '',
           },
         },
         {
@@ -205,6 +213,7 @@ test('optional name', () => {
             postType: '',
             description: '- Here you can find all the brand colors...',
             end: '',
+            lineEnd: '',
           },
         },
         {
@@ -222,6 +231,7 @@ test('optional name', () => {
             postType: '',
             description: '',
             end: '*/',
+            lineEnd: '',
           },
         },
       ],
@@ -265,6 +275,7 @@ test('inconsistent quotes', () => {
                 description:
                   'Colors - Here you can find all the brand colors...',
                 end: '',
+                lineEnd: '',
               },
             },
             {
@@ -282,6 +293,7 @@ test('inconsistent quotes', () => {
                 postType: '',
                 description: '',
                 end: '*/',
+                lineEnd: '',
               },
             },
           ],
@@ -303,6 +315,7 @@ test('inconsistent quotes', () => {
             postType: '',
             description: '',
             end: '',
+            lineEnd: '',
           },
         },
         {
@@ -321,6 +334,7 @@ test('inconsistent quotes', () => {
             postType: '',
             description: 'Colors - Here you can find all the brand colors...',
             end: '',
+            lineEnd: '',
           },
         },
         {
@@ -338,6 +352,7 @@ test('inconsistent quotes', () => {
             postType: '',
             description: '',
             end: '*/',
+            lineEnd: '',
           },
         },
       ],

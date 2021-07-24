@@ -3,7 +3,7 @@ const {
   inspect,
   stringify,
   transforms: { align },
-} = require('../../lib');
+} = require('../../lib/index.cjs');
 
 const tokens = {
   start: '',
@@ -17,6 +17,7 @@ const tokens = {
   postName: '',
   description: '',
   end: '',
+  lineEnd: '',
 };
 
 test('carriage returns', () => {
@@ -45,7 +46,8 @@ test('carriage returns', () => {
         start: '     ',
         delimiter: '*',
         postDelimiter: ' ',
-        description: 'description\r',
+        description: 'description',
+        lineEnd: '\r',
       },
     },
     {
@@ -59,7 +61,7 @@ test('carriage returns', () => {
         tag: '@param0',
         postTag: ' ',
         type: '{param-type}',
-        postType: '\r',
+        lineEnd: '\r',
       },
     },
     {
@@ -76,7 +78,8 @@ test('carriage returns', () => {
         postType: ' ',
         name: 'paramName',
         postName: ' ',
-        description: 'param description\r',
+        description: 'param description',
+        lineEnd: '\r',
       },
     },
     {
@@ -125,12 +128,12 @@ test('carriage returns with alignment', () => {
       */\r`.slice(1);
 
   const expected = `
-     /**
-      * Description may go
-      * over multiple lines followed by @tags
-      * @param {string} name  the name parameter
-      * @param {any}    value
-      */`.slice(1);
+     /**\r
+      * Description may go\r
+      * over multiple lines followed by @tags\r
+      * @param {string} name  the name parameter\r
+      * @param {any}    value\r
+      */\r`.slice(1);
 
   const parsed = parse(source);
   const aligned = align()(parsed[0]);

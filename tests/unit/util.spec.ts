@@ -56,6 +56,7 @@ test('seedTokens defaults', () => {
     postType: '',
     description: '',
     end: '',
+    lineEnd: '',
   });
 });
 
@@ -72,6 +73,7 @@ test('seedTokens overrides', () => {
     postType: '',
     description: 'abc',
     end: '',
+    lineEnd: '',
   });
 });
 

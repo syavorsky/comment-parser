@@ -14,7 +14,8 @@ function join(tokens: Tokens): string {
     tokens.name +
     tokens.postName +
     tokens.description +
-    tokens.end
+    tokens.end +
+    tokens.lineEnd
   );
 }
 

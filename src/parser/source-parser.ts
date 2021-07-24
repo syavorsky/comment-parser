@@ -1,5 +1,5 @@
 import { Line, Markers, Tokens } from '../primitives';
-import { seedTokens, splitSpace } from '../util';
+import { seedTokens, splitSpace, splitCR } from '../util';
 
 export interface Options {
   startLine: number;
@@ -17,6 +17,7 @@ export default function getParser({
     let rest = source;
     const tokens: Tokens = seedTokens();
 
+    [tokens.lineEnd, rest] = splitCR(rest);
     [tokens.start, rest] = splitSpace(rest);
 
     if (
