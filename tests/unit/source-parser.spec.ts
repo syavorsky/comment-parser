@@ -241,7 +241,8 @@ test('carriage returns', () => {
     ['/**', ' * description', ' *', ' */', ''].join('\r\n')
   );
 
-  const parsed = source.map(getParser());
+  const parse = getParser();
+  const parsed = source.map(parse);
 
   const block = [
     {
@@ -249,7 +250,7 @@ test('carriage returns', () => {
       source: '/**\r',
       tokens: seedTokens({
         delimiter: '/**',
-        postDelimiter: '\r',
+        lineEnd: '\r',
       }),
     },
     {
@@ -259,7 +260,8 @@ test('carriage returns', () => {
         start: ' ',
         delimiter: '*',
         postDelimiter: ' ',
-        description: 'description\r',
+        description: 'description',
+        lineEnd: '\r',
       }),
     },
     {
@@ -268,7 +270,7 @@ test('carriage returns', () => {
       tokens: seedTokens({
         start: ' ',
         delimiter: '*',
-        postDelimiter: '\r',
+        lineEnd: '\r',
       }),
     },
     {
@@ -276,7 +278,8 @@ test('carriage returns', () => {
       source: ' */\r',
       tokens: seedTokens({
         start: ' ',
-        end: '*/\r',
+        end: '*/',
+        lineEnd: '\r',
       }),
     },
   ];

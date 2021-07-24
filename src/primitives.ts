@@ -41,6 +41,7 @@ export interface Tokens {
   postType: string;
   description: string;
   end: string;
+  lineEnd: string;
 }
 
 export interface Problem {

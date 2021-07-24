@@ -23,6 +23,7 @@ test('name cut off', () => {
         postName: '',
         description: '',
         end: '',
+        lineEnd: '',
       },
     },
     {
@@ -41,6 +42,7 @@ test('name cut off', () => {
         postName: ' ',
         description: 'The options.',
         end: '',
+        lineEnd: '',
       },
     },
     {
@@ -58,6 +60,7 @@ test('name cut off', () => {
         postName: '',
         description: '',
         end: '*/',
+        lineEnd: '',
       },
     },
   ];
@@ -93,6 +96,7 @@ test('name cut off', () => {
           postName: '',
           description: '',
           end: '',
+          lineEnd: '',
         },
       },
       ...tagSource,

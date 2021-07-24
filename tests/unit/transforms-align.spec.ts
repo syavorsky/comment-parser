@@ -142,7 +142,7 @@ test('collapse postDelimiter', () => {
 
 test('keep carriage returns', () => {
   const source = `
-     /**\r
+     /**\r\r
       * Description may go\r
       * over multiple lines followed by @tags\r
       * @param {string} name the name parameter\r
@@ -150,12 +150,12 @@ test('keep carriage returns', () => {
       */\r`.slice(1);
 
   const expected = `
-     /**
-      * Description may go
-      * over multiple lines followed by @tags
-      * @param {string} name  the name parameter
-      * @param {any}    value
-      */`.slice(1);
+     /**\r\r
+      * Description may go\r
+      * over multiple lines followed by @tags\r
+      * @param {string} name  the name parameter\r
+      * @param {any}    value\r
+      */\r`.slice(1);
 
   const parsed = parse(source);
   const aligned = align()(parsed[0]);

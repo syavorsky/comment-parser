@@ -25,6 +25,7 @@ class Foo { }
         postType: '',
         description: '',
         end: '',
+        lineEnd: '',
       },
     },
     {
@@ -42,6 +43,7 @@ class Foo { }
         postType: '',
         description: '```ts',
         end: '',
+        lineEnd: '',
       },
     },
     {
@@ -59,6 +61,7 @@ class Foo { }
         postType: '',
         description: '@transient()',
         end: '',
+        lineEnd: '',
       },
     },
     {
@@ -76,6 +79,7 @@ class Foo { }
         postType: '',
         description: 'class Foo { }',
         end: '',
+        lineEnd: '',
       },
     },
     {
@@ -93,6 +97,7 @@ class Foo { }
         postType: '',
         description: '```',
         end: '',
+        lineEnd: '',
       },
     },
     {
@@ -110,6 +115,7 @@ class Foo { }
         postType: '',
         description: '',
         end: '*/',
+        lineEnd: '',
       },
     },
   ];
@@ -155,6 +161,7 @@ test('fenced one-liner', () => {
         postType: '',
         description: '```ts @transient() class Foo { } ```',
         end: '*/',
+        lineEnd: '',
       },
     },
   ];
@@ -207,6 +214,7 @@ text
         postType: '',
         description: '',
         end: '',
+        lineEnd: '',
       },
     },
     {
@@ -224,6 +232,7 @@ text
         postType: '',
         description: '```ts',
         end: '',
+        lineEnd: '',
       },
     },
     {
@@ -241,6 +250,7 @@ text
         postType: '',
         description: '@one',
         end: '',
+        lineEnd: '',
       },
     },
     {
@@ -258,6 +268,7 @@ text
         postType: '',
         description: '```',
         end: '',
+        lineEnd: '',
       },
     },
     {
@@ -275,6 +286,7 @@ text
         postType: '',
         description: 'text',
         end: '',
+        lineEnd: '',
       },
     },
     {
@@ -292,6 +304,7 @@ text
         postType: '',
         description: '```',
         end: '',
+        lineEnd: '',
       },
     },
     {
@@ -309,6 +322,7 @@ text
         postType: '',
         description: '@two',
         end: '',
+        lineEnd: '',
       },
     },
     {
@@ -326,6 +340,7 @@ text
         postType: '',
         description: '```',
         end: '',
+        lineEnd: '',
       },
     },
     {
@@ -343,6 +358,7 @@ text
         postType: '',
         description: '',
         end: '*/',
+        lineEnd: '',
       },
     },
   ];
@@ -395,6 +411,7 @@ text
         postType: '',
         description: '',
         end: '',
+        lineEnd: '',
       },
     },
     {
@@ -412,6 +429,7 @@ text
         postType: '',
         description: '###ts',
         end: '',
+        lineEnd: '',
       },
     },
     {
@@ -429,6 +447,7 @@ text
         postType: '',
         description: '@one',
         end: '',
+        lineEnd: '',
       },
     },
     {
@@ -446,6 +465,7 @@ text
         postType: '',
         description: '###',
         end: '',
+        lineEnd: '',
       },
     },
     {
@@ -463,6 +483,7 @@ text
         postType: '',
         description: 'text',
         end: '',
+        lineEnd: '',
       },
     },
     {
@@ -480,6 +501,7 @@ text
         postType: '',
         description: '###',
         end: '',
+        lineEnd: '',
       },
     },
     {
@@ -497,6 +519,7 @@ text
         postType: '',
         description: '@two',
         end: '',
+        lineEnd: '',
       },
     },
     {
@@ -514,6 +537,7 @@ text
         postType: '',
         description: '###',
         end: '',
+        lineEnd: '',
       },
     },
     {
@@ -531,6 +555,7 @@ text
         postType: '',
         description: '',
         end: '*/',
+        lineEnd: '',
       },
     },
   ];

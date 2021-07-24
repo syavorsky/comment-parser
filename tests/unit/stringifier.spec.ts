@@ -16,6 +16,7 @@ const source = [
       postType: '',
       description: '',
       end: '',
+      lineEnd: '',
     },
   },
   {
@@ -33,6 +34,7 @@ const source = [
       postType: '',
       description: 'Description may go',
       end: '',
+      lineEnd: '',
     },
   },
   {
@@ -50,6 +52,7 @@ const source = [
       postType: '',
       description: 'over multiple lines followed by @tags',
       end: '',
+      lineEnd: '',
     },
   },
   {
@@ -67,6 +70,7 @@ const source = [
       postType: '',
       description: '',
       end: '',
+      lineEnd: '',
     },
   },
   {
@@ -84,6 +88,7 @@ const source = [
       postType: ' ',
       description: 'description line 1',
       end: '',
+      lineEnd: '',
     },
   },
   {
@@ -101,6 +106,7 @@ const source = [
       postType: '',
       description: 'description line 2',
       end: '',
+      lineEnd: '',
     },
   },
   {
@@ -118,6 +124,7 @@ const source = [
       postType: '',
       description: 'description line 3',
       end: '',
+      lineEnd: '',
     },
   },
   {
@@ -135,6 +142,7 @@ const source = [
       postType: '',
       description: '',
       end: '*/',
+      lineEnd: '',
     },
   },
 ];

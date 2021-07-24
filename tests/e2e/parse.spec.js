@@ -25,6 +25,7 @@ test('description only', () => {
             postType: '',
             description: '',
             end: '',
+            lineEnd: '',
           },
         },
         {
@@ -42,6 +43,7 @@ test('description only', () => {
             postType: '',
             description: 'Description',
             end: '',
+            lineEnd: '',
           },
         },
         {
@@ -59,6 +61,7 @@ test('description only', () => {
             postType: '',
             description: '',
             end: '*/',
+            lineEnd: '',
           },
         },
       ],
@@ -91,6 +94,7 @@ test('description one-liner', () => {
             postType: '',
             description: 'Description ',
             end: '*/',
+            lineEnd: '',
           },
         },
       ],
@@ -123,6 +127,7 @@ test('block closed on same line', () => {
             postType: '',
             description: '',
             end: '',
+            lineEnd: '',
           },
         },
         {
@@ -140,6 +145,7 @@ test('block closed on same line', () => {
             postType: '',
             description: 'Description ',
             end: '*/',
+            lineEnd: '',
           },
         },
       ],
@@ -173,6 +179,7 @@ test('no mid stars', () => {
             postType: '',
             description: '',
             end: '',
+            lineEnd: '',
           },
         },
         {
@@ -190,6 +197,7 @@ test('no mid stars', () => {
             postType: '',
             description: 'Description',
             end: '',
+            lineEnd: '',
           },
         },
         {
@@ -207,6 +215,7 @@ test('no mid stars', () => {
             postType: '',
             description: '',
             end: '*/',
+            lineEnd: '',
           },
         },
       ],
@@ -246,6 +255,7 @@ test('skip surrounding empty lines while preserving line numbers', () => {
             postType: '',
             description: '',
             end: '',
+            lineEnd: '',
           },
         },
         {
@@ -263,6 +273,7 @@ test('skip surrounding empty lines while preserving line numbers', () => {
             postType: '',
             description: '',
             end: '',
+            lineEnd: '',
           },
         },
         {
@@ -280,6 +291,7 @@ test('skip surrounding empty lines while preserving line numbers', () => {
             postType: '',
             description: '',
             end: '',
+            lineEnd: '',
           },
         },
         {
@@ -297,6 +309,7 @@ test('skip surrounding empty lines while preserving line numbers', () => {
             postType: '',
             description: 'Description first line',
             end: '',
+            lineEnd: '',
           },
         },
         {
@@ -314,6 +327,7 @@ test('skip surrounding empty lines while preserving line numbers', () => {
             postType: '',
             description: '',
             end: '',
+            lineEnd: '',
           },
         },
         {
@@ -331,6 +345,7 @@ test('skip surrounding empty lines while preserving line numbers', () => {
             postType: '',
             description: 'Description second line',
             end: '',
+            lineEnd: '',
           },
         },
         {
@@ -348,6 +363,7 @@ test('skip surrounding empty lines while preserving line numbers', () => {
             postType: '',
             description: '',
             end: '',
+            lineEnd: '',
           },
         },
         {
@@ -365,6 +381,7 @@ test('skip surrounding empty lines while preserving line numbers', () => {
             postType: '',
             description: '',
             end: '*/',
+            lineEnd: '',
           },
         },
       ],
@@ -400,6 +417,7 @@ test('description on the first line', () => {
             postType: '',
             description: 'Description first line',
             end: '',
+            lineEnd: '',
           },
         },
         {
@@ -417,6 +435,7 @@ test('description on the first line', () => {
             postType: '',
             description: '',
             end: '',
+            lineEnd: '',
           },
         },
         {
@@ -434,6 +453,7 @@ test('description on the first line', () => {
             postType: '',
             description: 'Description second line',
             end: '',
+            lineEnd: '',
           },
         },
         {
@@ -451,6 +471,7 @@ test('description on the first line', () => {
             postType: '',
             description: '',
             end: '*/',
+            lineEnd: '',
           },
         },
       ],
@@ -502,6 +523,7 @@ test('multiple blocks', () => {
             postType: '',
             description: '',
             end: '',
+            lineEnd: '',
           },
         },
         {
@@ -519,6 +541,7 @@ test('multiple blocks', () => {
             postType: '',
             description: 'Description first line',
             end: '',
+            lineEnd: '',
           },
         },
         {
@@ -536,6 +559,7 @@ test('multiple blocks', () => {
             postType: '',
             description: '',
             end: '*/',
+            lineEnd: '',
           },
         },
       ],
@@ -560,6 +584,7 @@ test('multiple blocks', () => {
             postType: '',
             description: '',
             end: '',
+            lineEnd: '',
           },
         },
         {
@@ -577,6 +602,7 @@ test('multiple blocks', () => {
             postType: '',
             description: 'Description second line',
             end: '',
+            lineEnd: '',
           },
         },
         {
@@ -594,6 +620,7 @@ test('multiple blocks', () => {
             postType: '',
             description: '',
             end: '*/',
+            lineEnd: '',
           },
         },
       ],
@@ -638,6 +665,7 @@ test('tag only one-liner', () => {
         postType: '',
         description: '',
         end: '*/',
+        lineEnd: '',
       },
     },
   ];
@@ -684,6 +712,7 @@ test('tag only', () => {
         postType: '',
         description: '',
         end: '',
+        lineEnd: '',
       },
     },
     {
@@ -701,6 +730,7 @@ test('tag only', () => {
         postType: '',
         description: '',
         end: '',
+        lineEnd: '',
       },
     },
     {
@@ -718,6 +748,7 @@ test('tag only', () => {
         postType: '',
         description: '',
         end: '',
+        lineEnd: '',
       },
     },
     {
@@ -735,6 +766,7 @@ test('tag only', () => {
         postType: '',
         description: '',
         end: '*/',
+        lineEnd: '',
       },
     },
   ];
@@ -781,6 +813,7 @@ test('tag and type only', () => {
         postType: '',
         description: '',
         end: '',
+        lineEnd: '',
       },
     },
     {
@@ -798,6 +831,7 @@ test('tag and type only', () => {
         postType: '',
         description: '',
         end: '',
+        lineEnd: '',
       },
     },
     {
@@ -815,6 +849,7 @@ test('tag and type only', () => {
         postType: '',
         description: '',
         end: '',
+        lineEnd: '',
       },
     },
     {
@@ -832,6 +867,7 @@ test('tag and type only', () => {
         postType: '',
         description: '',
         end: '*/',
+        lineEnd: '',
       },
     },
   ];
@@ -878,6 +914,7 @@ test('tag and name only', () => {
         postType: '',
         description: '',
         end: '',
+        lineEnd: '',
       },
     },
     {
@@ -895,6 +932,7 @@ test('tag and name only', () => {
         postType: '',
         description: '',
         end: '',
+        lineEnd: '',
       },
     },
     {
@@ -912,6 +950,7 @@ test('tag and name only', () => {
         postType: '',
         description: '',
         end: '',
+        lineEnd: '',
       },
     },
     {
@@ -929,6 +968,7 @@ test('tag and name only', () => {
         postType: '',
         description: '',
         end: '*/',
+        lineEnd: '',
       },
     },
   ];
@@ -975,6 +1015,7 @@ test('tag, type, and name', () => {
         postType: '',
         description: '',
         end: '',
+        lineEnd: '',
       },
     },
     {
@@ -992,6 +1033,7 @@ test('tag, type, and name', () => {
         postType: '',
         description: '',
         end: '',
+        lineEnd: '',
       },
     },
     {
@@ -1009,6 +1051,7 @@ test('tag, type, and name', () => {
         postType: ' ',
         description: '',
         end: '',
+        lineEnd: '',
       },
     },
     {
@@ -1026,6 +1069,7 @@ test('tag, type, and name', () => {
         postType: '',
         description: '',
         end: '*/',
+        lineEnd: '',
       },
     },
   ];
@@ -1072,6 +1116,7 @@ test('tag, type, name, and description', () => {
         postType: '',
         description: '',
         end: '',
+        lineEnd: '',
       },
     },
     {
@@ -1089,6 +1134,7 @@ test('tag, type, name, and description', () => {
         postType: '',
         description: '',
         end: '',
+        lineEnd: '',
       },
     },
     {
@@ -1106,6 +1152,7 @@ test('tag, type, name, and description', () => {
         postType: ' ',
         description: 'description text',
         end: '',
+        lineEnd: '',
       },
     },
     {
@@ -1123,6 +1170,7 @@ test('tag, type, name, and description', () => {
         postType: '',
         description: '',
         end: '*/',
+        lineEnd: '',
       },
     },
   ];
@@ -1169,6 +1217,7 @@ test('description contains /**', () => {
         postType: '',
         description: '',
         end: '',
+        lineEnd: '',
       },
     },
     {
@@ -1186,6 +1235,7 @@ test('description contains /**', () => {
         postType: '',
         description: '',
         end: '',
+        lineEnd: '',
       },
     },
     {
@@ -1203,6 +1253,7 @@ test('description contains /**', () => {
         postType: ' ',
         description: 'description text /**',
         end: '',
+        lineEnd: '',
       },
     },
     {
@@ -1220,6 +1271,7 @@ test('description contains /**', () => {
         postType: '',
         description: '',
         end: '*/',
+        lineEnd: '',
       },
     },
   ];
@@ -1266,6 +1318,7 @@ test('tag, type, name, and description separated by mixed spaces', () => {
         postType: '',
         description: '',
         end: '',
+        lineEnd: '',
       },
     },
     {
@@ -1283,6 +1336,7 @@ test('tag, type, name, and description separated by mixed spaces', () => {
         postType: '',
         description: '',
         end: '',
+        lineEnd: '',
       },
     },
     {
@@ -1300,6 +1354,7 @@ test('tag, type, name, and description separated by mixed spaces', () => {
         postType: '\t ',
         description: 'description text',
         end: '',
+        lineEnd: '',
       },
     },
     {
@@ -1317,6 +1372,7 @@ test('tag, type, name, and description separated by mixed spaces', () => {
         postType: '',
         description: '',
         end: '*/',
+        lineEnd: '',
       },
     },
   ];
@@ -1364,6 +1420,7 @@ test('tag with multiline description', () => {
         postType: '',
         description: '',
         end: '',
+        lineEnd: '',
       },
     },
     {
@@ -1381,6 +1438,7 @@ test('tag with multiline description', () => {
         postType: ' ',
         description: 'description line 1',
         end: '',
+        lineEnd: '',
       },
     },
     {
@@ -1398,6 +1456,7 @@ test('tag with multiline description', () => {
         postType: '',
         description: 'description line 2',
         end: '',
+        lineEnd: '',
       },
     },
     {
@@ -1415,6 +1474,7 @@ test('tag with multiline description', () => {
         postType: '',
         description: 'description line 3',
         end: '',
+        lineEnd: '',
       },
     },
     {
@@ -1432,6 +1492,7 @@ test('tag with multiline description', () => {
         postType: '',
         description: '',
         end: '*/',
+        lineEnd: '',
       },
     },
   ];
@@ -1479,6 +1540,7 @@ test('optional name', () => {
         postType: '',
         description: '',
         end: '',
+        lineEnd: '',
       },
     },
     {
@@ -1496,6 +1558,7 @@ test('optional name', () => {
         postType: '',
         description: '',
         end: '',
+        lineEnd: '',
       },
     },
     {
@@ -1513,6 +1576,7 @@ test('optional name', () => {
         postType: ' ',
         description: 'description text',
         end: '',
+        lineEnd: '',
       },
     },
     {
@@ -1530,6 +1594,7 @@ test('optional name', () => {
         postType: '',
         description: '',
         end: '*/',
+        lineEnd: '',
       },
     },
   ];
@@ -1576,6 +1641,7 @@ test('report name errors', () => {
         postType: '',
         description: '',
         end: '',
+        lineEnd: '',
       },
     },
     {
@@ -1593,6 +1659,7 @@ test('report name errors', () => {
         postType: '',
         description: '',
         end: '',
+        lineEnd: '',
       },
     },
     {
@@ -1610,6 +1677,7 @@ test('report name errors', () => {
         postType: ' ',
         description: '[my-name description text',
         end: '',
+        lineEnd: '',
       },
     },
     {
@@ -1627,6 +1695,7 @@ test('report name errors', () => {
         postType: '',
         description: '',
         end: '*/',
+        lineEnd: '',
       },
     },
   ];
@@ -1682,6 +1751,7 @@ test('misaligned block', () => {
         postType: '',
         description: '',
         end: '',
+        lineEnd: '',
       },
     },
     {
@@ -1699,6 +1769,7 @@ test('misaligned block', () => {
         postType: ' ',
         description: 'description line 1',
         end: '',
+        lineEnd: '',
       },
     },
     {
@@ -1716,6 +1787,7 @@ test('misaligned block', () => {
         postType: '',
         description: 'description line 2',
         end: '',
+        lineEnd: '',
       },
     },
     {
@@ -1733,6 +1805,7 @@ test('misaligned block', () => {
         postType: '',
         description: 'description line 3',
         end: '',
+        lineEnd: '',
       },
     },
     {
@@ -1750,6 +1823,7 @@ test('misaligned block', () => {
         postType: '',
         description: '',
         end: '*/',
+        lineEnd: '',
       },
     },
   ];

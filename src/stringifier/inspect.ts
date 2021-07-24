@@ -14,6 +14,7 @@ interface Width {
   postType: number;
   description: number;
   end: number;
+  lineEnd: number;
 }
 
 const zeroWidth = {
@@ -29,7 +30,10 @@ const zeroWidth = {
   postType: 0,
   description: 0,
   end: 0,
+  lineEnd: 0,
 };
+
+const headers = { lineEnd: 'CR' };
 
 const fields = Object.keys(zeroWidth);
 
@@ -45,7 +49,7 @@ export default function inspect({ source }: Block): string {
 
   const width: Width = { ...zeroWidth };
 
-  for (const f of fields) width[f] = f.length;
+  for (const f of fields) width[f] = (headers[f] ?? f).length;
   for (const { number, tokens } of source) {
     width.line = Math.max(width.line, number.toString().length);
     for (const k in tokens)
@@ -53,7 +57,7 @@ export default function inspect({ source }: Block): string {
   }
 
   const lines: string[][] = [[], []];
-  for (const f of fields) lines[0].push(f.padEnd(width[f]));
+  for (const f of fields) lines[0].push((headers[f] ?? f).padEnd(width[f]));
   for (const f of fields) lines[1].push('-'.padEnd(width[f], '-'));
   for (const { number, tokens } of source) {
     const line = number.toString().padStart(width.line);

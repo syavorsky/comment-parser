@@ -8,6 +8,13 @@ export function hasCR(source: string): boolean {
   return /\r$/.test(source);
 }
 
+export function splitCR(source: string): [string, string] {
+  const matches = source.match(/\r+$/);
+  return matches == null
+    ? ['', source]
+    : [source.slice(-matches[0].length), source.slice(0, -matches[0].length)];
+}
+
 export function splitSpace(source: string): [string, string] {
   const matches = source.match(/^\s+/);
   return matches == null
@@ -55,6 +62,7 @@ export function seedTokens(tokens: Partial<Tokens> = {}): Tokens {
     postType: '',
     description: '',
     end: '',
+    lineEnd: '',
     ...tokens,
   };
 }
