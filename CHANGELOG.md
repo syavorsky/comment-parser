@@ -1,3 +1,6 @@
+# v1.2.0
+- keep and handle appropriately CR line endings
+
 # v1.1.6-beta.3
 - process CRs as a separate .lineEnd toke
 
