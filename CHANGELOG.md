@@ -1,3 +1,6 @@
+# v1.2.1
+- bump `engines` per `exports` issues in earlier Node versions
+
 # v1.2.0
 - keep and handle appropriately CR line endings
 
