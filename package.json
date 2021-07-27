@@ -3,7 +3,7 @@
   "version": "1.2.1",
   "description": "Generic JSDoc-like comment parser",
   "type": "module",
-  "main": "lib/index.js",
+  "main": "lib/index.cjs",
   "exports": {
     ".": {
       "import": "./es6/index.js",
