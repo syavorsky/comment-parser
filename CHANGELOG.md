@@ -1,3 +1,7 @@
+# v1.2.2
+- re-export ./util on the top-level for compatibility with older Node
+- point package's main to .cjs file
+
 # v1.2.1
 - bump `engines` per `exports` issues in earlier Node versions
 
