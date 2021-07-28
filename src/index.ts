@@ -8,6 +8,7 @@ import alignTransform from './transforms/align';
 import indentTransform from './transforms/indent';
 import crlfTransform from './transforms/crlf';
 import { flow as flowTransform } from './transforms/index';
+import { rewireSpecs, rewireSource, seedBlock, seedTokens } from './util';
 
 export * from './primitives';
 
@@ -31,3 +32,5 @@ export const tokenizers = {
   name: nameTokenizer,
   description: descriptionTokenizer,
 };
+
+export const util = { rewireSpecs, rewireSource, seedBlock, seedTokens };
