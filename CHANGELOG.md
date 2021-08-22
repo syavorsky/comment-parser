@@ -1,5 +1,9 @@
+# v1.2.4
+- reverting engine constraint back to ^12.0.0
+
 # v1.2.3
 - publishing missing fix: point package's main to .cjs file
+
 # v1.2.2
 - re-export ./util on the top-level for compatibility with older Node
 - point package's main to .cjs file
