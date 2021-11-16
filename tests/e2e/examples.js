@@ -80,7 +80,7 @@ function parse_escaping(source, parse, stringify, transforms) {
   // parse(source, {fence: '###'}) -- update source correspondingly
 
   /**
-   * @example "some code" 
+   * @example "some code"
   ###
   @decorator
   function hello() {

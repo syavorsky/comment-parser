@@ -1,4 +1,4 @@
-import { Block, Line, Problem } from '../primitives';
+import { Block, Line, Problem, BlockMarkers, Markers } from '../primitives';
 import { splitLines } from '../util';
 import blockParser from './block-parser';
 import sourceParser from './source-parser';
@@ -18,6 +18,8 @@ export interface Options {
   fence: string;
   // block and comment description compaction strategy
   spacing: 'compact' | 'preserve';
+  // comment description markers
+  markers: BlockMarkers;
   // tokenizer functions extracting name, type, and description out of tag, see Tokenizer
   tokenizers: Tokenizer[];
 }
@@ -28,6 +30,7 @@ export default function getParser({
   startLine = 0,
   fence = '```',
   spacing = 'compact',
+  markers = Markers,
   tokenizers = [
     tokenizeTag(),
     tokenizeType(spacing),
@@ -37,7 +40,7 @@ export default function getParser({
 }: Partial<Options> = {}): Parser {
   if (startLine < 0 || startLine % 1 > 0) throw new Error('Invalid startLine');
 
-  const parseSource = sourceParser({ startLine });
+  const parseSource = sourceParser({ startLine, markers });
   const parseBlock = blockParser({ fence });
   const parseSpec = specParser({ tokenizers });
   const joinDescription = getDescriptionJoiner(spacing);
@@ -57,7 +60,7 @@ export default function getParser({
       const specs = sections.slice(1).map(parseSpec);
 
       blocks.push({
-        description: joinDescription(sections[0]),
+        description: joinDescription(sections[0], markers),
         tags: specs,
         source: lines,
         problems: specs.reduce(
