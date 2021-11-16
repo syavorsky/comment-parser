@@ -1,8 +1,16 @@
+/** @deprecated */
 export enum Markers {
   start = '/**',
   nostart = '/***',
   delim = '*',
   end = '*/',
+}
+
+export interface BlockMarkers {
+  start: string;
+  nostart: string;
+  delim: string;
+  end: string;
 }
 
 export interface Block {

@@ -1,5 +1,5 @@
 import { Transform } from './index';
-import { Markers, Block, Line } from '../primitives';
+import { BlockMarkers, Block, Line, Markers } from '../primitives';
 import { rewireSource } from '../util';
 
 interface Width {
@@ -16,16 +16,18 @@ const zeroWidth = {
   name: 0,
 };
 
-const getWidth = (w: Width, { tokens: t }: Line) => ({
-  start: t.delimiter === Markers.start ? t.start.length : w.start,
-  tag: Math.max(w.tag, t.tag.length),
-  type: Math.max(w.type, t.type.length),
-  name: Math.max(w.name, t.name.length),
-});
+const getWidth =
+  (markers = Markers) =>
+  (w: Width, { tokens: t }: Line) => ({
+    start: t.delimiter === markers.start ? t.start.length : w.start,
+    tag: Math.max(w.tag, t.tag.length),
+    type: Math.max(w.type, t.type.length),
+    name: Math.max(w.name, t.name.length),
+  });
 
 const space = (len: number) => ''.padStart(len, ' ');
 
-export default function align(): Transform {
+export default function align(markers = Markers): Transform {
   let intoTags = false;
   let w: Width;
 
@@ -40,16 +42,16 @@ export default function align(): Transform {
       tokens.description === '';
 
     // dangling '*/'
-    if (tokens.end === Markers.end && isEmpty) {
+    if (tokens.end === markers.end && isEmpty) {
       tokens.start = space(w.start + 1);
       return { ...line, tokens };
     }
 
     switch (tokens.delimiter) {
-      case Markers.start:
+      case markers.start:
         tokens.start = space(w.start);
         break;
-      case Markers.delim:
+      case markers.delim:
         tokens.start = space(w.start + 1);
         break;
       default:
@@ -101,7 +103,7 @@ export default function align(): Transform {
   }
 
   return ({ source, ...fields }: Block): Block => {
-    w = source.reduce(getWidth, { ...zeroWidth });
+    w = source.reduce(getWidth(markers), { ...zeroWidth });
     return rewireSource({ ...fields, source: source.map(update) });
   };
 }

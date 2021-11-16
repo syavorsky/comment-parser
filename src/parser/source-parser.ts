@@ -1,14 +1,16 @@
-import { Line, Markers, Tokens } from '../primitives';
+import { Line, Tokens, BlockMarkers, Markers } from '../primitives';
 import { seedTokens, splitSpace, splitCR } from '../util';
 
 export interface Options {
   startLine: number;
+  markers: BlockMarkers;
 }
 
 export type Parser = (source: string) => Line[] | null;
 
 export default function getParser({
   startLine = 0,
+  markers = Markers,
 }: Partial<Options> = {}): Parser {
   let block: Line[] | null = null;
   let num = startLine;
@@ -22,12 +24,12 @@ export default function getParser({
 
     if (
       block === null &&
-      rest.startsWith(Markers.start) &&
-      !rest.startsWith(Markers.nostart)
+      rest.startsWith(markers.start) &&
+      !rest.startsWith(markers.nostart)
     ) {
       block = [];
-      tokens.delimiter = rest.slice(0, Markers.start.length);
-      rest = rest.slice(Markers.start.length);
+      tokens.delimiter = rest.slice(0, markers.start.length);
+      rest = rest.slice(markers.start.length);
       [tokens.postDelimiter, rest] = splitSpace(rest);
     }
 
@@ -36,22 +38,22 @@ export default function getParser({
       return null;
     }
 
-    const isClosed = rest.trimRight().endsWith(Markers.end);
+    const isClosed = rest.trimRight().endsWith(markers.end);
 
     if (
       tokens.delimiter === '' &&
-      rest.startsWith(Markers.delim) &&
-      !rest.startsWith(Markers.end)
+      rest.startsWith(markers.delim) &&
+      !rest.startsWith(markers.end)
     ) {
-      tokens.delimiter = Markers.delim;
-      rest = rest.slice(Markers.delim.length);
+      tokens.delimiter = markers.delim;
+      rest = rest.slice(markers.delim.length);
       [tokens.postDelimiter, rest] = splitSpace(rest);
     }
 
     if (isClosed) {
       const trimmed = rest.trimRight();
-      tokens.end = rest.slice(trimmed.length - Markers.end.length);
-      rest = trimmed.slice(0, -Markers.end.length);
+      tokens.end = rest.slice(trimmed.length - markers.end.length);
+      rest = trimmed.slice(0, -markers.end.length);
     }
 
     tokens.description = rest;

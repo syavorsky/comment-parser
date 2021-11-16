@@ -1,10 +1,10 @@
-import { Spec, Line, Markers } from '../../primitives';
+import { Spec, Line, BlockMarkers, Markers } from '../../primitives';
 import { Tokenizer } from './index';
 
 /**
  * Walks over provided lines joining description token into a single string.
  * */
-export type Joiner = (lines: Line[]) => string;
+export type Joiner = (lines: Line[], markers?: BlockMarkers) => string;
 
 /**
  * Shortcut for standard Joiners
@@ -17,13 +17,15 @@ export type Spacing = 'compact' | 'preserve' | Joiner;
  * Makes no changes to `spec.lines[].tokens` but joins them into `spec.description`
  * following given spacing srtategy
  * @param {Spacing} spacing tells how to handle the whitespace
+ * @param {BlockMarkers} markers tells how to handle comment block delimitation
  */
 export default function descriptionTokenizer(
-  spacing: Spacing = 'compact'
+  spacing: Spacing = 'compact',
+  markers = Markers
 ): Tokenizer {
   const join = getJoiner(spacing);
   return (spec: Spec): Spec => {
-    spec.description = join(spec.source);
+    spec.description = join(spec.source, markers);
     return spec;
   };
 }
@@ -31,10 +33,11 @@ export default function descriptionTokenizer(
 export function getJoiner(spacing: Spacing): Joiner {
   if (spacing === 'compact') return compactJoiner;
   if (spacing === 'preserve') return preserveJoiner;
+
   return spacing;
 }
 
-function compactJoiner(lines: Line[]): string {
+function compactJoiner(lines: Line[], markers = Markers): string {
   return lines
     .map(({ tokens: { description } }: Line) => description.trim())
     .filter((description) => description !== '')
@@ -48,13 +51,13 @@ const getDescription = ({ tokens }: Line) =>
   (tokens.delimiter === '' ? tokens.start : tokens.postDelimiter.slice(1)) +
   tokens.description;
 
-function preserveJoiner(lines: Line[]): string {
+function preserveJoiner(lines: Line[], markers = Markers): string {
   if (lines.length === 0) return '';
 
   // skip the opening line with no description
   if (
     lines[0].tokens.description === '' &&
-    lines[0].tokens.delimiter === Markers.start
+    lines[0].tokens.delimiter === markers.start
   )
     lines = lines.slice(1);
 
@@ -64,7 +67,7 @@ function preserveJoiner(lines: Line[]): string {
   if (
     lastLine !== undefined &&
     lastLine.tokens.description === '' &&
-    lastLine.tokens.end.endsWith(Markers.end)
+    lastLine.tokens.end.endsWith(markers.end)
   )
     lines = lines.slice(0, -1);
 
