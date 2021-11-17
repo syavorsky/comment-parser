@@ -66,15 +66,16 @@
   ],
   "author": "Sergiy Yavorsky <sergiy@yavorsky.me> (https://github.com/syavorsky)",
   "contributors": [
+    "Alex Grozav (https://github.com/alexgrozav)",
     "Alexej Yaroshevich (https://github.com/zxqfox)",
     "Andre Wachsmuth (https://github.com/blutorange)",
     "Brett Zamir (https://github.com/brettz9)",
     "Dieter Oberkofler (https://github.com/doberkofler)",
     "Evgeny Reznichenko (https://github.com/zxcabs)",
     "Javier \"Ciberma\" Mora (https://github.com/jhm-ciberman)",
+    "Jayden Seric (https://github.com/jaydenseric)",
     "Jordan Harband (https://github.com/ljharb)",
-    "tengattack (https://github.com/tengattack)",
-    "Jayden Seric (https://github.com/jaydenseric)"
+    "tengattack (https://github.com/tengattack)"
   ],
   "license": "MIT",
   "bugs": {
