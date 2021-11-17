@@ -1,3 +1,6 @@
+# v1.3.0
+- add support for custom block markers
+
 # v1.2.4
 - reverting engine constraint back to ^12.0.0
 
