@@ -20,7 +20,7 @@ export type Joiner = (parts: string[]) => string;
  * compact - trim surrounding space, replace line breaks with a single space
  * preserve - concat as is
  */
-export type Spacing = 'compact' | 'preserve' | Joiner;
+export type Spacing = 'compact' | 'preserve' | 'dedent' | Joiner;
 
 /**
  * Sets splits remaining `Spec.lines[].tokes.description` into `type` and `description`
@@ -86,6 +86,7 @@ const trim = (x: string) => x.trim();
 
 function getJoiner(spacing: Spacing): Joiner {
   if (spacing === 'compact') return (t: string[]) => t.map(trim).join('');
-  else if (spacing === 'preserve') return (t: string[]) => t.join('\n');
+  else if (spacing === 'preserve' || spacing === 'dedent')
+    return (t: string[]) => t.join('\n');
   else return spacing;
 }

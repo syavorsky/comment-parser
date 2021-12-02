@@ -1,5 +1,5 @@
 import { Line, Spec } from '../primitives';
-import { seedSpec } from '../util';
+import { dedent, seedSpec } from '../util';
 import { Tokenizer } from './tokenizers/index';
 
 export type Parser = (source: Line[]) => Spec;
@@ -16,5 +16,12 @@ export default function getParser({ tokenizers }: Options): Parser {
       if (spec.problems[spec.problems.length - 1]?.critical) break;
     }
     return spec;
+  };
+}
+
+export function dedentSpec(spec: Spec): Spec {
+  return {
+    ...spec,
+    description: dedent(spec.description),
   };
 }

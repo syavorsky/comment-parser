@@ -23,7 +23,7 @@ Lib mainly provides two pieces [Parser](#Parser) and [Stringifier](#Stringifier)
 Let's go over string parsing:
 
 ```js
-const { parse } = require('comment-parser/lib')
+const { parse } = require('comment-parser/lib');
 
 const source = `
 /**
@@ -31,9 +31,9 @@ const source = `
  * over few lines followed by @tags
  * @param {string} name the name parameter
  * @param {any} value the value of any type
- */`
+ */`;
 
-const parsed = parse(source)
+const parsed = parse(source);
 ```
 
 Lib source code is written in TypeScript and all data shapes are conveniently available for your IDE of choice. All types described below can be found in [primitives.ts](src/primitives.ts)
@@ -160,13 +160,14 @@ interface Options {
   // escaping chars sequence marking wrapped content literal for the parser
   fence: string;
   // block and comment description compaction strategy
-  spacing: 'compact' | 'preserve';
+  spacing: 'compact' | 'preserve' | 'dedent';
   // tokenizer functions extracting name, type, and description out of tag, see Tokenizer
   tokenizers: Tokenizer[];
 }
 ```
 
 examples
+
 - [default config](https://syavorsky.github.io/comment-parser/#parse-defaults)
 - [line numbers control](https://syavorsky.github.io/comment-parser/#parse-line-numbering)
 - [description spacing](https://syavorsky.github.io/comment-parser/#parse-spacing)
@@ -180,7 +181,11 @@ examples
 The stringifier is an important piece used by other tools updating the source code. It goes over `Block.source[].tokens` items and assembles them back to the string. It might be used with various transforms applied before stringifying.
 
 ```js
-const { parse, stringify, transforms: {flow, align, indent} } = require('comment-parser');
+const {
+  parse,
+  stringify,
+  transforms: { flow, align, indent },
+} = require('comment-parser');
 
 const source = `
   /**
@@ -193,7 +198,7 @@ const source = `
    */`;
 
 const parsed = parse(source);
-const transform = flow(align(), indent(0))
+const transform = flow(align(), indent(0));
 console.log(stringify(transform(parsed[0])));
 ```
 
@@ -211,6 +216,7 @@ console.log(stringify(transform(parsed[0])));
 ```
 
 examples
+
 - [format comments](https://syavorsky.github.io/comment-parser/#stringify-formatting)
 
 [suggest more examples](https://github.com/syavorsky/comment-parser/issues/new?title=example+suggestion%3A+...&labels=example,stringifier)

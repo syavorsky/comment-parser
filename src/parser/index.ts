@@ -1,8 +1,8 @@
 import { Block, Line, Problem, BlockMarkers, Markers } from '../primitives';
-import { splitLines } from '../util';
+import { splitLines, dedent, compose2, identity } from '../util';
 import blockParser from './block-parser';
 import sourceParser from './source-parser';
-import specParser from './spec-parser';
+import specParser, { dedentSpec } from './spec-parser';
 import { Tokenizer } from './tokenizers/index';
 import tokenizeTag from './tokenizers/tag';
 import tokenizeType from './tokenizers/type';
@@ -17,7 +17,7 @@ export interface Options {
   // escaping chars sequence marking wrapped content literal for the parser
   fence: string;
   // block and comment description compaction strategy
-  spacing: 'compact' | 'preserve';
+  spacing: 'compact' | 'preserve' | 'dedent';
   // comment description markers
   markers: BlockMarkers;
   // tokenizer functions extracting name, type, and description out of tag, see Tokenizer
@@ -57,10 +57,19 @@ export default function getParser({
       if (lines.find(notEmpty) === undefined) continue;
 
       const sections = parseBlock(lines);
-      const specs = sections.slice(1).map(parseSpec);
+      const specFormatter = spacing === 'dedent' ? dedentSpec : identity;
+
+      const specs = sections.slice(1).map(compose2(specFormatter, parseSpec));
+
+      const joinedDescription = joinDescription(sections[0], markers);
+
+      const description =
+        spacing === 'dedent' ? dedent(joinedDescription) : joinedDescription;
+
+      console.log({ joinedDescription, spacing });
 
       blocks.push({
-        description: joinDescription(sections[0], markers),
+        description,
         tags: specs,
         source: lines,
         problems: specs.reduce(

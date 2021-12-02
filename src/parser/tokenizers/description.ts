@@ -11,7 +11,7 @@ export type Joiner = (lines: Line[], markers?: BlockMarkers) => string;
  * compact - strip surrounding whitespace and concat lines using a single string
  * preserve - preserves original whitespace and line breaks as is
  */
-export type Spacing = 'compact' | 'preserve' | Joiner;
+export type Spacing = 'compact' | 'preserve' | 'dedent' | Joiner;
 
 /**
  * Makes no changes to `spec.lines[].tokens` but joins them into `spec.description`
@@ -32,7 +32,7 @@ export default function descriptionTokenizer(
 
 export function getJoiner(spacing: Spacing): Joiner {
   if (spacing === 'compact') return compactJoiner;
-  if (spacing === 'preserve') return preserveJoiner;
+  if (spacing === 'preserve' || spacing === 'dedent') return preserveJoiner;
 
   return spacing;
 }

@@ -97,3 +97,61 @@ export function rewireSpecs(block: Block): Block {
   block.source = block.source.map((line) => source.get(line.number) || line);
   return block;
 }
+
+/**
+ * Dedent a string. Adapted from 'dedent' npm package
+ * @see https://npm.im/dedent
+ */
+export function dedent(raw: string): string {
+  // first, perform interpolation
+  var result = '';
+  for (var i = 0; i < raw.length; i++) {
+    result += raw[i]
+      // join lines when there is a suppressed newline
+      .replace(/\\\n[ \t]*/g, '')
+      // handle escaped backticks
+      .replace(/\\`/g, '`');
+
+    if (i < (arguments.length <= 1 ? 0 : arguments.length - 1)) {
+      result += arguments.length <= i + 1 ? undefined : arguments[i + 1];
+    }
+  }
+
+  // now strip indentation
+  var lines = result.split('\n');
+  var mindent = null;
+  lines.forEach(function (l) {
+    var m = l.match(/^(\s+)\S+/);
+    if (m) {
+      var indent = m[1].length;
+      if (!mindent) {
+        // this is the first indented line
+        mindent = indent;
+      } else {
+        mindent = Math.min(mindent, indent);
+      }
+    }
+  });
+
+  if (mindent !== null) {
+    result = lines
+      .map(function (l) {
+        return l[0] === ' ' ? l.slice(mindent) : l;
+      })
+      .join('\n');
+  }
+
+  // dedent eats leading and trailing whitespace too
+  result = result.trim();
+
+  // handle escaped newlines at the end to ensure they don't get stripped too
+  return result.replace(/\\n/g, '\n');
+}
+
+/** I combinator */
+export const identity = <T>(x: T): T => x;
+/** B combinator - the Bluebird. Compose two unary functions, right-to-left */
+export const compose2 =
+  <T, U = T, V = T>(f: (y: U) => V, g: (x: T) => U) =>
+  (x: T): V =>
+    f(g(x));
