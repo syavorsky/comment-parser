@@ -1,4 +1,5 @@
 import {
+  hasCR,
   isSpace,
   seedTokens,
   seedBlock,
@@ -6,6 +7,15 @@ import {
   splitSpace,
   seedSpec,
 } from '../../src/util';
+
+test.each([
+  ['beginning', '\r to end', false],
+  ['middle', 'has \r in middle', false],
+  ['ending', 'only at end \r', true],
+  ['none', 'no carriage returns', false],
+])('carriage returns - %s', (name, source, boolResult) => {
+  expect(hasCR(source)).toEqual(boolResult);
+});
 
 test.each([
   ['win', 'a\r\nb\r\nc', ['a\r', 'b\r', 'c']],
