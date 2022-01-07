@@ -4,7 +4,7 @@ import { seedTokens } from '../../src/util';
 test('block with tags', () => {
   const parsed = getParser()(`
   /**
-   * Description may go 
+   * Description may go\x20
    * over few lines followed by @tags
    * @param {string} name name parameter
    *
@@ -167,10 +167,10 @@ test('block with tags', () => {
   ]);
 });
 
-test('no source clonning', () => {
+test('no source cloning', () => {
   const parsed = getParser()(`
   /**
-   * Description may go 
+   * Description may go\x20
    * over few lines followed by @tags
    * @param {string} name name parameter
    *
@@ -179,11 +179,111 @@ test('no source clonning', () => {
   expect(parsed[0].tags[0].source[0] === parsed[0].source[3]).toBe(true);
 });
 
+test('empty multi-line block', () => {
+  const parsed = getParser()(`
+  /**
+   *
+   */`);
+  expect(parsed).toEqual([
+    {
+      description: '',
+      tags: [],
+      source: [
+        {
+          number: 1,
+          source: '  /**',
+          tokens: {
+            delimiter: '/**',
+            description: '',
+            end: '',
+            lineEnd: '',
+            name: '',
+            postDelimiter: '',
+            postName: '',
+            postTag: '',
+            postType: '',
+            start: '  ',
+            tag: '',
+            type: '',
+          },
+        },
+        {
+          number: 2,
+          source: '   *',
+          tokens: {
+            delimiter: '*',
+            description: '',
+            end: '',
+            lineEnd: '',
+            name: '',
+            postDelimiter: '',
+            postName: '',
+            postTag: '',
+            postType: '',
+            start: '   ',
+            tag: '',
+            type: '',
+          },
+        },
+        {
+          number: 3,
+          source: '   */',
+          tokens: {
+            delimiter: '',
+            description: '',
+            end: '*/',
+            lineEnd: '',
+            name: '',
+            postDelimiter: '',
+            postName: '',
+            postTag: '',
+            postType: '',
+            start: '   ',
+            tag: '',
+            type: '',
+          },
+        },
+      ],
+      problems: [],
+    },
+  ]);
+});
+
+test('empty one-line block', () => {
+  const parsed = getParser()(`
+  /** */`);
+  expect(parsed).toEqual([
+    {
+      description: '',
+      tags: [],
+      source: [
+        {
+          number: 1,
+          source: '  /** */',
+          tokens: {
+            delimiter: '/**',
+            description: '',
+            end: '*/',
+            lineEnd: '',
+            name: '',
+            postDelimiter: ' ',
+            postName: '',
+            postTag: '',
+            postType: '',
+            start: '  ',
+            tag: '',
+            type: '',
+          },
+        },
+      ],
+      problems: [],
+    },
+  ]);
+});
+
 test.each([
-  ['empty', '/**\n*\n*/'],
   ['one-star', '/*\n*\n*/'],
   ['three-star', '/***\n*\n*/'],
-  ['empty one-liner', '/** */'],
   ['one-star oneliner', '/* */'],
   ['three-star oneliner', '/*** */'],
 ])('skip block - %s', (name, source) => {
