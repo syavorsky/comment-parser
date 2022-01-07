@@ -45,16 +45,12 @@ export default function getParser({
   const parseSpec = specParser({ tokenizers });
   const joinDescription = getDescriptionJoiner(spacing);
 
-  const notEmpty = (line: Line): boolean =>
-    line.tokens.description.trim() != '';
-
   return function (source: string): Block[] {
     const blocks: Block[] = [];
     for (const line of splitLines(source)) {
       const lines = parseSource(line);
 
       if (lines === null) continue;
-      if (lines.find(notEmpty) === undefined) continue;
 
       const sections = parseBlock(lines);
       const specs = sections.slice(1).map(parseSpec);

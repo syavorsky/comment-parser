@@ -480,15 +480,6 @@ test('description on the first line', () => {
   ]);
 });
 
-test('skip empty blocks', () => {
-  const parsed = parse(`
-  /**
-   *
-   */
-  var a`);
-  expect(parsed).toHaveLength(0);
-});
-
 test('multiple blocks', () => {
   const parsed = parse(`
   /**
