@@ -81,6 +81,5 @@
   "bugs": {
     "url": "https://github.com/syavorsky/comment-parser/issues"
   },
-  "homepage": "https://github.com/syavorsky/comment-parser",
-  "dependencies": {}
+  "homepage": "https://github.com/syavorsky/comment-parser"
 }
