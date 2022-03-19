@@ -1,3 +1,6 @@
+# v1.3.1
+- allow for valid empty jsdoc; fixes #128
+
 # v1.3.0
 - add support for custom block markers
 
