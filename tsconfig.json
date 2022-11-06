@@ -1,8 +1,9 @@
 {
+  "$schema": "https://json.schemastore.org/tsconfig.json",
   "compilerOptions": {
     "target": "es2015",
-    "module": "es2015",
-    "moduleResolution": "node",
+    "module": "node16",
+    "moduleResolution": "node16",
     "declaration": true,
     "outDir": "./es6",
     "lib": ["es2016", "es5"]

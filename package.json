@@ -35,21 +35,20 @@
     "test": "tests"
   },
   "devDependencies": {
-    "@types/jest": "^26.0.23",
+    "@types/jest": "^29.2.0",
     "convert-extension": "^0.3.0",
-    "jest": "^27.0.5",
+    "jest": "^29.2.0",
     "prettier": "2.3.1",
-    "replace": "^1.2.1",
     "rimraf": "^3.0.2",
     "rollup": "^2.52.2",
-    "ts-jest": "^27.0.3",
-    "typescript": "^4.3.4"
+    "ts-jest": "^29.0.3",
+    "typescript": "^4.8.3"
   },
   "engines": {
     "node": ">= 12.0.0"
   },
   "scripts": {
-    "build": "rimraf lib es6 browser; tsc -p tsconfig.json && tsc -p tsconfig.node.json && rollup -o browser/index.js -f iife --context window -n CommentParser es6/index.js && convert-extension cjs lib/ && cd es6 && replace \"from '(\\.[^']*)'\" \"from '\\$1.js'\" * -r --include=\"*.js\"",
+    "build": "rimraf lib es6 browser; tsc -p tsconfig.json && tsc -p tsconfig.node.json && rollup -o browser/index.js -f iife --context window -n CommentParser es6/index.js && convert-extension cjs lib/",
     "format": "prettier --write src tests",
     "pretest": "rimraf coverage; npm run build",
     "test": "prettier --check src tests && jest --verbose",
