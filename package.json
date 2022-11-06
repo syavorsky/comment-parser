@@ -49,7 +49,7 @@
     "node": ">= 12.0.0"
   },
   "scripts": {
-    "build": "rimraf lib es6 browser; tsc -p tsconfig.json && tsc -p tsconfig.node.json && rollup -o browser/index.js -f iife --context window -n CommentParser es6/index.js && convert-extension cjs lib/ && cd es6 && replace \"from '(\\.[^']*)'\" \"from '\\$1.js'\" * -r --include=\"*.js\"",
+    "build": "rimraf lib es6 browser; tsc -p tsconfig.json && tsc -p tsconfig.node.json && rollup -o browser/index.js -f iife --context window -n CommentParser es6/index.js && convert-extension cjs lib/ && cd es6 && replace \"from '(\\.[^']*)'\" \"from '\\$1.js'\" * -r --include=\"*.js,*.d.ts\"",
     "format": "prettier --write src tests",
     "pretest": "rimraf coverage; npm run build",
     "test": "prettier --check src tests && jest --verbose",
