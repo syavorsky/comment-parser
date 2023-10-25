@@ -1,3 +1,7 @@
+# v1.4.1
+- fix .prettierignore
+- add source trasformation example
+
 # v1.4.0
 - ESM compatibility improvements; fixes #159, #161
 
