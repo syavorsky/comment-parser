@@ -74,6 +74,36 @@ test('require @', () => {
   );
 });
 
+test('disallow @npm/package format', () => {
+  expect(
+    tokenize(
+      seedSpec({
+        source: [
+          {
+            number: 42,
+            source: '...',
+            tokens: seedTokens({
+              description: '@npm/package',
+            }),
+          },
+        ],
+      })
+    )
+  ).toEqual(
+    seedSpec({
+      source: [
+        {
+          number: 42,
+          source: '...',
+          tokens: seedTokens({
+            description: '@npm/package',
+          }),
+        },
+      ],
+    })
+  );
+});
+
 test.each([
   ['@+tag', '+tag'],
   ['@-tag', '-tag'],
