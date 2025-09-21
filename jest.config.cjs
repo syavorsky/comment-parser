@@ -6,12 +6,6 @@ const { compilerOptions: tsconfig } = JSON.parse(
 );
 
 module.exports = {
-  globals: {
-    'ts-jest': {
-      tsconfig,
-    },
-  },
-
   // All imported modules in your tests should be mocked automatically
   // automock: false,
 
@@ -186,7 +180,9 @@ module.exports = {
 
   // A map from regular expressions to paths to transformers
   transform: {
-    '^.+\\.ts$': 'ts-jest',
+    '^.+\\.ts$': ['ts-jest', {
+      tsconfig
+    }],
   },
 
   // An array of regexp pattern strings that are matched against all source file paths, matched files will skip transformation
