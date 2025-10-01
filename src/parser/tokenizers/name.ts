@@ -13,9 +13,19 @@ export default function nameTokenizer(): Tokenizer {
     tokens.type === '' ? num : i;
 
   return (spec: Spec): Spec => {
-    // look for the name in the line where {type} ends
-    const { tokens } = spec.source[spec.source.reduce(typeEnd, 0)];
-    const source = tokens.description.trimLeft();
+    // look for the name starting in the line where {type} ends
+    let finalTypeLine = spec.source.reduce(typeEnd, 0);
+
+    let tokens;
+    do {
+      ({ tokens } = spec.source[finalTypeLine]);
+      if (tokens.description.trim()) {
+        break;
+      }
+      finalTypeLine++;
+    } while (spec.source[finalTypeLine]);
+
+    const source = tokens.description.trimStart();
 
     const quotedGroups = source.split('"');
 

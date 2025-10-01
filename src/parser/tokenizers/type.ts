@@ -23,7 +23,7 @@ export type Joiner = (parts: string[]) => string;
 export type Spacing = 'compact' | 'preserve' | Joiner;
 
 /**
- * Sets splits remaining `Spec.lines[].tokes.description` into `type` and `description`
+ * Sets splits remaining `Spec.lines[].tokens.description` into `type` and `description`
  * tokens and populates Spec.type`
  *
  * @param {Spacing} spacing tells how to deal with a whitespace
@@ -35,9 +35,18 @@ export default function typeTokenizer(spacing: Spacing = 'compact'): Tokenizer {
     let curlies = 0;
     let lines: [Tokens, string][] = [];
 
-    for (const [i, { tokens }] of spec.source.entries()) {
+    let descriptionBegun = false;
+    let firstTypeIteration = true;
+    for (const { tokens } of spec.source.values()) {
       let type = '';
-      if (i === 0 && tokens.description[0] !== '{') return spec;
+      if (!descriptionBegun && tokens.description.trim()) {
+        descriptionBegun = true;
+      } else if (!descriptionBegun) {
+        continue;
+      }
+
+      if (firstTypeIteration && tokens.description[0] !== '{') return spec;
+      firstTypeIteration = false;
 
       for (const ch of tokens.description) {
         if (ch === '{') curlies++;
@@ -48,6 +57,10 @@ export default function typeTokenizer(spacing: Spacing = 'compact'): Tokenizer {
 
       lines.push([tokens, type]);
       if (curlies === 0) break;
+    }
+
+    if (!descriptionBegun) {
+      return spec;
     }
 
     if (curlies !== 0) {
