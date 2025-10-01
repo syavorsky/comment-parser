@@ -167,6 +167,240 @@ test('block with tags', () => {
   ]);
 });
 
+test('tag with name and description on second line', () => {
+  const parsed = getParser()(`
+  /**
+   * @param {string}
+   *   foo The foo.
+   */`);
+  expect(parsed).toEqual([
+    {
+      description: '',
+      tags: [
+        {
+          tag: 'param',
+          name: 'foo',
+          type: 'string',
+          optional: false,
+          description: 'The foo.',
+          problems: [],
+          source: [
+            {
+              number: 2,
+              source: '   * @param {string}',
+              tokens: seedTokens({
+                start: '   ',
+                delimiter: '*',
+                postDelimiter: ' ',
+                tag: '@param',
+                postTag: ' ',
+                type: '{string}',
+              }),
+            },
+            {
+              number: 3,
+              source: '   *   foo The foo.',
+              tokens: seedTokens({
+                start: '   ',
+                delimiter: '*',
+                postDelimiter: '   ',
+                name: 'foo',
+                postName: ' ',
+                description: 'The foo.',
+              }),
+            },
+            {
+              number: 4,
+              source: '   */',
+              tokens: seedTokens({
+                start: '   ',
+                end: '*/',
+              }),
+            },
+          ],
+        },
+      ],
+      source: [
+        {
+          number: 1,
+          source: '  /**',
+          tokens: seedTokens({
+            delimiter: '/**',
+            start: '  ',
+          }),
+        },
+        {
+          number: 2,
+          source: '   * @param {string}',
+          tokens: seedTokens({
+            start: '   ',
+            delimiter: '*',
+            postDelimiter: ' ',
+            tag: '@param',
+            postTag: ' ',
+            type: '{string}',
+          }),
+        },
+        {
+          number: 3,
+          source: '   *   foo The foo.',
+          tokens: seedTokens({
+            start: '   ',
+            delimiter: '*',
+            postDelimiter: '   ',
+            name: 'foo',
+            postName: ' ',
+            description: 'The foo.',
+          }),
+        },
+        {
+          number: 4,
+          source: '   */',
+          tokens: seedTokens({
+            start: '   ',
+            end: '*/',
+          }),
+        },
+      ],
+      problems: [],
+    },
+  ]);
+});
+
+test('tag with type, name and description on subsequent lines', () => {
+  const parsed = getParser()(`
+  /**
+   * @param
+   * {string}
+   *   foo
+   * The foo.
+   */`);
+  expect(parsed).toEqual([
+    {
+      description: '',
+      tags: [
+        {
+          tag: 'param',
+          name: 'foo',
+          type: 'string',
+          optional: false,
+          description: 'The foo.',
+          problems: [],
+          source: [
+            {
+              number: 2,
+              source: '   * @param',
+              tokens: seedTokens({
+                start: '   ',
+                delimiter: '*',
+                postDelimiter: ' ',
+                tag: '@param',
+              }),
+            },
+            {
+              number: 3,
+              source: '   * {string}',
+              tokens: seedTokens({
+                start: '   ',
+                delimiter: '*',
+                postDelimiter: ' ',
+                type: '{string}',
+              }),
+            },
+            {
+              number: 4,
+              source: '   *   foo',
+              tokens: seedTokens({
+                start: '   ',
+                delimiter: '*',
+                postDelimiter: '   ',
+                name: 'foo',
+              }),
+            },
+            {
+              number: 5,
+              source: '   * The foo.',
+              tokens: seedTokens({
+                start: '   ',
+                delimiter: '*',
+                postDelimiter: ' ',
+                description: 'The foo.',
+              }),
+            },
+            {
+              number: 6,
+              source: '   */',
+              tokens: seedTokens({
+                start: '   ',
+                end: '*/',
+              }),
+            },
+          ],
+        },
+      ],
+      source: [
+        {
+          number: 1,
+          source: '  /**',
+          tokens: seedTokens({
+            delimiter: '/**',
+            start: '  ',
+          }),
+        },
+        {
+          number: 2,
+          source: '   * @param',
+          tokens: seedTokens({
+            start: '   ',
+            delimiter: '*',
+            postDelimiter: ' ',
+            tag: '@param',
+          }),
+        },
+        {
+          number: 3,
+          source: '   * {string}',
+          tokens: seedTokens({
+            start: '   ',
+            delimiter: '*',
+            postDelimiter: ' ',
+            type: '{string}',
+          }),
+        },
+        {
+          number: 4,
+          source: '   *   foo',
+          tokens: seedTokens({
+            start: '   ',
+            delimiter: '*',
+            postDelimiter: '   ',
+            name: 'foo',
+          }),
+        },
+        {
+          number: 5,
+          source: '   * The foo.',
+          tokens: seedTokens({
+            start: '   ',
+            delimiter: '*',
+            postDelimiter: ' ',
+            description: 'The foo.',
+          }),
+        },
+        {
+          number: 6,
+          source: '   */',
+          tokens: seedTokens({
+            start: '   ',
+            end: '*/',
+          }),
+        },
+      ],
+      problems: [],
+    },
+  ]);
+});
+
 test('no source cloning', () => {
   const parsed = getParser()(`
   /**
