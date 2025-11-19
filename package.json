@@ -31,6 +31,11 @@
     }
   },
   "types": "lib/index.d.ts",
+  "files": [
+    "browser",
+    "es6",
+    "lib"
+  ],
   "directories": {
     "test": "tests"
   },
