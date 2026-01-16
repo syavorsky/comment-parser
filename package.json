@@ -35,6 +35,7 @@
     "test": "tests"
   },
   "devDependencies": {
+    "@changesets/cli": "^2.29.8",
     "@types/jest": "^30.0.0",
     "convert-extension": "^0.3.0",
     "jest": "^30.1.3",
