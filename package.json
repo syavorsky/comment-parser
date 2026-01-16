@@ -1,9 +1,12 @@
 {
   "name": "comment-parser",
-  "version": "1.4.1",
+  "version": "1.4.2",
   "description": "Generic JSDoc-like comment parser",
   "type": "module",
   "main": "lib/index.cjs",
+  "publishConfig": {
+    "access": "public"
+  },
   "exports": {
     ".": {
       "import": "./es6/index.js",
@@ -59,7 +62,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git@github.com:yavorskiy/comment-parser.git"
+    "url": "git+ssh://git@github.com/yavorskiy/comment-parser.git"
   },
   "keywords": [
     "jsdoc",
