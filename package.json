@@ -1,6 +1,6 @@
 {
   "name": "comment-parser",
-  "version": "1.4.2",
+  "version": "1.4.3",
   "description": "Generic JSDoc-like comment parser",
   "type": "module",
   "main": "lib/index.cjs",

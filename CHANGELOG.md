@@ -1,5 +1,11 @@
 # v1.4.1
 
+## 1.4.3
+
+### Patch Changes
+
+- Add prepare and prepublishOnly scripts to ensure build runs before publishing
+
 ## 1.4.2
 
 ### Patch Changes
