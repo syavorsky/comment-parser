@@ -52,7 +52,9 @@
     "format": "prettier --write src tests",
     "pretest": "rimraf coverage; npm run build",
     "test": "prettier --check src tests && jest --verbose",
-    "preversion": "npm run build"
+    "preversion": "npm run build",
+    "prepare": "npm run build",
+    "prepublishOnly": "npm run build"
   },
   "repository": {
     "type": "git",
