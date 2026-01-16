@@ -21,3 +21,4 @@ coverage
 .vscode
 .tmp
 .DS_Store
+*.tgz
