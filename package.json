@@ -57,8 +57,12 @@
     "pretest": "rimraf coverage; npm run build",
     "test": "prettier --check src tests && jest --verbose",
     "preversion": "npm run build",
+    "postversion": "git add . && git commit -m \"chore: release v$(node -p \"require('./package.json').version\")\"",
     "prepare": "npm run build",
-    "prepublishOnly": "npm run build"
+    "prepublishOnly": "npm run build",
+    "release:add": "git pull origin master && changeset",
+    "release:version": "git pull origin master && changeset version && npm install",
+    "release:publish": "git pull origin master && npm run build && changeset publish && git push --follow-tags"
   },
   "repository": {
     "type": "git",
