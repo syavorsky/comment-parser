@@ -167,3 +167,83 @@ test('fence function', () => {
   expect(groups.length).toBe(2);
   expect(groups).toEqual([source.slice(0, 5), source.slice(5)]);
 });
+
+test('should not treat @npm/package or @ember/debug as tags', () => {
+  const parser = getParser();
+  const lines: Line[] = [
+    {
+      number: 1,
+      source: '/**',
+      tokens: seedTokens({
+        start: '',
+        delimiter: '/**',
+        postDelimiter: '',
+        description: '',
+        end: '',
+      }),
+    },
+    {
+      number: 2,
+      source: ' * Description line',
+      tokens: seedTokens({
+        start: ' ',
+        delimiter: '*',
+        postDelimiter: ' ',
+        description: 'Description line',
+        end: '',
+      }),
+    },
+    {
+      number: 3,
+      source: ' * @ember/debug should not be treated as tag',
+      tokens: seedTokens({
+        start: ' ',
+        delimiter: '*',
+        postDelimiter: ' ',
+        description: '@ember/debug should not be treated as tag',
+        end: '',
+      }),
+    },
+    {
+      number: 4,
+      source: ' * @npm/package should not be treated as tag either',
+      tokens: seedTokens({
+        start: ' ',
+        delimiter: '*',
+        postDelimiter: ' ',
+        description: '@npm/package should not be treated as tag either',
+        end: '',
+      }),
+    },
+    {
+      number: 5,
+      source: ' * @param {string} value',
+      tokens: seedTokens({
+        start: ' ',
+        delimiter: '*',
+        postDelimiter: ' ',
+        description: '@param {string} value',
+        end: '',
+      }),
+    },
+    {
+      number: 6,
+      source: ' */',
+      tokens: seedTokens({
+        start: ' ',
+        delimiter: '',
+        postDelimiter: '',
+        description: '',
+        end: '*/',
+      }),
+    },
+  ];
+
+  const groups: Line[][] = parser(lines);
+
+  // Should have 2 sections: description (lines 0-3) and @param tag (lines 4-5)
+  // @ember/debug and @npm/package should stay in description, not create new sections
+  expect(groups.length).toBe(2);
+  expect(groups[0]).toEqual([lines[0], lines[1], lines[2], lines[3]]);
+  expect(groups[1]).toEqual([lines[4], lines[5]]);
+});
