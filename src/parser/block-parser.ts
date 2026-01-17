@@ -1,12 +1,12 @@
 import { Line } from '../primitives.js';
 
-const reTag = /^@\S+/;
+const reTag = /^@[^\s/]+(?=\s|$)/;
 
 /**
  * Groups source lines in sections representing tags.
  * First section is a block description if present. Last section captures lines starting with
  * the last tag to the end of the block, including dangling closing marker.
- * @param {Line[]} block souce lines making a single comment block
+ * @param {Line[]} block source lines making a single comment block
  */
 export type Parser = (block: Line[]) => Line[][];
 
