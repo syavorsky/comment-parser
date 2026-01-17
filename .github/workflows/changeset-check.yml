@@ -1,0 +1,78 @@
+name: Changeset Check
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, labeled, unlabeled]
+
+jobs:
+  changeset-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check for changeset
+        id: changeset-check
+        run: |
+          # Check if there are any changeset files (excluding README.md)
+          CHANGESET_FILES=$(git diff --name-only origin/${{ github.base_ref }}...HEAD -- .changeset/*.md | grep -v '.changeset/README.md' || true)
+
+          if [ -z "$CHANGESET_FILES" ]; then
+            echo "has_changeset=false" >> $GITHUB_OUTPUT
+          else
+            echo "has_changeset=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Comment on PR
+        if: steps.changeset-check.outputs.has_changeset == 'false' && !contains(github.event.pull_request.labels.*.name, 'skip-changeset')
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            });
+
+            const botComment = comments.find(comment =>
+              comment.user.type === 'Bot' &&
+              comment.body.includes('Missing Changeset')
+            );
+
+            const message = `## ⚠️ Missing Changeset
+
+            This PR doesn't include a changeset file. If this PR contains changes that should be noted in the changelog, please add a changeset by running:
+
+            \`\`\`bash
+            npm run release:add
+            \`\`\`
+
+            This will prompt you to describe the changes and select the version bump type.
+
+            ---
+
+            💡 If this PR doesn't require a changeset (e.g., docs, tests, or internal changes), add the \`skip-changeset\` label to this PR.`;
+
+            if (botComment) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: botComment.id,
+                body: message
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body: message
+              });
+            }
+
+      - name: Fail if no changeset
+        if: steps.changeset-check.outputs.has_changeset == 'false' && !contains(github.event.pull_request.labels.*.name, 'skip-changeset')
+        run: |
+          echo "::error::No changeset found. Please run 'npm run release:add' or add the 'skip-changeset' label."
+          exit 1

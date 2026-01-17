@@ -59,7 +59,7 @@
     "preversion": "npm run build",
     "prepare": "npm run build",
     "prepublishOnly": "npm run build",
-    "release:add": "git pull origin main && changeset",
+    "release:add": "changeset",
     "release:version": "git pull origin main && changeset version && npm install && git add . && git commit -m \"release v$(node -p \"require('./package.json').version\")\"",
     "release:publish": "git pull origin main && changeset publish && git push --follow-tags"
   },
