@@ -1,5 +1,11 @@
 # v1.4.1
 
+## 1.4.4
+
+### Patch Changes
+
+- fully exclude slash-containing strings like @npm/package from tag detection @brettz9
+
 ## 1.4.3
 
 ### Patch Changes
