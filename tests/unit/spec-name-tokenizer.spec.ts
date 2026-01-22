@@ -734,3 +734,97 @@ test('after multiline {type}', () => {
     })
   );
 });
+
+test('name on second line after type', () => {
+  const sourceIn = [
+    {
+      number: 0,
+      source: '...',
+      tokens: seedTokens({
+        tag: '@param',
+        postTag: ' ',
+        type: '{string}',
+        postType: '',
+        description: '',
+      }),
+    },
+    {
+      number: 1,
+      source: '...',
+      tokens: seedTokens({
+        description: 'foo The foo description.',
+      }),
+    },
+  ];
+
+  const sourceOut = JSON.parse(JSON.stringify(sourceIn));
+  Object.assign(sourceOut[1].tokens, {
+    name: 'foo',
+    postName: ' ',
+    description: 'The foo description.',
+  });
+
+  expect(tokenize(seedSpec({ type: 'string', source: sourceIn }))).toEqual(
+    seedSpec({
+      type: 'string',
+      name: 'foo',
+      source: sourceOut,
+    })
+  );
+});
+
+test('no type - should not look for name on subsequent lines', () => {
+  const sourceIn = [
+    {
+      number: 0,
+      source: '...',
+      tokens: seedTokens({
+        tag: '@example',
+        postTag: '',
+        description: '',
+      }),
+    },
+    {
+      number: 1,
+      source: '...',
+      tokens: seedTokens({
+        description: 'const foo = bar()',
+      }),
+    },
+  ];
+
+  expect(tokenize(seedSpec({ source: sourceIn }))).toEqual(
+    seedSpec({
+      name: '',
+      source: sourceIn,
+    })
+  );
+});
+
+test('no type with comment syntax - should not parse as name', () => {
+  const sourceIn = [
+    {
+      number: 0,
+      source: '...',
+      tokens: seedTokens({
+        tag: '@example',
+        postTag: '',
+        description: '',
+      }),
+    },
+    {
+      number: 1,
+      source: '...',
+      tokens: seedTokens({
+        description: '// Create something',
+      }),
+    },
+  ];
+
+  expect(tokenize(seedSpec({ source: sourceIn }))).toEqual(
+    seedSpec({
+      name: '',
+      source: sourceIn,
+    })
+  );
+});
