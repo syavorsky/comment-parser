@@ -1,4 +1,4 @@
-import { Spec, Line } from '../../primitives.js';
+import { Spec, Line, Tokens } from '../../primitives.js';
 import { splitSpace, isSpace } from '../../util.js';
 import { Tokenizer } from './index.js';
 
@@ -16,14 +16,18 @@ export default function nameTokenizer(): Tokenizer {
     // look for the name starting in the line where {type} ends
     let finalTypeLine = spec.source.reduce(typeEnd, 0);
 
-    let tokens;
-    do {
+    let tokens: Tokens;
+    if (spec.type) {
+      do {
+        ({ tokens } = spec.source[finalTypeLine]);
+        if (tokens.description.trim()) {
+          break;
+        }
+        finalTypeLine++;
+      } while (spec.source[finalTypeLine]);
+    } else {
       ({ tokens } = spec.source[finalTypeLine]);
-      if (tokens.description.trim()) {
-        break;
-      }
-      finalTypeLine++;
-    } while (spec.source[finalTypeLine]);
+    }
 
     const source = tokens.description.trimStart();
 
