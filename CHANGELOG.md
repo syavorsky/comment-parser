@@ -1,5 +1,11 @@
 # v1.4.1
 
+## 1.4.5
+
+### Patch Changes
+
+- fix: skip empty lines in name tokenizer only when type is present
+
 ## 1.4.4
 
 ### Patch Changes
