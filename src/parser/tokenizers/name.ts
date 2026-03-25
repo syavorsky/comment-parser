@@ -111,6 +111,32 @@ export default function nameTokenizer(): Tokenizer {
         });
         return spec;
       }
+    } else {
+      const eqIndex = name.indexOf('=');
+      if (eqIndex !== -1) {
+        defaultValue = name.slice(eqIndex + 1);
+        name = name.slice(0, eqIndex);
+
+        if (name === '') {
+          spec.problems.push({
+            code: 'spec:name:empty-name',
+            message: 'empty name',
+            line: spec.source[0].number,
+            critical: true,
+          });
+          return spec;
+        }
+
+        if (defaultValue === '') {
+          spec.problems.push({
+            code: 'spec:name:empty-default',
+            message: 'empty default value',
+            line: spec.source[0].number,
+            critical: true,
+          });
+          return spec;
+        }
+      }
     }
 
     spec.optional = optional;

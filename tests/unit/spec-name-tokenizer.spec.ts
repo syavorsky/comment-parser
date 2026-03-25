@@ -620,6 +620,114 @@ test('empty', () => {
   );
 });
 
+test('non-optional with default', () => {
+  expect(
+    tokenize(
+      seedSpec({
+        source: [
+          {
+            number: 1,
+            source: '...',
+            tokens: seedTokens({
+              description: 'param=value param description',
+            }),
+          },
+        ],
+      })
+    )
+  ).toEqual(
+    seedSpec({
+      name: 'param',
+      optional: false,
+      default: 'value',
+      source: [
+        {
+          number: 1,
+          source: '...',
+          tokens: seedTokens({
+            name: 'param=value',
+            postName: ' ',
+            description: 'param description',
+          }),
+        },
+      ],
+    })
+  );
+});
+
+test('non-optional with numeric default', () => {
+  expect(
+    tokenize(
+      seedSpec({
+        source: [
+          {
+            number: 1,
+            source: '...',
+            tokens: seedTokens({
+              description: 'BITMASK_VALUE_A=16 blah blah',
+            }),
+          },
+        ],
+      })
+    )
+  ).toEqual(
+    seedSpec({
+      name: 'BITMASK_VALUE_A',
+      optional: false,
+      default: '16',
+      source: [
+        {
+          number: 1,
+          source: '...',
+          tokens: seedTokens({
+            name: 'BITMASK_VALUE_A=16',
+            postName: ' ',
+            description: 'blah blah',
+          }),
+        },
+      ],
+    })
+  );
+});
+
+test('non-optional with empty default', () => {
+  expect(
+    tokenize(
+      seedSpec({
+        source: [
+          {
+            number: 1,
+            source: '...',
+            tokens: seedTokens({
+              description: 'param= param description',
+            }),
+          },
+        ],
+      })
+    )
+  ).toEqual(
+    seedSpec({
+      problems: [
+        {
+          code: 'spec:name:empty-default',
+          line: 1,
+          critical: true,
+          message: 'empty default value',
+        },
+      ],
+      source: [
+        {
+          number: 1,
+          source: '...',
+          tokens: seedTokens({
+            description: 'param= param description',
+          }),
+        },
+      ],
+    })
+  );
+});
+
 test('default value syntax', () => {
   expect(
     tokenize(
