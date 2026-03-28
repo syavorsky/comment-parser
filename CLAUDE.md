@@ -83,10 +83,30 @@ This script:
 
 ## Versioning & releases
 
-PRs **must** include a changeset file or carry the `skip-changeset` label (enforced by CI). To add one:
+PRs **must** include a changeset file or carry the `skip-changeset` label (enforced by CI).
+
+`npm run release:add` is interactive and can't be automated. Instead, create the changeset file directly:
 
 ```bash
-npm run release:add
+# .changeset/<random-name>.md
+---
+'comment-parser': patch
+---
+
+Description of the fix or change.
 ```
+
+Use `patch` for bug fixes, `minor` for new features, `major` for breaking changes. The filename can be anything unique (e.g. use a random word combo).
+
+Add the changeset file as a separate commit alongside the code changes.
+
+### Full release flow
+
+```bash
+npm run release:version   # bumps version, updates CHANGELOG, commits
+npm run release:publish   # publishes to npm, pushes tags
+```
+
+After publishing, update the playground (see above).
 
 CI tests against Node 20, 22, and 24.
