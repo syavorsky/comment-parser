@@ -22,3 +22,4 @@ coverage
 .tmp
 .DS_Store
 *.tgz
+.claude
