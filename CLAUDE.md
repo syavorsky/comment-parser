@@ -81,6 +81,14 @@ This script:
 4. Updates the version label in `comment-parser/index.html`
 5. Commits `package.json`, `package-lock.json`, and `comment-parser/`
 
+## Branching
+
+Always work on a dedicated branch, never directly on `main`:
+
+- **GitHub issue** → `issue-186/non-optional-defaults`
+- **Bug without an issue** → `bug/short-description`
+- **Feature without an issue** → `feature/short-description`
+
 ## Versioning & releases
 
 PRs **must** include a changeset file or carry the `skip-changeset` label (enforced by CI).
