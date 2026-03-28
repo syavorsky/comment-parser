@@ -693,6 +693,247 @@ test('default with arrow', () => {
   );
 });
 
+test('non-optional with default', () => {
+  expect(
+    tokenize(
+      seedSpec({
+        source: [
+          {
+            number: 1,
+            source: '...',
+            tokens: seedTokens({
+              description: 'BITMASK_VALUE_A=16 description',
+            }),
+          },
+        ],
+      })
+    )
+  ).toEqual(
+    seedSpec({
+      name: 'BITMASK_VALUE_A',
+      default: '16',
+      source: [
+        {
+          number: 1,
+          source: '...',
+          tokens: seedTokens({
+            name: 'BITMASK_VALUE_A=16',
+            postName: ' ',
+            description: 'description',
+          }),
+        },
+      ],
+    })
+  );
+});
+
+test('non-optional with default, no description', () => {
+  expect(
+    tokenize(
+      seedSpec({
+        source: [
+          {
+            number: 1,
+            source: '...',
+            tokens: seedTokens({ description: 'BITMASK_VALUE_A=16' }),
+          },
+        ],
+      })
+    )
+  ).toEqual(
+    seedSpec({
+      name: 'BITMASK_VALUE_A',
+      default: '16',
+      source: [
+        {
+          number: 1,
+          source: '...',
+          tokens: seedTokens({
+            name: 'BITMASK_VALUE_A=16',
+            postName: '',
+            description: '',
+          }),
+        },
+      ],
+    })
+  );
+});
+
+test('non-optional with arrow not treated as default', () => {
+  expect(
+    tokenize(
+      seedSpec({
+        source: [
+          {
+            number: 1,
+            source: '...',
+            tokens: seedTokens({ description: 'name=>value description' }),
+          },
+        ],
+      })
+    )
+  ).toEqual(
+    seedSpec({
+      name: 'name=>value',
+      source: [
+        {
+          number: 1,
+          source: '...',
+          tokens: seedTokens({
+            name: 'name=>value',
+            postName: ' ',
+            description: 'description',
+          }),
+        },
+      ],
+    })
+  );
+});
+
+test('non-optional empty name with default', () => {
+  expect(
+    tokenize(
+      seedSpec({
+        source: [
+          {
+            number: 1,
+            source: '...',
+            tokens: seedTokens({ description: '=value description' }),
+          },
+        ],
+      })
+    )
+  ).toEqual(
+    seedSpec({
+      problems: [
+        {
+          code: 'spec:name:empty-name',
+          line: 1,
+          critical: true,
+          message: 'empty name',
+        },
+      ],
+      source: [
+        {
+          number: 1,
+          source: '...',
+          tokens: seedTokens({
+            description: '=value description',
+          }),
+        },
+      ],
+    })
+  );
+});
+
+test('non-optional empty default', () => {
+  expect(
+    tokenize(
+      seedSpec({
+        source: [
+          {
+            number: 1,
+            source: '...',
+            tokens: seedTokens({ description: 'param= description' }),
+          },
+        ],
+      })
+    )
+  ).toEqual(
+    seedSpec({
+      problems: [
+        {
+          code: 'spec:name:empty-default',
+          line: 1,
+          critical: true,
+          message: 'empty default value',
+        },
+      ],
+      source: [
+        {
+          number: 1,
+          source: '...',
+          tokens: seedTokens({
+            description: 'param= description',
+          }),
+        },
+      ],
+    })
+  );
+});
+
+test('non-optional invalid default syntax', () => {
+  expect(
+    tokenize(
+      seedSpec({
+        source: [
+          {
+            number: 1,
+            source: '...',
+            tokens: seedTokens({
+              description: 'param=value=value description',
+            }),
+          },
+        ],
+      })
+    )
+  ).toEqual(
+    seedSpec({
+      problems: [
+        {
+          code: 'spec:name:invalid-default',
+          line: 1,
+          critical: true,
+          message: 'invalid default value syntax',
+        },
+      ],
+      source: [
+        {
+          number: 1,
+          source: '...',
+          tokens: seedTokens({
+            description: 'param=value=value description',
+          }),
+        },
+      ],
+    })
+  );
+});
+
+test('non-optional dotted name with default', () => {
+  expect(
+    tokenize(
+      seedSpec({
+        source: [
+          {
+            number: 1,
+            source: '...',
+            tokens: seedTokens({
+              description: 'obj.prop=42 the property',
+            }),
+          },
+        ],
+      })
+    )
+  ).toEqual(
+    seedSpec({
+      name: 'obj.prop',
+      default: '42',
+      source: [
+        {
+          number: 1,
+          source: '...',
+          tokens: seedTokens({
+            name: 'obj.prop=42',
+            postName: ' ',
+            description: 'the property',
+          }),
+        },
+      ],
+    })
+  );
+});
+
 test('after multiline {type}', () => {
   const sourceIn = [
     {
