@@ -112,10 +112,10 @@ export default function nameTokenizer(): Tokenizer {
         return spec;
       }
     } else {
-      const eqIndex = name.indexOf('=');
-      if (eqIndex !== -1) {
-        defaultValue = name.slice(eqIndex + 1);
-        name = name.slice(0, eqIndex);
+      const parts = name.split('=');
+      if (parts.length > 1) {
+        name = parts[0].trim();
+        defaultValue = parts.slice(1).join('=').trim();
 
         if (name === '') {
           spec.problems.push({
@@ -131,6 +131,17 @@ export default function nameTokenizer(): Tokenizer {
           spec.problems.push({
             code: 'spec:name:empty-default',
             message: 'empty default value',
+            line: spec.source[0].number,
+            critical: true,
+          });
+          return spec;
+        }
+
+        // has "=" and is not a string, except for "=>"
+        if (!isQuoted(defaultValue) && /=(?!>)/.test(defaultValue)) {
+          spec.problems.push({
+            code: 'spec:name:invalid-default',
+            message: 'invalid default value syntax',
             line: spec.source[0].number,
             critical: true,
           });

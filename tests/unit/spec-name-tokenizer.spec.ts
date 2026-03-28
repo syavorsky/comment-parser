@@ -728,6 +728,44 @@ test('non-optional with empty default', () => {
   );
 });
 
+test('non-optional with invalid default syntax', () => {
+  expect(
+    tokenize(
+      seedSpec({
+        source: [
+          {
+            number: 1,
+            source: '...',
+            tokens: seedTokens({
+              description: 'param=value=value param description',
+            }),
+          },
+        ],
+      })
+    )
+  ).toEqual(
+    seedSpec({
+      problems: [
+        {
+          code: 'spec:name:invalid-default',
+          line: 1,
+          critical: true,
+          message: 'invalid default value syntax',
+        },
+      ],
+      source: [
+        {
+          number: 1,
+          source: '...',
+          tokens: seedTokens({
+            description: 'param=value=value param description',
+          }),
+        },
+      ],
+    })
+  );
+});
+
 test('default value syntax', () => {
   expect(
     tokenize(
