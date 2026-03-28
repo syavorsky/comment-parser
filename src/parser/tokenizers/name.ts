@@ -113,6 +113,44 @@ export default function nameTokenizer(): Tokenizer {
       }
     }
 
+    if (!optional) {
+      const eqIndex = name.search(/=(?!>)/);
+      if (eqIndex !== -1) {
+        defaultValue = name.slice(eqIndex + 1).trim();
+        name = name.slice(0, eqIndex).trim();
+
+        if (name === '') {
+          spec.problems.push({
+            code: 'spec:name:empty-name',
+            message: 'empty name',
+            line: spec.source[0].number,
+            critical: true,
+          });
+          return spec;
+        }
+
+        if (defaultValue === '') {
+          spec.problems.push({
+            code: 'spec:name:empty-default',
+            message: 'empty default value',
+            line: spec.source[0].number,
+            critical: true,
+          });
+          return spec;
+        }
+
+        if (!isQuoted(defaultValue) && /=(?!>)/.test(defaultValue)) {
+          spec.problems.push({
+            code: 'spec:name:invalid-default',
+            message: 'invalid default value syntax',
+            line: spec.source[0].number,
+            critical: true,
+          });
+          return spec;
+        }
+      }
+    }
+
     spec.optional = optional;
     spec.name = name;
     tokens.name = nameToken;
