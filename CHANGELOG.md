@@ -1,5 +1,11 @@
 # v1.4.1
 
+## 1.4.6
+
+### Patch Changes
+
+- 02d3c46: Support default values on non-optional names (e.g. `@property {number} BITMASK_VALUE_A=16 - description`)
+
 ## 1.4.5
 
 ### Patch Changes
