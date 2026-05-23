@@ -116,10 +116,10 @@ export default function nameTokenizer(): Tokenizer {
     if (!optional) {
       const eqIndex = name.search(/=(?!>)/);
       if (eqIndex !== -1) {
-        defaultValue = name.slice(eqIndex + 1).trim();
-        name = name.slice(0, eqIndex).trim();
+        const preEqual = name.slice(0, eqIndex).trim();
+        const postEqual = name.slice(eqIndex + 1).trim();
 
-        if (name === '') {
+        if (preEqual === '') {
           spec.problems.push({
             code: 'spec:name:empty-name',
             message: 'empty name',
@@ -129,7 +129,7 @@ export default function nameTokenizer(): Tokenizer {
           return spec;
         }
 
-        if (defaultValue === '') {
+        if (postEqual === '') {
           spec.problems.push({
             code: 'spec:name:empty-default',
             message: 'empty default value',
@@ -139,14 +139,21 @@ export default function nameTokenizer(): Tokenizer {
           return spec;
         }
 
-        if (!isQuoted(defaultValue) && /=(?!>)/.test(defaultValue)) {
-          spec.problems.push({
-            code: 'spec:name:invalid-default',
-            message: 'invalid default value syntax',
-            line: spec.source[0].number,
-            critical: true,
-          });
-          return spec;
+        // Only match with JS identifier (or dots) before "="
+        if (
+          /^[\p{ID_Start}$_\.][\p{ID_Continue}$_\u200c\u200d\.]*=/u.test(name)
+        ) {
+          if (!isQuoted(postEqual) && /=(?!>)/.test(postEqual)) {
+            spec.problems.push({
+              code: 'spec:name:invalid-default',
+              message: 'invalid default value syntax',
+              line: spec.source[0].number,
+              critical: true,
+            });
+            return spec;
+          }
+          name = preEqual;
+          defaultValue = postEqual;
         }
       }
     }

@@ -934,6 +934,72 @@ test('non-optional dotted name with default', () => {
   );
 });
 
+test('non-optional, non-identifier name', () => {
+  expect(
+    tokenize(
+      seedSpec({
+        source: [
+          {
+            number: 1,
+            source: '...',
+            tokens: seedTokens({
+              tag: 'see',
+              description: 'https://example.com/foo?bar=baz#section',
+            }),
+          },
+        ],
+      })
+    )
+  ).toEqual(
+    seedSpec({
+      name: 'https://example.com/foo?bar=baz#section',
+      source: [
+        {
+          number: 1,
+          source: '...',
+          tokens: seedTokens({
+            tag: 'see',
+            name: 'https://example.com/foo?bar=baz#section',
+          }),
+        },
+      ],
+    })
+  );
+});
+
+test('non-optional, non-identifier name with multiple equals signs', () => {
+  expect(
+    tokenize(
+      seedSpec({
+        source: [
+          {
+            number: 1,
+            source: '...',
+            tokens: seedTokens({
+              tag: 'see',
+              description: 'https://example.com/foo?bar=baz&qux=quux',
+            }),
+          },
+        ],
+      })
+    )
+  ).toEqual(
+    seedSpec({
+      name: 'https://example.com/foo?bar=baz&qux=quux',
+      source: [
+        {
+          number: 1,
+          source: '...',
+          tokens: seedTokens({
+            tag: 'see',
+            name: 'https://example.com/foo?bar=baz&qux=quux',
+          }),
+        },
+      ],
+    })
+  );
+});
+
 test('after multiline {type}', () => {
   const sourceIn = [
     {
