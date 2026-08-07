@@ -4,7 +4,9 @@
     "module": "node16",
     "declaration": true,
     "outDir": "./es6",
-    "lib": ["es2016", "es5"]
+    "rootDir": "src",
+    "types": ["jest"],
+    "lib": ["es2019"]
   },
   "include": ["src"],
   "exclude": ["node_modules"]

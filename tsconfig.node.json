@@ -4,7 +4,9 @@
     "module": "commonjs",
     "declaration": true,
     "outDir": "./lib",
-    "lib": ["es2016", "es5"]
+    "rootDir": "src",
+    "types": ["jest"],
+    "lib": ["es2019"]
   },
   "include": ["src"],
   "exclude": ["node_modules"]

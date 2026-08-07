@@ -78,7 +78,7 @@ export function rewireSource(block: Block): Block {
     new Map<number, Line>()
   );
   for (const spec of block.tags) {
-    spec.source = spec.source.map((line) => source.get(line.number));
+    spec.source = spec.source.map((line) => <Line>source.get(line.number));
   }
   return block;
 }

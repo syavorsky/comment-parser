@@ -38,7 +38,7 @@ export default function getParser({
       return null;
     }
 
-    const isClosed = rest.trimRight().endsWith(markers.end);
+    const isClosed = rest.trimEnd().endsWith(markers.end);
 
     if (
       tokens.delimiter === '' &&
@@ -51,7 +51,7 @@ export default function getParser({
     }
 
     if (isClosed) {
-      const trimmed = rest.trimRight();
+      const trimmed = rest.trimEnd();
       tokens.end = rest.slice(trimmed.length - markers.end.length);
       rest = trimmed.slice(0, -markers.end.length);
     }

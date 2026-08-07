@@ -2,10 +2,10 @@ import { Transform } from './index.js';
 import { Block, Line } from '../primitives.js';
 import { rewireSource } from '../util.js';
 
-const pull = (offset: number) => (str) => str.slice(offset);
+const pull = (offset: number) => (str: string) => str.slice(offset);
 const push = (offset: number) => {
   const space = ''.padStart(offset, ' ');
-  return (str) => str + space;
+  return (str: string) => str + space;
 };
 
 export default function indent(pos: number): Transform {

@@ -37,7 +37,7 @@ export function getJoiner(spacing: Spacing): Joiner {
   return spacing;
 }
 
-function compactJoiner(lines: Line[], markers = Markers): string {
+function compactJoiner(lines: Line[], markers: BlockMarkers = Markers): string {
   return lines
     .map(({ tokens: { description } }: Line) => description.trim())
     .filter((description) => description !== '')
@@ -51,7 +51,10 @@ const getDescription = ({ tokens }: Line) =>
   (tokens.delimiter === '' ? tokens.start : tokens.postDelimiter.slice(1)) +
   tokens.description;
 
-function preserveJoiner(lines: Line[], markers = Markers): string {
+function preserveJoiner(
+  lines: Line[],
+  markers: BlockMarkers = Markers
+): string {
   if (lines.length === 0) return '';
 
   // skip the opening line with no description

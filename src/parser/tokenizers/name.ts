@@ -2,7 +2,8 @@ import { Spec, Line, Tokens } from '../../primitives.js';
 import { splitSpace, isSpace } from '../../util.js';
 import { Tokenizer } from './index.js';
 
-const isQuoted = (s: string) => s && s.startsWith('"') && s.endsWith('"');
+const isQuoted = (s: string | undefined) =>
+  s && s.startsWith('"') && s.endsWith('"');
 
 /**
  * Splits remaining `spec.lines[].tokens.description` into `name` and `descriptions` tokens,
@@ -50,7 +51,7 @@ export default function nameTokenizer(): Tokenizer {
     let brackets = 0;
     let name = '';
     let optional = false;
-    let defaultValue: string;
+    let defaultValue: string | undefined;
 
     // assume name is non-space string or anything wrapped into brackets
     for (const ch of source) {
@@ -102,7 +103,7 @@ export default function nameTokenizer(): Tokenizer {
       }
 
       // has "=" and is not a string, except for "=>"
-      if (!isQuoted(defaultValue) && /=(?!>)/.test(defaultValue)) {
+      if (!isQuoted(defaultValue) && /=(?!>)/.test(defaultValue || '')) {
         spec.problems.push({
           code: 'spec:name:invalid-default',
           message: 'invalid default value syntax',

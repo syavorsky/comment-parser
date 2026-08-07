@@ -17,7 +17,7 @@ interface Width {
   lineEnd: number;
 }
 
-const zeroWidth = {
+const zeroWidth: Width = {
   line: 0,
   start: 0,
   delimiter: 0,
@@ -33,16 +33,18 @@ const zeroWidth = {
   lineEnd: 0,
 };
 
-const headers = { lineEnd: 'CR' };
+const headers: Partial<Record<keyof Width, string>> = { lineEnd: 'CR' };
 
-const fields = Object.keys(zeroWidth);
+const fields = <(keyof Width)[]>Object.keys(zeroWidth);
 
 const repr = (x: string) => (isSpace(x) ? `{${x.length}}` : x);
 
 const frame = (line: string[]) => '|' + line.join('|') + '|';
 
 const align = (width: Width, tokens: Tokens): string[] =>
-  Object.keys(tokens).map((k) => repr(tokens[k]).padEnd(width[k]));
+  (Object.keys(tokens) as (keyof Tokens)[]).map((k) =>
+    repr(tokens[k]).padEnd(width[k as keyof Width])
+  );
 
 export default function inspect({ source }: Block): string {
   if (source.length === 0) return '';
@@ -52,8 +54,12 @@ export default function inspect({ source }: Block): string {
   for (const f of fields) width[f] = (headers[f] ?? f).length;
   for (const { number, tokens } of source) {
     width.line = Math.max(width.line, number.toString().length);
-    for (const k in tokens)
-      width[k] = Math.max(width[k], repr(tokens[k]).length);
+    for (const k of Object.keys(tokens) as (keyof Tokens)[]) {
+      width[k as keyof Width] = Math.max(
+        width[k as keyof Width],
+        repr(tokens[k]).length
+      );
+    }
   }
 
   const lines: string[][] = [[], []];
