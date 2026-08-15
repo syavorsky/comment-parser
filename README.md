@@ -23,7 +23,7 @@ Lib mainly provides two pieces [Parser](#Parser) and [Stringifier](#Stringifier)
 Let's go over string parsing:
 
 ```js
-const { parse } = require('comment-parser/lib')
+import { parse } from 'comment-parser/parser/index.js'
 
 const source = `
 /**
@@ -180,7 +180,9 @@ examples
 The stringifier is an important piece used by other tools updating the source code. It goes over `Block.source[].tokens` items and assembles them back to the string. It might be used with various transforms applied before stringifying.
 
 ```js
-const { parse, stringify, transforms: {flow, align, indent} } = require('comment-parser');
+import { parse, stringify, transforms } from 'comment-parser'
+
+const { flow, align, indent } = transforms
 
 const source = `
   /**
@@ -190,11 +192,11 @@ const source = `
 * @my-tag {my.type} my-name description line 1
       description line 2
     * description line 3
-   */`;
+   */`
 
-const parsed = parse(source);
+const parsed = parse(source)
 const transform = flow(align(), indent(0))
-console.log(stringify(transform(parsed[0])));
+console.log(stringify(transform(parsed[0])))
 ```
 
 ### Result
