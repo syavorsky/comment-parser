@@ -1,2 +1,4 @@
 .*
 coverage/
+.claude/
+CLAUDE.md
