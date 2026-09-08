@@ -1,5 +1,11 @@
 # v1.4.1
 
+## 1.4.9
+
+### Patch Changes
+
+- 5cf5302: docs: update README to use valid subpath (and update to ESM)
+
 ## 1.4.8
 
 ### Patch Changes
