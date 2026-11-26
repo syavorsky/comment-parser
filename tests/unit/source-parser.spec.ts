@@ -213,6 +213,29 @@ test('multiple blocks', () => {
   expect(parsed).toEqual([null, block0, null, block1, null]);
 });
 
+test('empty comment is not a block start', () => {
+  const parsed = parse(`
+    /**/
+    const a = 1;
+    /** description */`);
+
+  const block = [
+    {
+      number: 3,
+      source: '    /** description */',
+      tokens: seedTokens({
+        start: '    ',
+        delimiter: '/**',
+        postDelimiter: ' ',
+        description: 'description ',
+        end: '*/',
+      }),
+    },
+  ];
+
+  expect(parsed).toEqual([...nulls(3), block]);
+});
+
 test('start line number', () => {
   const source = splitLines(`
   /** description */`);

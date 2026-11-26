@@ -8,6 +8,12 @@ export interface Options {
 
 export type Parser = (source: string) => Line[] | null;
 
+// end marker overlaps the start marker, e.g. "/**/" is an empty plain comment
+const isEmptyComment = (source: string, markers: BlockMarkers) => {
+  const end = source.indexOf(markers.end, 1);
+  return end !== -1 && end < markers.start.length;
+};
+
 export default function getParser({
   startLine = 0,
   markers = Markers,
@@ -25,7 +31,8 @@ export default function getParser({
     if (
       block === null &&
       rest.startsWith(markers.start) &&
-      !rest.startsWith(markers.nostart)
+      !rest.startsWith(markers.nostart) &&
+      !isEmptyComment(rest, markers)
     ) {
       block = [];
       tokens.delimiter = rest.slice(0, markers.start.length);
