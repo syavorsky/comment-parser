@@ -82,8 +82,9 @@ export default function nameTokenizer(): Tokenizer {
     let optional = false;
     let defaultValue: string | undefined;
 
-    // a quote left open (e.g. an apostrophe) is read as a plain character
-    const scanned = scanName(source, true) ?? scanName(source, false)!;
+    // if skipping quotes leaves brackets unbalanced (e.g. apostrophes), quotes are plain characters
+    const quoted = scanName(source, true);
+    const scanned = quoted?.brackets === 0 ? quoted : scanName(source, false)!;
     let name = scanned.name;
     const brackets = scanned.brackets;
 

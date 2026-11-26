@@ -474,6 +474,41 @@ test('default with unpaired single quote', () => {
   );
 });
 
+test('default with apostrophes in name and description', () => {
+  expect(
+    tokenize(
+      seedSpec({
+        source: [
+          {
+            number: 1,
+            source: '...',
+            tokens: seedTokens({
+              description: "[param=it's] it's description",
+            }),
+          },
+        ],
+      })
+    )
+  ).toEqual(
+    seedSpec({
+      name: 'param',
+      optional: true,
+      default: "it's",
+      source: [
+        {
+          number: 1,
+          source: '...',
+          tokens: seedTokens({
+            name: "[param=it's]",
+            postName: ' ',
+            description: "it's description",
+          }),
+        },
+      ],
+    })
+  );
+});
+
 test('non-alphanumeric', () => {
   expect(
     tokenize(
