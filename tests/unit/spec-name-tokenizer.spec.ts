@@ -299,6 +299,181 @@ test('quoted default with =', () => {
   );
 });
 
+test('single-quoted default with =', () => {
+  expect(
+    tokenize(
+      seedSpec({
+        source: [
+          {
+            number: 1,
+            source: '...',
+            tokens: seedTokens({
+              description: "[param='=']" + ' param description',
+            }),
+          },
+        ],
+      })
+    )
+  ).toEqual(
+    seedSpec({
+      name: 'param',
+      optional: true,
+      default: "'='",
+      source: [
+        {
+          number: 1,
+          source: '...',
+          tokens: seedTokens({
+            name: "[param='=']",
+            postName: ' ',
+            description: 'param description',
+          }),
+        },
+      ],
+    })
+  );
+});
+
+test('quoted default with ]', () => {
+  expect(
+    tokenize(
+      seedSpec({
+        source: [
+          {
+            number: 1,
+            source: '...',
+            tokens: seedTokens({
+              description: '[param="]"]' + ' param description',
+            }),
+          },
+        ],
+      })
+    )
+  ).toEqual(
+    seedSpec({
+      name: 'param',
+      optional: true,
+      default: '"]"',
+      source: [
+        {
+          number: 1,
+          source: '...',
+          tokens: seedTokens({
+            name: '[param="]"]',
+            postName: ' ',
+            description: 'param description',
+          }),
+        },
+      ],
+    })
+  );
+});
+
+test('backtick-quoted default with ]', () => {
+  expect(
+    tokenize(
+      seedSpec({
+        source: [
+          {
+            number: 1,
+            source: '...',
+            tokens: seedTokens({
+              description: '[param=`]`]' + ' param description',
+            }),
+          },
+        ],
+      })
+    )
+  ).toEqual(
+    seedSpec({
+      name: 'param',
+      optional: true,
+      default: '`]`',
+      source: [
+        {
+          number: 1,
+          source: '...',
+          tokens: seedTokens({
+            name: '[param=`]`]',
+            postName: ' ',
+            description: 'param description',
+          }),
+        },
+      ],
+    })
+  );
+});
+
+test('default with comparison operators', () => {
+  expect(
+    tokenize(
+      seedSpec({
+        source: [
+          {
+            number: 1,
+            source: '...',
+            tokens: seedTokens({
+              description: '[param=a !== b && c >= d]' + ' param description',
+            }),
+          },
+        ],
+      })
+    )
+  ).toEqual(
+    seedSpec({
+      name: 'param',
+      optional: true,
+      default: 'a !== b && c >= d',
+      source: [
+        {
+          number: 1,
+          source: '...',
+          tokens: seedTokens({
+            name: '[param=a !== b && c >= d]',
+            postName: ' ',
+            description: 'param description',
+          }),
+        },
+      ],
+    })
+  );
+});
+
+test('default with unpaired single quote', () => {
+  expect(
+    tokenize(
+      seedSpec({
+        source: [
+          {
+            number: 1,
+            source: '...',
+            tokens: seedTokens({
+              description: "[param=O'Brien]" + ' param description',
+            }),
+          },
+        ],
+      })
+    )
+  ).toEqual(
+    seedSpec({
+      name: 'param',
+      optional: true,
+      default: "O'Brien",
+      source: [
+        {
+          number: 1,
+          source: '...',
+          tokens: seedTokens({
+            name: "[param=O'Brien]",
+            postName: ' ',
+            description: 'param description',
+          }),
+        },
+      ],
+    })
+  );
+});
+
 test('non-alphanumeric', () => {
   expect(
     tokenize(
