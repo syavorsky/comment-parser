@@ -459,3 +459,42 @@ test('custom markers', () => {
 
   expect(parsed).toEqual([...nulls(11), block]);
 });
+
+test('custom markers with same start and end are not an empty comment', () => {
+  _parse = getParser({
+    markers: { start: '////', nostart: '// ', delim: '///', end: '////' },
+  });
+  const parsed = parse(`
+    //////
+    /// description
+    ////`);
+
+  const block = [
+    {
+      number: 1,
+      source: '    //////',
+      tokens: seedTokens({
+        start: '    ',
+        delimiter: '////',
+        description: '//',
+      }),
+    },
+    {
+      number: 2,
+      source: '    /// description',
+      tokens: seedTokens({
+        start: '    ',
+        delimiter: '///',
+        postDelimiter: ' ',
+        description: 'description',
+      }),
+    },
+    {
+      number: 3,
+      source: '    ////',
+      tokens: seedTokens({ start: '    ', end: '////' }),
+    },
+  ];
+
+  expect(parsed).toEqual([...nulls(3), block]);
+});
