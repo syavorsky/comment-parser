@@ -1,5 +1,11 @@
 # v1.4.1
 
+## 1.4.10
+
+### Patch Changes
+
+- 3222d4f: Allow quoted brackets, single-quoted or backtick-quoted `=`, and comparison operators in default values
+
 ## 1.4.9
 
 ### Patch Changes
