@@ -1,5 +1,11 @@
 # v1.4.1
 
+## 1.4.11
+
+### Patch Changes
+
+- d6a4f05: Don't treat an empty `/**/` comment as the start of a block.
+
 ## 1.4.10
 
 ### Patch Changes
